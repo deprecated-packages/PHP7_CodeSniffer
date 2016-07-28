@@ -1,0 +1,4 @@
+services:
+    - Symplify\PHP7_CodeSniffer\Standard\StandardFinder
+    - Symplify\PHP7_CodeSniffer\SniffFinder\SniffFinder
+    - Symplify\PHP7_CodeSniffer\SniffFinder\SniffProvider

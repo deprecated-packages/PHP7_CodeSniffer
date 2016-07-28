@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// 1. build DI container
+$containerFactory = new Symplify\PHP7_CodeSniffer\DI\ContainerFactory();
+$container = $containerFactory->create();
+
+// 2. get Console Application
+/** @var Symplify\PHP7_CodeSniffer\Console\CodeSnifferApplication $codeSnifferApplication */
+$codeSnifferApplication = $container->getByType(Symplify\PHP7_CodeSniffer\Console\CodeSnifferApplication::class);
+
+// 3. run it!
+$codeSnifferApplication->setDefaultCommand('check', true);
+$codeSnifferApplication->run();
