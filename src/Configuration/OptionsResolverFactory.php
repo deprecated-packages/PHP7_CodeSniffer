@@ -87,11 +87,13 @@ final class OptionsResolverFactory
 
     private function setNormalizers(OptionsResolver $optionsResolver)
     {
-        $optionsResolver->setNormalizer('standards', function (OptionsResolver $optionsResolver, array $standardNames) {
-            $standardNames = $this->normalizeCommaSeparatedValues($standardNames);
-
-            return $this->standardFinder->getRulesetPathsForStandardNames($standardNames);
-        });
+        $optionsResolver->setNormalizer(
+            'standards',
+            function (OptionsResolver $optionsResolver, array $standardNames) {
+                $standardNames = $this->normalizeCommaSeparatedValues($standardNames);
+                return $this->standardFinder->getRulesetPathsForStandardNames($standardNames);
+            }
+        );
     }
 
     private function normalizeCommaSeparatedValues(array $values) : array

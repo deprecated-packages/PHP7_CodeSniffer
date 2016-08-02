@@ -55,29 +55,55 @@ final class RunCommand extends Command
         $this->setName('run');
         $this->setDescription('Checks code against coding standard.');
 
-        $this->addArgument('source', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Files or directories to process.');
+        $this->addArgument(
+            'source',
+            InputArgument::REQUIRED | InputArgument::IS_ARRAY,
+            'Files or directories to process.'
+        );
         $this->addOption('fix', null, null, 'Fix all fixable errors.');
 
-        $this->addOption('standards', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of coding standards to use.', []);
-        $this->addOption('sniffs', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of sniff codes to use.', []);
+        $this->addOption(
+            'standards',
+            null,
+            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+            'List of coding standards to use.'
+        );
+        $this->addOption(
+            'sniffs',
+            null,
+            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+            'List of sniff codes to use.'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $isFixer = $input->getOption('fix');
-            $this->php7CodeSniffer->registerSniffs($input->getOption('standards'), $input->getOption('sniffs'));
-            $this->php7CodeSniffer->runForSource($input->getArgument('source'), $isFixer);
+            $this->php7CodeSniffer->registerSniffs(
+                $input->getOption('standards'),
+                $input->getOption('sniffs')
+            );
+            $this->php7CodeSniffer->runForSource(
+                $input->getArgument('source'),
+                $input->getOption('fix')
+            );
 
             // 2. print found errors to the output
             if ($this->reportCollector->getErrorCount()) {
-                $this->printErrors();
-                $this->printFixingNote($isFixer);
+                if (!$input->getOption('fix')) {
+                    $this->printErrors();
+                    $this->printFixingNote();
+                } else {
+                    $this->printUnfixedErrors();
+                }
 
                 return ExitCode::ERROR;
             }
 
-            $this->codeSnifferStyle->success('Great job! Your code is completely fine. Take a break and look around you. Beautiful world, isn\'t it?');
+            $this->codeSnifferStyle->success(
+                'Great job! Your code is completely fine. Take a break and look around you.'.
+                'Beautiful world, isn\'t it?'
+            );
 
             return ExitCode::SUCCESS;
         } catch (Throwable $throwable) {
@@ -109,5 +135,15 @@ final class RunCommand extends Command
                 $howMany
             ));
         }
+    }
+
+    private function printUnfixedErrors()
+    {
+        // TODO!
+        //        $this->codeSnifferStyle->writeErrorReports($this->reportCollector->getUnfixableErrorMessages());
+        //        $this->codeSnifferStyle->error(sprintf(
+        //            '%d errors could nof be fixed.',
+        //            $this->reportCollector->getUnfixableErrorCount()
+        //        ));
     }
 }

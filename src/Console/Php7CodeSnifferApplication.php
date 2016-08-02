@@ -31,8 +31,7 @@ final class Php7CodeSnifferApplication extends Application
     {
         return new InputDefinition([
             new InputArgument('command', InputArgument::REQUIRED, 'The command to execute'),
-            new InputOption('--help', '-h', InputOption::VALUE_NONE, 'Display this help message'),
-            new InputOption('--version', '-V', InputOption::VALUE_NONE, 'Display this application version'),
+            new InputOption('--help', '-h', InputOption::VALUE_NONE, 'Display this help message')
         ]);
     }
 }

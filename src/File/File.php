@@ -100,7 +100,14 @@ final class File extends BaseFile implements FileInterface
             return false;
         }
 
-        $this->reportCollector->addErrorMessage($this->path, $message, $line, $code, $data, $isFixable);
+        $this->reportCollector->addErrorMessage(
+            $this->path,
+            $message,
+            $line,
+            $code,
+            $data,
+            $isFixable
+        );
 
         return true;
     }

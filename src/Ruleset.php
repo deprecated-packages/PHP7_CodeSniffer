@@ -28,6 +28,8 @@ final class Ruleset
     public function decorateSniffsWithCustomRules(array $sniffs)
     {
         $ruleset = $this->rulesetBuilder->getRuleset();
+        dump($ruleset);
+        die;
 
         foreach ($sniffs as $sniffCode => $sniffObject) {
             if (!isset($ruleset[$sniffCode]['properties'])) {

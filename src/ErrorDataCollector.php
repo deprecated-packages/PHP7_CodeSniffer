@@ -52,8 +52,14 @@ final class ErrorDataCollector
         return $this->sortErrorMessagesByFileAndLine($this->errorMessages);
     }
 
-    public function addErrorMessage(string $filePath, string $message, int $line, string $sniffCode, array $data, bool $isFixable)
-    {
+    public function addErrorMessage(
+        string $filePath,
+        string $message,
+        int $line,
+        string $sniffCode,
+        array $data,
+        bool $isFixable
+    ) {
         $this->errorCount++;
 
         if ($isFixable) {
