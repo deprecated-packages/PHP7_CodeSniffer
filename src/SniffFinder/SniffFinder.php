@@ -98,8 +98,7 @@ final class SniffFinder
 
     private function isAbstractClass(string $className) : bool
     {
-        $reflection = new ReflectionClass($className);
-        return $reflection->isAbstract();
+        return (new ReflectionClass($className))->isAbstract();
     }
 
     private function doesSniffSupportsPhp(string $className) : bool

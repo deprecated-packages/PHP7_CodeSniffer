@@ -8,7 +8,6 @@
 namespace Symplify\PHP7_CodeSniffer\SniffFinder;
 
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
-use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
 use Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder;
 
 final class SniffProvider
@@ -23,22 +22,16 @@ final class SniffProvider
      */
     private $rulesetBuilder;
 
-    /**
-     * @var Router
-     */
-    private $router;
-
-    public function __construct(ConfigurationResolver $configurationResolver, RulesetBuilder $rulesetBuilder, Router $router)
+    public function __construct(ConfigurationResolver $configurationResolver, RulesetBuilder $rulesetBuilder)
     {
         $this->configurationResolver = $configurationResolver;
         $this->rulesetBuilder = $rulesetBuilder;
-        $this->router = $router;
     }
 
     public function getActiveSniffs(array $standards, array $sniffs) : array
     {
         $standards = $this->configurationResolver->resolveStandards($standards);
-        $sniffs = $this->configurationResolver->resolveSniffs($sniffs);
+        $exclusivelyIncludedSniffs = $this->configurationResolver->resolveSniffs($sniffs);
         
         $sniffs = [];
         foreach ($standards as $rulesetXmlPath) {
@@ -46,23 +39,18 @@ final class SniffProvider
             $sniffs = array_merge($sniffs, $newSniffs);
         }
 
-        if ($sniffRestrictions = $this->getSniffRestrictions()) {
-            $this->excludeRestrictedSniffs($sniffs, $sniffRestrictions);
+        if ($exclusivelyIncludedSniffs) {
+            $this->excludeRestrictedSniffs($sniffs, $exclusivelyIncludedSniffs);
         }
 
         return $sniffs;
     }
 
-//    private function getSniffRestrictions() : array
-//    {
-//        return $this->configuration->getSniff();
-//    }
-
-    private function excludeRestrictedSniffs(array $sniffs, array $sniffsToBeKept)
+    private function excludeRestrictedSniffs(array $sniffs, array $exclusivelyIncludedSniffs)
     {
         $finalSniffs = [];
         foreach ($sniffs as $sniffCode => $sniffClass) {
-            if (isset($sniffsToBeKept[$sniffCode]) === false) {
+            if (isset($exclusivelyIncludedSniffs[$sniffCode]) === false) {
                 continue;
             }
 
