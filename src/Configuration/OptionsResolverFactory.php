@@ -28,7 +28,7 @@ final class OptionsResolverFactory
     public function create() : OptionsResolver
     {
         $optionsResolver = new OptionsResolver();
-        $optionsResolver->setRequired(['sniffs', 'standards', 'source']);
+        $optionsResolver->setDefined(['standards', 'sniffs', 'source']);
         $this->setAllowedValues($optionsResolver);
         $this->setNormalizers($optionsResolver);
         

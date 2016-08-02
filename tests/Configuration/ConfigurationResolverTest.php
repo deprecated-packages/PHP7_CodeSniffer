@@ -2,7 +2,6 @@
 
 namespace Symplify\PHP7_CodeSniffer\Configuration\Tests;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Configuration\OptionsResolverFactory;
@@ -22,7 +21,7 @@ final class ConfigurationResolverTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Symplify\PHP7_CodeSniffer\Exception\Configuration\StandardNotFoundException
      */
     public function testNonExistingStandard()
     {
