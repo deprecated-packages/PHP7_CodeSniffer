@@ -47,7 +47,7 @@ final class FileFactory
         $this->eolCharDetector = $eolCharDetector;
     }
 
-    public function create(string $filePath, bool $isFixer = false) : File
+    public function create(string $filePath, bool $isFixer) : File
     {
         $tokens = $this->fileToTokenParser->parseFromFilePath($filePath);
         $eolChar = $this->eolCharDetector->detectForFilePath($filePath);

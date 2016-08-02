@@ -7,18 +7,16 @@
 
 namespace Symplify\PHP7_CodeSniffer\SniffFinder;
 
-use Symplify\PHP7_CodeSniffer\Configuration\Configuration;
+use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
 use Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder;
-use Symplify\PHP7_CodeSniffer\SniffFinder\Composer\VendorDirProvider;
-use Symplify\PHP7_CodeSniffer\SniffFinder\Contract\SniffFinderInterface;
 
 final class SniffProvider
 {
     /**
-     * @var Configuration
+     * @var ConfigurationResolver
      */
-    private $configuration;
+    private $configurationResolver;
 
     /**
      * @var RulesetBuilder
@@ -30,17 +28,20 @@ final class SniffProvider
      */
     private $router;
 
-    public function __construct(Configuration $configuration, RulesetBuilder $rulesetBuilder, Router $router)
+    public function __construct(ConfigurationResolver $configurationResolver, RulesetBuilder $rulesetBuilder, Router $router)
     {
-        $this->configuration = $configuration;
+        $this->configurationResolver = $configurationResolver;
         $this->rulesetBuilder = $rulesetBuilder;
         $this->router = $router;
     }
 
-    public function getActiveSniffs() : array
+    public function getActiveSniffs(array $standards, array $sniffs) : array
     {
+        $standards = $this->configurationResolver->resolveStandards($standards);
+        $sniffs = $this->configurationResolver->resolveSniffs($sniffs);
+        
         $sniffs = [];
-        foreach ($this->configuration->getStandards() as $name => $rulesetXmlPath) {
+        foreach ($standards as $rulesetXmlPath) {
             $newSniffs = $this->rulesetBuilder->buildFromRulesetXml($rulesetXmlPath);
             $sniffs = array_merge($sniffs, $newSniffs);
         }
@@ -52,17 +53,10 @@ final class SniffProvider
         return $sniffs;
     }
 
-    private function getSniffRestrictions() : array
-    {
-        return $this->configuration->getSniff();
-//        $sniffRestrictions = [];
-//        foreach ($this->configuration->getSniff() as $sniffName) {
-//            $sniffClass = $this->router->getClassFromSniffName($sniffName);
-//            $sniffRestrictions[$sniffName] = $sniffClass;
-//        }
-//
-//        return $sniffRestrictions;
-    }
+//    private function getSniffRestrictions() : array
+//    {
+//        return $this->configuration->getSniff();
+//    }
 
     private function excludeRestrictedSniffs(array $sniffs, array $sniffsToBeKept)
     {

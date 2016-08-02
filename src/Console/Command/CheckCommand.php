@@ -10,6 +10,7 @@ namespace Symplify\PHP7_CodeSniffer\Console\Command;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -69,26 +70,24 @@ final class CheckCommand extends Command
     {
         $this->setName('check');
         $this->setDescription('Checks code against coding standard.');
-        $this->addArgument('source', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'One or more files or directories to process');
-        $this->addOption('standards', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'The name(s) of the coding standard to use', ['PSR2']);
-        $this->addOption('sniffs', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'List of sniff codes to use.');
-        $this->addOption('fix', null, InputOption::VALUE_NONE, 'Fix all fixable errors.');
+
+        $this->addArgument('source', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Files or directories to process.');
+        $this->addOption('fix', null, null, 'Fix all fixable errors.');
+
+        $this->addOption('standards', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of coding standards to use.');
+        $this->addOption('sniffs', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of sniff codes to use.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            // 0. setup
             $this->ruleset->createSniffList();
 
-            // 1. get files
-            $files = $this->sourceFilesProvider->getFiles();
-
-            // 2. run it
-            $this->php7CodeSniffer->runForFiles($files);
+            $this->php7CodeSniffer->registerSniffs($input->getOption('standards'), $input->getOption('sniffs'));
+            $this->php7CodeSniffer->runForSource($input->getArgument('source'), $input->getOption('fix'));
 
             // 3. finish it
-            $this->codeSnifferStyle->newLine();
+//            $this->codeSnifferStyle->newLine();
 
             // 2. print found errors to the output
             if ($this->reportCollector->getErrorCount()) {

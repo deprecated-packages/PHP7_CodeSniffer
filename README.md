@@ -13,29 +13,22 @@ This is essential development tool that ensures your code **remains clean and co
 
 Via composer:
 
-```json
+```bash
 composer require symplify/php7_codesniffer --dev
 ```
 
-## Usage
+## Use
 
 Run it from cli:
 
 ```bash
-./vendor/bin/php7cs src
+./vendor/bin/php7cs src --standards=PSR2
 ```
 
 To fix the issues just add `--fix`:
 
 ```bash
-./vendor/bin/php7cs src --fix
-```
-
-### How to Use Specific Standard?
-
-```bash
-./vendor/bin/php7cs src --standards=PSR2
-./vendor/bin/php7cs src --standards=PSR2,Zend
+./vendor/bin/php7cs src --standards=PSR2 --fix
 ```
 
 ### How to Use Specific Sniff?

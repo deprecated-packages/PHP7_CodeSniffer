@@ -31,9 +31,15 @@ final class Php7CodeSniffer
         $this->eventDispatcher = $eventDispatcher;
         $this->sourceFilesProvider = $sourceFilesProvider;
     }
-    
+
+    public function registerSniffs(array $standards, array $sniffs)
+    {
+    }
+
     public function runForSource(array $source, bool $isFixer = false)
     {
+        $this->ensureSniffsAreRegistered();
+
         $files = $this->sourceFilesProvider->getFilesForSource($source, $isFixer);
 
         foreach ($files as $file) {
@@ -69,5 +75,10 @@ final class Php7CodeSniffer
         $newContent = $file->fixer->getContents();
 
         file_put_contents($file->getFilename(), $newContent);
+    }
+
+    private function ensureSniffsAreRegistered()
+    {
+        // todo
     }
 }

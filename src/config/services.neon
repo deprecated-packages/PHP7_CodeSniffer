@@ -1,7 +1,9 @@
 includes:
     - services/configuration.neon
     - services/console.neon
+    - services/event-dispatcher.neon
     - services/files.neon
+    - services/ruleset.neon
     - services/sniffs.neon
 
 services:
@@ -11,17 +13,9 @@ services:
     # reporter
     - Symplify\PHP7_CodeSniffer\ErrorDataCollector
 
-    # ruleset
-    - Symplify\PHP7_CodeSniffer\Ruleset
-    - Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router
-    - Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder
-    - Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer
-
     # tokenizer / parser
     - Symplify\PHP7_CodeSniffer\Parser\FileToTokensParser
     - Symplify\PHP7_CodeSniffer\Parser\EolCharDetector
-    - PHP_CodeSniffer\Util\Tokens
 
-    # sniff dispatcher
-    - Symplify\PHP7_CodeSniffer\EventDispatcher\CurrentListenerAwareEventDispatcher
-    - Symplify\PHP7_CodeSniffer\EventDispatcher\CurrentListenerSniffCodeProvider
+    # this has to be created to initializes all token constants
+    - PHP_CodeSniffer\Util\Tokens

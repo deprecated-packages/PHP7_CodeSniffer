@@ -1,5 +1,8 @@
 services:
-    - Symplify\PHP7_CodeSniffer\Configuration\Configuration
-    - Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver
-    - Symplify\PHP7_CodeSniffer\Configuration\EventSubscriber\ResolveConfigurationEventSubscriber
     - Symplify\PHP7_CodeSniffer\Configuration\EventSubscriber\RequirementsEventSubscriber
+    - Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver
+
+    # options resolver
+    - Symplify\PHP7_CodeSniffer\Configuration\OptionsResolverFactory
+    -
+         factory: [@Symplify\PHP7_CodeSniffer\Configuration\OptionsResolverFactory, 'create']
