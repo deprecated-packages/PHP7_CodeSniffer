@@ -7,12 +7,8 @@
 
 namespace Symplify\PHP7_CodeSniffer\SniffFinder;
 
-use Nette\Caching\Storages\DevNullStorage;
-use Nette\Loaders\RobotLoader;
-use ReflectionClass;
 use Symfony\Component\Finder\Finder;
 use Symplify\PHP7_CodeSniffer\SniffFinder\Composer\VendorDirProvider;
-use Symplify\PHP7_CodeSniffer\SniffFinder\Naming\SniffNaming;
 
 final class SniffFinder
 {
@@ -20,6 +16,24 @@ final class SniffFinder
      * @var string[]
      */
     private $sniffClassesPerDirectory = [];
+
+    /**
+     * @var SniffClassRobotLoaderFactory
+     */
+    private $sniffClassRobotLoaderFactory;
+
+    /**
+     * @var SniffClassFilter
+     */
+    private $sniffClassFilter;
+
+    public function __construct(
+        SniffClassRobotLoaderFactory $sniffClassRobotLoaderFactory,
+        SniffClassFilter $sniffClassFilter
+    ) {
+        $this->sniffClassRobotLoaderFactory = $sniffClassRobotLoaderFactory;
+        $this->sniffClassFilter = $sniffClassFilter;
+    }
 
     /**
      * {@inheritdoc}
@@ -58,60 +72,12 @@ final class SniffFinder
             return $this->sniffClassesPerDirectory[$directory];
         }
 
-        $robot = $this->createAndSetupRobotLoaderForDirectory($directory);
-        $robot->rebuild();
+        $robotLoader = $this->sniffClassRobotLoaderFactory->createForDirectory($directory);
 
-        $sniffClasses = $this->filterOutAbstractAndNonPhpSniffs(array_keys($robot->getIndexedClasses()));
-        $this->sniffClassesPerDirectory[$directory] = $sniffClasses;
+        $sniffClasses = $this->sniffClassFilter->filterOutAbstractAndNonPhpSniffClasses(
+            array_keys($robotLoader->getIndexedClasses())
+        );
 
-        return $sniffClasses;
-    }
-
-    private function createAndSetupRobotLoaderForDirectory(string $directory) : RobotLoader
-    {
-        $robot = new RobotLoader();
-        $robot->setCacheStorage(new DevNullStorage());
-        $robot->addDirectory($directory);
-        $robot->ignoreDirs .= ', tests, Tests';
-        $robot->acceptFiles = '*Sniff.php';
-        return $robot;
-    }
-
-    private function filterOutAbstractAndNonPhpSniffs(array $classes) : array
-    {
-        $sniffClasses = [];
-        foreach ($classes as $class) {
-            if ($this->isAbstractClass($class)) {
-                continue;
-            }
-
-            if (!$this->doesSniffSupportsPhp($class)) {
-                continue;
-            }
-
-            $code = SniffNaming::guessSniffCodeBySniffClass($class);
-            $sniffClasses[$code] = $class;
-        }
-
-        return $sniffClasses;
-    }
-
-    private function isAbstractClass(string $className) : bool
-    {
-        return (new ReflectionClass($className))->isAbstract();
-    }
-
-    private function doesSniffSupportsPhp(string $className) : bool
-    {
-        $vars = get_class_vars($className);
-        if (!isset($vars['supportedTokenizers'])) {
-            return true;
-        }
-
-        if (in_array('PHP', $vars['supportedTokenizers'])) {
-            return true;
-        }
-
-        return false;
+        return $this->sniffClassesPerDirectory[$directory] = $sniffClasses;
     }
 }

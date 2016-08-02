@@ -20,7 +20,7 @@ use Symplify\PHP7_CodeSniffer\File\SourceFilesProvider;
 use Symplify\PHP7_CodeSniffer\Php7CodeSniffer;
 use Symplify\PHP7_CodeSniffer\Ruleset;
 
-final class CheckCommand extends Command
+final class RunCommand extends Command
 {
     /**
      * @var SourceFilesProvider
@@ -68,14 +68,14 @@ final class CheckCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('check');
+        $this->setName('run');
         $this->setDescription('Checks code against coding standard.');
 
         $this->addArgument('source', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Files or directories to process.');
         $this->addOption('fix', null, null, 'Fix all fixable errors.');
 
-        $this->addOption('standards', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of coding standards to use.');
-        $this->addOption('sniffs', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of sniff codes to use.');
+        $this->addOption('standards', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of coding standards to use.', []);
+        $this->addOption('sniffs', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of sniff codes to use.', []);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
