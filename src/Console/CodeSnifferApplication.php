@@ -12,7 +12,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symplify\PHP7_CodeSniffer\Php7CodeSniffer;
 
 final class CodeSnifferApplication extends Application
 {
@@ -21,7 +20,7 @@ final class CodeSnifferApplication extends Application
      */
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
-        parent::__construct('PHP 7 Code Sniffer', Php7CodeSniffer::VERSION);
+        parent::__construct('PHP 7 Code Sniffer', null);
         $this->setDispatcher($eventDispatcher);
     }
 

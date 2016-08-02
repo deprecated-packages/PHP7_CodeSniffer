@@ -8,54 +8,42 @@
 namespace Symplify\PHP7_CodeSniffer;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symplify\PHP7_CodeSniffer\Configuration\Configuration;
-use Symplify\PHP7_CodeSniffer\Console\Progress\ShowProgress;
 use Symplify\PHP7_CodeSniffer\Event\CheckFileTokenEvent;
 use Symplify\PHP7_CodeSniffer\File\File;
+use Symplify\PHP7_CodeSniffer\File\SourceFilesProvider;
 
 final class Php7CodeSniffer
 {
-    /**
-     * @var string
-     */
-    const VERSION = '4.0.0';
-
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
     /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
 
     /**
-     * @var ShowProgress
+     * @var SourceFilesProvider
      */
-    private $showProgress;
+    private $sourceFilesProvider;
 
     public function __construct(
-        Configuration $configuration,
         EventDispatcherInterface $eventDispatcher,
-        ShowProgress $showProgress
+        SourceFilesProvider $sourceFilesProvider
     ) {
-        $this->configuration = $configuration;
         $this->eventDispatcher = $eventDispatcher;
-        $this->showProgress = $showProgress;
+        $this->sourceFilesProvider = $sourceFilesProvider;
     }
-
-    public function runForFiles(array $files)
+    
+    public function runForSource(array $source, bool $isFixer = false)
     {
+        $files = $this->sourceFilesProvider->getFilesForSource($source, $isFixer);
+
         foreach ($files as $file) {
-            if ($this->configuration->isFixer()) {
+            if ($isFixer) {
                 $this->processFileWithFixer($file);
             } else {
                 $this->processFile($file);
             }
 
             $file->cleanUp();
-            $this->showProgress->advance();
         }
     }
 

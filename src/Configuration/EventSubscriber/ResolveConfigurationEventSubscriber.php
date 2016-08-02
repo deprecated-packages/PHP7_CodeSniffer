@@ -11,6 +11,7 @@ use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symplify\PHP7_CodeSniffer\Configuration\Configuration;
+use Symplify\PHP7_CodeSniffer\Console\Command\CheckCommand;
 use Symplify\PHP7_CodeSniffer\Console\Command\FixCommand;
 
 final class ResolveConfigurationEventSubscriber implements EventSubscriberInterface
@@ -47,7 +48,7 @@ final class ResolveConfigurationEventSubscriber implements EventSubscriberInterf
     private function detectFixerAndSetIt(ConsoleCommandEvent $consoleCommandEvent, array $arguments) : array
     {
         $command = $consoleCommandEvent->getCommand();
-        if ($command instanceof FixCommand) {
+        if ($command instanceof CheckCommand) {
             $arguments['isFixer'] = true;
             return $arguments;
         }

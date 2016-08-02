@@ -13,7 +13,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symplify\PHP7_CodeSniffer\Console\Progress\ShowProgress;
 use Symplify\PHP7_CodeSniffer\Console\Style\CodeSnifferStyle;
 use Symplify\PHP7_CodeSniffer\ErrorDataCollector;
 use Symplify\PHP7_CodeSniffer\File\SourceFilesProvider;
@@ -43,11 +42,6 @@ final class CheckCommand extends Command
     private $ruleset;
 
     /**
-     * @var ShowProgress
-     */
-    private $showProgress;
-
-    /**
      * @var Php7CodeSniffer
      */
     private $php7CodeSniffer;
@@ -57,14 +51,12 @@ final class CheckCommand extends Command
         CodeSnifferStyle $codeSnifferStyle,
         ErrorDataCollector $reportCollector,
         Ruleset $ruleset,
-        ShowProgress $showProgress,
         Php7CodeSniffer $php7CodeSniffer
     ) {
         $this->sourceFilesProvider = $sourceFilesProvider;
         $this->codeSnifferStyle = $codeSnifferStyle;
         $this->reportCollector = $reportCollector;
         $this->ruleset = $ruleset;
-        $this->showProgress = $showProgress;
         $this->php7CodeSniffer = $php7CodeSniffer;
 
         parent::__construct();
@@ -91,13 +83,11 @@ final class CheckCommand extends Command
 
             // 1. get files
             $files = $this->sourceFilesProvider->getFiles();
-            $this->showProgress->init(count($files));
 
             // 2. run it
             $this->php7CodeSniffer->runForFiles($files);
 
             // 3. finish it
-            $this->showProgress->finish();
             $this->codeSnifferStyle->newLine();
 
             // 2. print found errors to the output

@@ -8,17 +8,11 @@
 namespace Symplify\PHP7_CodeSniffer\File;
 
 use SplFileInfo;
-use Symplify\PHP7_CodeSniffer\Configuration\Configuration;
 use Symplify\PHP7_CodeSniffer\Finder\SourceFinder;
 use Symplify\PHP7_CodeSniffer\Ruleset;
 
 final class SourceFilesProvider
 {
-    /**
-     * @var File[]
-     */
-    private $files;
-
     /**
      * @var SourceFinder
      */
@@ -30,43 +24,41 @@ final class SourceFilesProvider
     private $fileFactory;
 
     /**
-     * @var Configuration
+     * @var File[][]
      */
-    private $configuration;
+    private $filesBySource = [];
 
-    public function __construct(
-        SourceFinder $sourceFinder,
-        FileFactory $fileFactory,
-        Configuration $configuration
-    ) {
+    public function __construct(SourceFinder $sourceFinder, FileFactory $fileFactory)
+    {
         $this->sourceFinder = $sourceFinder;
         $this->fileFactory = $fileFactory;
-        $this->configuration = $configuration;
     }
 
     /**
      * @return File[]
      */
-    public function getFiles() : array
+    public function getFilesForSource(array $source, bool $isFixer) : array
     {
-        if ($this->files) {
-            return $this->files;
+        $sourceHash = md5(json_encode($source));
+        if (isset($this->filesBySource[$sourceHash])) {
+            return $this->filesBySource[$sourceHash];
         }
 
-        $files = $this->sourceFinder->find($this->configuration->getSource());
-        $this->files = $this->wrapFilesToValueObjects($files);
-
-        return $this->files;
+        return $this->filesBySource[$sourceHash] = $this->wrapFilesToValueObjects(
+            $this->sourceFinder->find($source),
+            $isFixer
+        );
     }
 
     /**
      * @param SplFileInfo[] $files
-     * @return File[]
+     * @param bool $isFixer
+     * @return array|File[]
      */
-    private function wrapFilesToValueObjects(array $files) : array
+    private function wrapFilesToValueObjects(array $files, bool $isFixer) : array
     {
         foreach ($files as $name => $fileInfo) {
-            $files[$name] = $this->fileFactory->create($name);
+            $files[$name] = $this->fileFactory->create($name, $isFixer);
         }
 
         return $files;

@@ -36,6 +36,12 @@ final class ConfigurationResolver
         return $this->optionsResolver->resolve($options);
     }
 
+    public function resolveSource(array $source) : array
+    {
+        $options = $this->resolve(['source' => $source]);
+        return $options['source'];
+    }
+
     private function createAndSetupOptionsResolver()
     {
         $this->optionsResolver = new OptionsResolver();

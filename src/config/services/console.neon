@@ -5,5 +5,3 @@ services:
     - Symfony\Component\Console\Input\ArgvInput
     - Symfony\Component\Console\Output\ConsoleOutput
     - Symplify\PHP7_CodeSniffer\Console\Style\CodeSnifferStyle
-
-    - Symplify\PHP7_CodeSniffer\Console\Progress\ShowProgress
