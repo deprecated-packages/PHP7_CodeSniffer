@@ -11,7 +11,7 @@ use Nette\DI\CompilerExtension;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symplify\PHP7_CodeSniffer\Console\CodeSnifferApplication;
+use Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication;
 
 final class Php7CodeSnifferExtension extends CompilerExtension
 {
@@ -42,7 +42,7 @@ final class Php7CodeSnifferExtension extends CompilerExtension
 
     private function loadConsoleCommandsToConsoleApplication()
     {
-        $this->addServicesToCollector(CodeSnifferApplication::class, Command::class, 'add');
+        $this->addServicesToCollector(Php7CodeSnifferApplication::class, Command::class, 'add');
     }
 
     private function loadEventSubscribersToEventDispatcher()

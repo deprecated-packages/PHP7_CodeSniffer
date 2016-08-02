@@ -10,7 +10,6 @@ namespace Symplify\PHP7_CodeSniffer\Parser;
 use Nette\Utils\FileSystem;
 use PHP_CodeSniffer\Tokenizers\PHP;
 use stdClass;
-use Symplify\PHP7_CodeSniffer\File\File;
 
 final class FileToTokensParser
 {
@@ -39,8 +38,6 @@ final class FileToTokensParser
 
     private function parseLegacyWithFileContentAndEolChar($fileContent, $eolChar) : array
     {
-        $this->setupLegacyVerbosityConstant();
-
         return (new PHP($fileContent, $this->getLegacyConfig(), $eolChar))->getTokens();
     }
 
@@ -55,12 +52,5 @@ final class FileToTokensParser
         $this->legacyConfig = $config;
 
         return $this->legacyConfig;
-    }
-
-    private function setupLegacyVerbosityConstant()
-    {
-        if (!defined('PHP_CODESNIFFER_VERBOSITY')) {
-            define('PHP_CODESNIFFER_VERBOSITY', 0);
-        }
     }
 }

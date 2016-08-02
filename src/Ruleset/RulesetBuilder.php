@@ -145,7 +145,7 @@ final class RulesetBuilder
             }
         }
     }
-    
+
     private function normalizeReference(string $reference)
     {
         if ($this->ruleReferenceNormalizer->isRulesetReference($reference)) {

@@ -29,7 +29,7 @@ final class FileFactory
      * @var FileToTokensParser
      */
     private $fileToTokenParser;
-    
+
     /**
      * @var EolCharDetector
      */

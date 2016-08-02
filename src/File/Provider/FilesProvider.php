@@ -5,13 +5,15 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\File;
+namespace Symplify\PHP7_CodeSniffer\File\Provider;
 
 use SplFileInfo;
-use Symplify\PHP7_CodeSniffer\Finder\SourceFinder;
+use Symplify\PHP7_CodeSniffer\File\File;
+use Symplify\PHP7_CodeSniffer\File\FileFactory;
+use Symplify\PHP7_CodeSniffer\File\Finder\SourceFinder;
 use Symplify\PHP7_CodeSniffer\Ruleset;
 
-final class SourceFilesProvider
+final class FilesProvider
 {
     /**
      * @var SourceFinder

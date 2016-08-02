@@ -35,37 +35,11 @@ final class SniffFinder
         $this->sniffClassFilter = $sniffClassFilter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findAllSniffClasses() : array
     {
         return $this->findAllSniffClassesInDirectory(VendorDirProvider::provide());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findAllSniffs() : array
-    {
-        return $this->findSniffsInDirectory(VendorDirProvider::provide());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findSniffsInDirectory(string $directory) : array
-    {
-        $filesInfo = (new Finder())->files()
-            ->in($directory)
-            ->name('*Sniff.php');
-
-        return array_keys(iterator_to_array($filesInfo));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function findAllSniffClassesInDirectory(string $directory) : array
     {
         if (isset($this->sniffClassesPerDirectory[$directory])) {

@@ -5,7 +5,7 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\Finder;
+namespace Symplify\PHP7_CodeSniffer\File\Finder;
 
 use SplFileInfo;
 use Symfony\Component\Finder\Finder;
@@ -13,6 +13,7 @@ use Symfony\Component\Finder\Finder;
 final class SourceFinder
 {
     /**
+     * @param array|string[]
      * @return SplFileInfo[]
      */
     public function find(array $source) : array

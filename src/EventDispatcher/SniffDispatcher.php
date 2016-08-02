@@ -8,9 +8,10 @@
 namespace Symplify\PHP7_CodeSniffer\EventDispatcher;
 
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventDispatcher as BaseEventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symplify\PHP7_CodeSniffer\Event\CheckFileTokenEvent;
 
-final class CurrentListenerAwareEventDispatcher extends BaseEventDispatcher
+final class SniffDispatcher extends EventDispatcher
 {
     /**
      * @var CurrentListenerSniffCodeProvider
@@ -20,6 +21,24 @@ final class CurrentListenerAwareEventDispatcher extends BaseEventDispatcher
     public function __construct(CurrentListenerSniffCodeProvider $currentListenerSniffCodeProvider)
     {
         $this->currentListenerSniffCodeProvider = $currentListenerSniffCodeProvider;
+    }
+
+    /**
+     * @param array|string[] $sniffs
+     */
+    public function addSniffListeners(array $sniffs)
+    {
+        foreach ($sniffs as $sniffCode => $sniffObject) {
+            $tokens = $sniffs[$sniffCode]->register();
+            foreach ($tokens as $token) {
+                $this->addListener($token, function (CheckFileTokenEvent $checkFileToken) use ($sniffObject) {
+                    $sniffObject->process(
+                        $checkFileToken->getFile(),
+                        $checkFileToken->getStackPointer()
+                    );
+                });
+            }
+        }
     }
 
     /**

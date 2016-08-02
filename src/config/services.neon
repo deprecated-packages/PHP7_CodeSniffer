@@ -5,6 +5,7 @@ includes:
     - services/files.neon
     - services/ruleset.neon
     - services/sniffs.neon
+    - services/standard.neon
 
 services:
     - Symplify\PHP7_CodeSniffer\Fixer

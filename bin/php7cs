@@ -8,8 +8,8 @@ $containerFactory = new Symplify\PHP7_CodeSniffer\DI\ContainerFactory();
 $container = $containerFactory->create();
 
 // 2. get Console Application
-/** @var Symplify\PHP7_CodeSniffer\Console\CodeSnifferApplication $codeSnifferApplication */
-$codeSnifferApplication = $container->getByType(Symplify\PHP7_CodeSniffer\Console\CodeSnifferApplication::class);
+/** @var Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication $codeSnifferApplication */
+$codeSnifferApplication = $container->getByType(Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication::class);
 
 // 3. run it!
 $codeSnifferApplication->setDefaultCommand('run', true);

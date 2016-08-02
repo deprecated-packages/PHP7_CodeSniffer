@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-final class CodeSnifferApplication extends Application
+final class Php7CodeSnifferApplication extends Application
 {
     /**
      * {@inheritdoc}

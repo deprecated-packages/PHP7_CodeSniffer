@@ -1,6 +1,7 @@
 services:
-    - Symplify\PHP7_CodeSniffer\Standard\StandardFinder
+    - Symplify\PHP7_CodeSniffer\Sniff\SniffFactory
+    - Symplify\PHP7_CodeSniffer\SniffFinder\SniffClassesResolver
+
     - Symplify\PHP7_CodeSniffer\SniffFinder\SniffFinder
-    - Symplify\PHP7_CodeSniffer\SniffFinder\SniffProvider
     - Symplify\PHP7_CodeSniffer\SniffFinder\SniffClassFilter
     - Symplify\PHP7_CodeSniffer\SniffFinder\SniffClassRobotLoaderFactory

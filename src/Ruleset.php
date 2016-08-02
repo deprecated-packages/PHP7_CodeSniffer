@@ -8,92 +8,33 @@
 namespace Symplify\PHP7_CodeSniffer;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symplify\PHP7_CodeSniffer\Event\CheckFileTokenEvent;
 use Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder;
-use Symplify\PHP7_CodeSniffer\SniffFinder\SniffProvider;
 
 final class Ruleset
 {
-    /**
-     * The key is the sniff code
-     * and the value is the sniff object.
-     *
-     * @var Sniff[]
-     */
-    private $sniffs = [];
-
-    /**
-     * An array of rules from the ruleset.xml file.
-     *
-     * It may be empty, indicating that the ruleset does not override
-     * any of the default sniff settings.
-     *
-     * @var array<string, mixed>
-     */
-    public $ruleset = [];
-
-    /**
-     * @var SniffProvider
-     */
-    private $sniffProvider;
-
     /**
      * @var RulesetBuilder
      */
     private $rulesetBuilder;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    public function __construct(
-        SniffProvider $sniffProvider,
-        RulesetBuilder $rulesetBuilder,
-        EventDispatcherInterface $eventDispatcher
-    ) {
-        $this->sniffProvider = $sniffProvider;
+    public function __construct(RulesetBuilder $rulesetBuilder)
+    {
         $this->rulesetBuilder = $rulesetBuilder;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function createSniffList()
+    /**
+     * @param array|Sniff[] $sniffs
+     */
+    public function decorateSniffsWithCustomRules(array $sniffs)
     {
-        $this->registerSniffs($this->sniffProvider->getActiveSniffs());
-        $this->loadSniffsToTokensTheyListenToo();
-    }
+        $ruleset = $this->rulesetBuilder->getRuleset();
 
-    private function registerSniffs(array $sniffClasses)
-    {
-        // these classes should be registered a services
-        // and collected by event dispatcher, as they subscribe
-        // to tokens...
-        foreach ($sniffClasses as $sniffCode => $sniffClass) {
-            $this->sniffs[$sniffCode] = new $sniffClass;
-        }
-    }
-
-    private function loadSniffsToTokensTheyListenToo()
-    {
-        $this->ruleset = $this->rulesetBuilder->getRuleset();
-
-        foreach ($this->sniffs as $sniffCode => $sniffObject) {
-            $this->setCustomProperties($sniffCode);
-
-            $tokens = $this->sniffs[$sniffCode]->register();
-            foreach ($tokens as $token) {
-                $this->eventDispatcher->addListener($token, function (CheckFileTokenEvent $checkFileToken) use ($sniffObject) {
-                    $sniffObject->process($checkFileToken->getFile(), $checkFileToken->getStackPointer());
-                });
+        foreach ($sniffs as $sniffCode => $sniffObject) {
+            if (!isset($ruleset[$sniffCode]['properties'])) {
+                continue;
             }
-        }
-    }
 
-    private function setCustomProperties(string $sniffCode)
-    {
-        if (isset($this->ruleset[$sniffCode]['properties']) === true) {
-            foreach ($this->ruleset[$sniffCode]['properties'] as $name => $value) {
+            foreach ($ruleset[$sniffCode]['properties'] as $name => $value) {
                 $this->setSniffProperty($sniffCode, $name, $value);
             }
         }
@@ -106,7 +47,7 @@ final class Ruleset
      */
     private function setSniffProperty(string $sniffCode, string $name, $value)
     {
-        if (isset($this->sniffs[$sniffCode]) === false) {
+        if (isset($sniffs[$sniffCode]) === false) {
             return;
         }
 
@@ -122,6 +63,6 @@ final class Ruleset
             $value = false;
         }
 
-        $this->sniffs[$sniffCode]->$name = $value;
+        $sniffs[$sniffCode]->$name = $value;
     }
 }

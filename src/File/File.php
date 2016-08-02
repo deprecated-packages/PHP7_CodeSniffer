@@ -9,6 +9,7 @@ namespace Symplify\PHP7_CodeSniffer\File;
 
 use PHP_CodeSniffer\Files\File as BaseFile;
 use Symplify\PHP7_CodeSniffer\Contract\File\FileInterface;
+use Symplify\PHP7_CodeSniffer\Exception\File\NotImplementedException;
 use Symplify\PHP7_CodeSniffer\Fixer;
 use Symplify\PHP7_CodeSniffer\ErrorDataCollector;
 
@@ -58,7 +59,9 @@ final class File extends BaseFile implements FileInterface
      */
     public function parse()
     {
-        throw new \Exception('Not implemented, nor needed to be public. File is already parsed on __construct.');
+        throw new NotImplementedException(
+            'This is not needed to be public. File is already parsed on __construct.'
+        );
     }
 
     /**
@@ -66,13 +69,15 @@ final class File extends BaseFile implements FileInterface
      */
     public function process()
     {
-        throw new \Exception('Not implemented, nor needed to be public. Use external processing.');
+        throw new NotImplementedException(
+            'This is not needed to be public. Use external processing.'
+        );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addFixableError($error, $stackPtr, $code, $data = [], $severity = 0)
+    public function addFixableError($error, $stackPtr, $code, $data=[], $severity=0)
     {
         $this->addError($error, $stackPtr, $code, $data, $severity, true);
         return $this->isFixer;
@@ -81,8 +86,16 @@ final class File extends BaseFile implements FileInterface
     /**
      * {@inheritdoc}
      */
-    protected function addMessage($error, $message, $line, $column, $code, $data, $severity, $isFixable = false) : bool
-    {
+    protected function addMessage(
+        $error,
+        $message,
+        $line,
+        $column,
+        $code,
+        $data,
+        $severity,
+        $isFixable=false
+    ) : bool {
         if (!$error) { // skip warnings
             return false;
         }

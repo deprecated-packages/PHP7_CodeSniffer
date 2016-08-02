@@ -24,14 +24,14 @@ final class OptionsResolverFactory
     {
         $this->standardFinder = $standardFinder;
     }
-    
+
     public function create() : OptionsResolver
     {
         $optionsResolver = new OptionsResolver();
         $optionsResolver->setDefined(['standards', 'sniffs', 'source']);
         $this->setAllowedValues($optionsResolver);
         $this->setNormalizers($optionsResolver);
-        
+
         return $optionsResolver;
     }
 

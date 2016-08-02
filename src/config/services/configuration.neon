@@ -1,5 +1,4 @@
 services:
-    - Symplify\PHP7_CodeSniffer\Configuration\EventSubscriber\RequirementsEventSubscriber
     - Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver
 
     # options resolver

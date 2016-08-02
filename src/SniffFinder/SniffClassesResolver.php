@@ -10,7 +10,7 @@ namespace Symplify\PHP7_CodeSniffer\SniffFinder;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder;
 
-final class SniffProvider
+final class SniffClassesResolver
 {
     /**
      * @var ConfigurationResolver
@@ -22,25 +22,27 @@ final class SniffProvider
      */
     private $rulesetBuilder;
 
-    public function __construct(ConfigurationResolver $configurationResolver, RulesetBuilder $rulesetBuilder)
-    {
+    public function __construct(
+        ConfigurationResolver $configurationResolver,
+        RulesetBuilder $rulesetBuilder
+    ) {
         $this->configurationResolver = $configurationResolver;
         $this->rulesetBuilder = $rulesetBuilder;
     }
 
-    public function getActiveSniffs(array $standards, array $sniffs) : array
+    public function resolveFromStandardsAndSniffs(array $standards, array $includedSniffs) : array
     {
         $standards = $this->configurationResolver->resolveStandards($standards);
-        $exclusivelyIncludedSniffs = $this->configurationResolver->resolveSniffs($sniffs);
-        
+        $includedSniffs = $this->configurationResolver->resolveSniffs($includedSniffs);
+
         $sniffs = [];
         foreach ($standards as $rulesetXmlPath) {
             $newSniffs = $this->rulesetBuilder->buildFromRulesetXml($rulesetXmlPath);
             $sniffs = array_merge($sniffs, $newSniffs);
         }
 
-        if ($exclusivelyIncludedSniffs) {
-            $this->excludeRestrictedSniffs($sniffs, $exclusivelyIncludedSniffs);
+        if ($includedSniffs) {
+            $sniffs = $this->excludeRestrictedSniffs($sniffs, $includedSniffs);
         }
 
         return $sniffs;

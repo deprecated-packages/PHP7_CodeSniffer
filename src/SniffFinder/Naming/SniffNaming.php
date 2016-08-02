@@ -25,7 +25,8 @@ final class SniffNaming
             return $secondGuess;
         }
 
-        $thirdGuess = 'PHP_CodeSniffer\\Standards\\'.$parts[0].'\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff';
+        $thirdGuess = 'PHP_CodeSniffer\\Standards\\'.$parts[0]
+            .'\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff';
         return $thirdGuess;
     }
 

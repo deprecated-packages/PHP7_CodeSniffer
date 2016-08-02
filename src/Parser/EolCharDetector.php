@@ -8,7 +8,6 @@
 namespace Symplify\PHP7_CodeSniffer\Parser;
 
 use Nette\Utils\FileSystem;
-use Symplify\PHP7_CodeSniffer\File\File;
 
 final class EolCharDetector
 {

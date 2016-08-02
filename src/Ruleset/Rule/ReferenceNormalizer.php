@@ -23,14 +23,17 @@ final class ReferenceNormalizer
      * @var StandardFinder
      */
     private $standardFinder;
-    
+
     /**
      * @var Router
      */
     private $router;
 
-    public function __construct(SniffFinder $sniffFinder, StandardFinder $standardFinder, Router $router)
-    {
+    public function __construct(
+        SniffFinder $sniffFinder,
+        StandardFinder $standardFinder,
+        Router $router
+    ) {
         $this->sniffFinder = $sniffFinder;
         $this->standardFinder = $standardFinder;
         $this->router = $router;

@@ -49,7 +49,7 @@ final class ErrorDataCollector
 
     public function getErrorMessages() : array
     {
-        return $this->errorMessages;
+        return $this->sortErrorMessagesByFileAndLine($this->errorMessages);
     }
 
     public function addErrorMessage(string $filePath, string $message, int $line, string $sniffCode, array $data, bool $isFixable)
@@ -86,5 +86,24 @@ final class ErrorDataCollector
         }
 
         return $message;
+    }
+
+    private function sortErrorMessagesByFileAndLine(array $errorMessages)
+    {
+        ksort($errorMessages);
+
+        foreach ($errorMessages as $file => $errorMessagesForFile) {
+            if (count($errorMessagesForFile) <= 1) {
+                continue;
+            }
+
+            uasort($errorMessagesForFile, function ($first, $second) {
+                return ($first['line'] > $second['line']);
+            });
+
+            $errorMessages[$file] = $errorMessagesForFile;
+        }
+
+        return $errorMessages;
     }
 }
