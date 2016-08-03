@@ -1,10 +1,13 @@
 <?php
 
-namespace Symplify\PHP7_CodeSniffer\Configuration\Tests;
+namespace Symplify\PHP7_CodeSniffer\Tests\Configuration;
 
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
-use Symplify\PHP7_CodeSniffer\Configuration\OptionsResolverFactory;
+use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\SniffsOptionResolver;
+use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\SourceOptionResolver;
+use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\StandardsOptionResolver;
+use Symplify\PHP7_CodeSniffer\Configuration\OptionResolverFactory;
 use Symplify\PHP7_CodeSniffer\Standard\StandardFinder;
 
 final class ConfigurationResolverTest extends TestCase
@@ -16,8 +19,12 @@ final class ConfigurationResolverTest extends TestCase
 
     protected function setUp()
     {
-        $optionsResolver = (new OptionsResolverFactory(new StandardFinder()))->create();
-        $this->configurationResolver = new ConfigurationResolver($optionsResolver);
+        $this->configurationResolver = new ConfigurationResolver();
+        $this->configurationResolver->addOptionResolver(new SniffsOptionResolver());
+        $this->configurationResolver->addOptionResolver(new SourceOptionResolver());
+        $this->configurationResolver->addOptionResolver(new StandardsOptionResolver(
+            new StandardFinder()
+        ));
     }
 
     /**
@@ -25,6 +32,24 @@ final class ConfigurationResolverTest extends TestCase
      */
     public function testNonExistingStandard()
     {
-        $this->configurationResolver->resolveStandards(['fake']);
+        $this->configurationResolver->resolve('standards', ['fake']);
+    }
+
+    public function testResolve()
+    {
+        $this->assertSame(
+            [__DIR__],
+            $this->configurationResolver->resolve('source', [__DIR__])
+        );
+
+        $this->assertArrayHasKey(
+            'PSR2',
+            $this->configurationResolver->resolve('standards', ['PSR2'])
+        );
+
+        $this->assertSame(
+            ['One.Two.Three'],
+            $this->configurationResolver->resolve('sniffs', ['One.Two.Three'])
+        );
     }
 }

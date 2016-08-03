@@ -10,7 +10,7 @@ namespace Symplify\PHP7_CodeSniffer\EventDispatcher;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symplify\PHP7_CodeSniffer\Event\CheckFileTokenEvent;
+use Symplify\PHP7_CodeSniffer\EventDispatcher\Event\CheckFileTokenEvent;
 
 final class SniffDispatcher extends EventDispatcher
 {
@@ -25,7 +25,7 @@ final class SniffDispatcher extends EventDispatcher
     }
 
     /**
-     * @param array|string[] $sniffs
+     * @param Sniff[] $sniffs
      */
     public function addSniffListeners(array $sniffs)
     {

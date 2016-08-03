@@ -8,9 +8,9 @@
 namespace Symplify\PHP7_CodeSniffer\File;
 
 use Symplify\PHP7_CodeSniffer\Fixer;
-use Symplify\PHP7_CodeSniffer\ErrorDataCollector;
 use Symplify\PHP7_CodeSniffer\Parser\EolCharDetector;
 use Symplify\PHP7_CodeSniffer\Parser\FileToTokensParser;
+use Symplify\PHP7_CodeSniffer\Report\ErrorDataCollector;
 use Symplify\PHP7_CodeSniffer\Ruleset;
 
 final class FileFactory

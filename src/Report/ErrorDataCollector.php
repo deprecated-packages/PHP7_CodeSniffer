@@ -5,7 +5,7 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer;
+namespace Symplify\PHP7_CodeSniffer\Report;
 
 use Symplify\PHP7_CodeSniffer\EventDispatcher\CurrentListenerSniffCodeProvider;
 use Symplify\PHP7_CodeSniffer\File\File;
@@ -32,9 +32,17 @@ final class ErrorDataCollector
      */
     private $currentListenerSniffCodeProvider;
 
-    public function __construct(CurrentListenerSniffCodeProvider $currentListenerSniffCodeProvider)
-    {
+    /**
+     * @var ErrorMessageSorter
+     */
+    private $errorMessageSorter;
+
+    public function __construct(
+        CurrentListenerSniffCodeProvider $currentListenerSniffCodeProvider,
+        ErrorMessageSorter $errorMessageSorter
+    ) {
         $this->currentListenerSniffCodeProvider = $currentListenerSniffCodeProvider;
+        $this->errorMessageSorter = $errorMessageSorter;
     }
 
     public function getErrorCount() : int
@@ -54,7 +62,7 @@ final class ErrorDataCollector
 
     public function getErrorMessages() : array
     {
-        return $this->sortErrorMessagesByFileAndLine($this->errorMessages);
+        return $this->errorMessageSorter->sortByFileAndLine($this->errorMessages);
     }
 
     public function getUnfixableErrorMessages() : array
@@ -83,8 +91,8 @@ final class ErrorDataCollector
         string $message,
         int $line,
         string $sniffCode,
-        array $data,
-        bool $isFixable
+        array $data=[],
+        bool $isFixable=false
     ) {
         $this->errorCount++;
 
@@ -118,24 +126,5 @@ final class ErrorDataCollector
         }
 
         return $message;
-    }
-
-    private function sortErrorMessagesByFileAndLine(array $errorMessages)
-    {
-        ksort($errorMessages);
-
-        foreach ($errorMessages as $file => $errorMessagesForFile) {
-            if (count($errorMessagesForFile) <= 1) {
-                continue;
-            }
-
-            uasort($errorMessagesForFile, function ($first, $second) {
-                return ($first['line'] > $second['line']);
-            });
-
-            $errorMessages[$file] = $errorMessagesForFile;
-        }
-
-        return $errorMessages;
     }
 }

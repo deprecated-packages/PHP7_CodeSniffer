@@ -11,7 +11,7 @@ use PHP_CodeSniffer\Files\File as BaseFile;
 use Symplify\PHP7_CodeSniffer\Contract\File\FileInterface;
 use Symplify\PHP7_CodeSniffer\Exception\File\NotImplementedException;
 use Symplify\PHP7_CodeSniffer\Fixer;
-use Symplify\PHP7_CodeSniffer\ErrorDataCollector;
+use Symplify\PHP7_CodeSniffer\Report\ErrorDataCollector;
 
 final class File extends BaseFile implements FileInterface
 {

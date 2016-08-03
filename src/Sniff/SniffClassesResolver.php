@@ -32,8 +32,8 @@ final class SniffClassesResolver
 
     public function resolveFromStandardsAndSniffs(array $standards, array $includedSniffs) : array
     {
-        $standards = $this->configurationResolver->resolveStandards($standards);
-        $includedSniffs = $this->configurationResolver->resolveSniffs($includedSniffs);
+        $standards = $this->configurationResolver->resolve('standards', $standards);
+        $includedSniffs = $this->configurationResolver->resolve('sniffs', $includedSniffs);
 
         $sniffs = [];
         foreach ($standards as $rulesetXmlPath) {

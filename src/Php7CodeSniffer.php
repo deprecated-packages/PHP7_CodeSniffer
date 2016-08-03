@@ -7,7 +7,7 @@
 
 namespace Symplify\PHP7_CodeSniffer;
 
-use Symplify\PHP7_CodeSniffer\Event\CheckFileTokenEvent;
+use Symplify\PHP7_CodeSniffer\EventDispatcher\Event\CheckFileTokenEvent;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\SniffDispatcher;
 use Symplify\PHP7_CodeSniffer\Exception\RuntimeException;
 use Symplify\PHP7_CodeSniffer\File\File;
