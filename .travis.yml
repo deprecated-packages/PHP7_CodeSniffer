@@ -15,7 +15,7 @@ before_script:
 
 script:
   - vendor/bin/phpunit $PHPUNIT_FLAGS
-  - php bin/php7cs src tests
+  - bin/php7cs src tests --standards=PSR2
 
 after_script:
   - if [[ "$PHPUNIT_FLAGS" != "" ]]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi

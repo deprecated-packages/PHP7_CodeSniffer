@@ -7,7 +7,9 @@ use PHP_CodeSniffer\Util\Tokens;
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
 use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
-use Symplify\PHP7_CodeSniffer\SniffFinder\SniffFinder;
+use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassFilter;
+use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassRobotLoaderFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 use Symplify\PHP7_CodeSniffer\Standard\StandardFinder;
 
 final class ReferenceNormalizerTest extends TestCase
@@ -22,9 +24,9 @@ final class ReferenceNormalizerTest extends TestCase
         new Tokens();
 
         $this->referenceNormalizer = new ReferenceNormalizer(
-            new SniffFinder(),
+            $this->createSniffFinder(),
             new StandardFinder(),
-            new Router(new SniffFinder())
+            new Router($this->createSniffFinder())
         );
     }
 
@@ -32,5 +34,13 @@ final class ReferenceNormalizerTest extends TestCase
     {
         $this->assertTrue($this->referenceNormalizer->isStandardReference('PSR1'));
         $this->assertFalse($this->referenceNormalizer->isStandardReference('non-existing'));
+    }
+
+    private function createSniffFinder() : SniffFinder
+    {
+        return new SniffFinder(
+            new SniffClassRobotLoaderFactory(),
+            new SniffClassFilter()
+        );
     }
 }

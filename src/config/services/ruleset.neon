@@ -1,0 +1,5 @@
+services:
+    - Symplify\PHP7_CodeSniffer\Ruleset
+    - Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router
+    - Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder
+    - Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer

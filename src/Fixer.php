@@ -161,7 +161,7 @@ final class Fixer
         return true;
     }
 
-    public function substrToken(int $stackPtr, int $start, int $length = null) : bool
+    public function substrToken(int $stackPtr, int $start, int $length=null) : bool
     {
         $current = $this->getTokenContent($stackPtr);
 

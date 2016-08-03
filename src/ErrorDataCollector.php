@@ -47,13 +47,45 @@ final class ErrorDataCollector
         return $this->fixableErrorCount;
     }
 
-    public function getErrorMessages() : array
+    public function getUnfixableErrorCount() : int
     {
-        return $this->errorMessages;
+        return $this->errorCount - $this->fixableErrorCount;
     }
 
-    public function addErrorMessage(string $filePath, string $message, int $line, string $sniffCode, array $data, bool $isFixable)
+    public function getErrorMessages() : array
     {
+        return $this->sortErrorMessagesByFileAndLine($this->errorMessages);
+    }
+
+    public function getUnfixableErrorMessages() : array
+    {
+        $unfixableErrorMessages = [];
+        foreach ($this->getErrorMessages() as $file => $errorMessagesForFile) {
+            $unfixableErrorMessagesForFile = [];
+            foreach ($errorMessagesForFile as $errorMessage) {
+                if ($errorMessage['isFixable']) {
+                    continue;
+                }
+
+                $unfixableErrorMessagesForFile[] = $errorMessage;
+            }
+
+            if (count($unfixableErrorMessagesForFile)) {
+                $unfixableErrorMessages[$file] = $unfixableErrorMessagesForFile;
+            }
+        }
+
+        return $unfixableErrorMessages;
+    }
+
+    public function addErrorMessage(
+        string $filePath,
+        string $message,
+        int $line,
+        string $sniffCode,
+        array $data,
+        bool $isFixable
+    ) {
         $this->errorCount++;
 
         if ($isFixable) {
@@ -86,5 +118,24 @@ final class ErrorDataCollector
         }
 
         return $message;
+    }
+
+    private function sortErrorMessagesByFileAndLine(array $errorMessages)
+    {
+        ksort($errorMessages);
+
+        foreach ($errorMessages as $file => $errorMessagesForFile) {
+            if (count($errorMessagesForFile) <= 1) {
+                continue;
+            }
+
+            uasort($errorMessagesForFile, function ($first, $second) {
+                return ($first['line'] > $second['line']);
+            });
+
+            $errorMessages[$file] = $errorMessagesForFile;
+        }
+
+        return $errorMessages;
     }
 }

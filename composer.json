@@ -1,11 +1,10 @@
 {
     "name": "symplify/php7_codesniffer",
-    "description": "PHP7_CodeSniffer tokenizes PHP files and detects violations of a defined set of coding standards.",
+    "description": "PHP7_CodeSniffer detects and fixes violations against your coding standard.",
     "keywords": ["phpcs", "standards", "php7", "code sniffer", "symplify"],
     "license": "MIT",
     "authors": [
-        { "name": "Tomáš Votruba", "email": "tomas.vot@gmail.com" },
-        { "name": "Greg Sherwood" }
+        { "name": "Tomáš Votruba", "email": "tomas.vot@gmail.com" }
     ],
     "require": {
         "php": "^7.0",

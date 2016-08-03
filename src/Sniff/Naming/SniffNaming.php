@@ -5,7 +5,7 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\SniffFinder\Naming;
+namespace Symplify\PHP7_CodeSniffer\Sniff\Naming;
 
 use Nette\Utils\Strings;
 
@@ -25,7 +25,8 @@ final class SniffNaming
             return $secondGuess;
         }
 
-        $thirdGuess = 'PHP_CodeSniffer\\Standards\\'.$parts[0].'\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff';
+        $thirdGuess = 'PHP_CodeSniffer\\Standards\\'.$parts[0]
+            .'\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff';
         return $thirdGuess;
     }
 

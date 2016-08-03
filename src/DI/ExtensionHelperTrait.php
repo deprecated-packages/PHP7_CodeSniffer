@@ -15,10 +15,13 @@ use Nette\DI\ServiceDefinition;
  */
 trait ExtensionHelperTrait
 {
-    private function addServicesToCollector(string $collectorClass, string $collectedClass, string $adderMethodName)
-    {
-        $collectorDefinition = $this->getDefinitionByType($collectorClass);
+    private function addServicesToCollector(
+        string $collectorClass,
+        string $collectedClass,
+        string $adderMethodName
+    ) {
         $containerBuilder = $this->getContainerBuilder();
+        $collectorDefinition = $this->getDefinitionByType($collectorClass);
 
         foreach ($containerBuilder->findByType($collectedClass) as $definition) {
             $collectorDefinition->addSetup(

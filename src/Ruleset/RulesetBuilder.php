@@ -9,7 +9,7 @@ namespace Symplify\PHP7_CodeSniffer\Ruleset;
 
 use SimpleXMLElement;
 use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
-use Symplify\PHP7_CodeSniffer\SniffFinder\SniffFinder;
+use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 use Symplify\PHP7_CodeSniffer\Standard\StandardFinder;
 
 final class RulesetBuilder
@@ -145,7 +145,7 @@ final class RulesetBuilder
             }
         }
     }
-    
+
     private function normalizeReference(string $reference)
     {
         if ($this->ruleReferenceNormalizer->isRulesetReference($reference)) {

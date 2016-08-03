@@ -7,6 +7,7 @@
 
 namespace Symplify\PHP7_CodeSniffer\Event;
 
+use PHP_CodeSniffer\Files\File;
 use Symfony\Component\EventDispatcher\Event;
 use Symplify\PHP7_CodeSniffer\Contract\File\FileInterface;
 
@@ -28,6 +29,9 @@ final class CheckFileTokenEvent extends Event
         $this->stackPointer = $stackPointer;
     }
 
+    /**
+     * @return FileInterface|File
+     */
     public function getFile() : FileInterface
     {
         return $this->file;
