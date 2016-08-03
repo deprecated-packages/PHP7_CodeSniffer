@@ -47,9 +47,35 @@ final class ErrorDataCollector
         return $this->fixableErrorCount;
     }
 
+    public function getUnfixableErrorCount() : int
+    {
+        return $this->errorCount - $this->fixableErrorCount;
+    }
+
     public function getErrorMessages() : array
     {
         return $this->sortErrorMessagesByFileAndLine($this->errorMessages);
+    }
+
+    public function getUnfixableErrorMessages() : array
+    {
+        $unfixableErrorMessages = [];
+        foreach ($this->getErrorMessages() as $file => $errorMessagesForFile) {
+            $unfixableErrorMessagesForFile = [];
+            foreach ($errorMessagesForFile as $errorMessage) {
+                if ($errorMessage['isFixable']) {
+                    continue;
+                }
+
+                $unfixableErrorMessagesForFile[] = $errorMessage;
+            }
+
+            if (count($unfixableErrorMessagesForFile)) {
+                $unfixableErrorMessages[$file] = $unfixableErrorMessagesForFile;
+            }
+        }
+
+        return $unfixableErrorMessages;
     }
 
     public function addErrorMessage(

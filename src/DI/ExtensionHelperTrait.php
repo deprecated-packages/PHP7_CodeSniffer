@@ -20,8 +20,8 @@ trait ExtensionHelperTrait
         string $collectedClass,
         string $adderMethodName
     ) {
-        $collectorDefinition = $this->getDefinitionByType($collectorClass);
         $containerBuilder = $this->getContainerBuilder();
+        $collectorDefinition = $this->getDefinitionByType($collectorClass);
 
         foreach ($containerBuilder->findByType($collectedClass) as $definition) {
             $collectorDefinition->addSetup(

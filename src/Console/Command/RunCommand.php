@@ -90,20 +90,17 @@ final class RunCommand extends Command
 
             // 2. print found errors to the output
             if ($this->reportCollector->getErrorCount()) {
-                if (!$input->getOption('fix')) {
+                if ($input->getOption('fix')) {
+                    $this->printUnfixedErrors();
+                } else {
                     $this->printErrors();
                     $this->printFixingNote();
-                } else {
-                    $this->printUnfixedErrors();
                 }
 
                 return ExitCode::ERROR;
             }
 
-            $this->codeSnifferStyle->success(
-                'Great job! Your code is completely fine. Take a break and look around you.'.
-                'Beautiful world, isn\'t it?'
-            );
+            $this->codeSnifferStyle->success('Great job! Your code is completely fine. Take a break and look around you.');
 
             return ExitCode::SUCCESS;
         } catch (Throwable $throwable) {
@@ -139,11 +136,14 @@ final class RunCommand extends Command
 
     private function printUnfixedErrors()
     {
-        // TODO!
-        //        $this->codeSnifferStyle->writeErrorReports($this->reportCollector->getUnfixableErrorMessages());
-        //        $this->codeSnifferStyle->error(sprintf(
-        //            '%d errors could nof be fixed.',
-        //            $this->reportCollector->getUnfixableErrorCount()
-        //        ));
+        $this->codeSnifferStyle->writeErrorReports($this->reportCollector->getUnfixableErrorMessages());
+        $this->codeSnifferStyle->success(sprintf(
+            'Congrats! %d errors were fixed.',
+            $this->reportCollector->getFixableErrorCount()
+        ));
+        $this->codeSnifferStyle->error(sprintf(
+            '%d errors could not be fixed. You have to do it manually.',
+            $this->reportCollector->getUnfixableErrorCount()
+        ));
     }
 }
