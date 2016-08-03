@@ -14,8 +14,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symplify\PHP7_CodeSniffer\Console\ExitCode;
 use Symplify\PHP7_CodeSniffer\Console\Style\CodeSnifferStyle;
-use Symplify\PHP7_CodeSniffer\ErrorDataCollector;
 use Symplify\PHP7_CodeSniffer\Php7CodeSniffer;
+use Symplify\PHP7_CodeSniffer\Report\ErrorDataCollector;
 use Throwable;
 
 final class RunCommand extends Command

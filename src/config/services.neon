@@ -6,13 +6,11 @@ includes:
     - services/ruleset.neon
     - services/sniffs.neon
     - services/standard.neon
+    - services/report.neon
 
 services:
     - Symplify\PHP7_CodeSniffer\Fixer
     - Symplify\PHP7_CodeSniffer\Php7CodeSniffer
-
-    # reporter
-    - Symplify\PHP7_CodeSniffer\ErrorDataCollector
 
     # tokenizer / parser
     - Symplify\PHP7_CodeSniffer\Parser\FileToTokensParser

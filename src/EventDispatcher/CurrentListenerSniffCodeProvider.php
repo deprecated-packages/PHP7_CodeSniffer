@@ -7,10 +7,9 @@
 
 namespace Symplify\PHP7_CodeSniffer\EventDispatcher;
 
-use Closure;
 use ReflectionFunction;
 use SplObjectStorage;
-use Symplify\PHP7_CodeSniffer\SniffFinder\Naming\SniffNaming;
+use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 
 final class CurrentListenerSniffCodeProvider
 {
