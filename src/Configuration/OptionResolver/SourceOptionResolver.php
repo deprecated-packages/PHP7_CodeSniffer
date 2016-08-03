@@ -18,9 +18,6 @@ final class SourceOptionResolver implements OptionResolverInterface
      */
     const NAME = 'source';
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName() : string
     {
         return self::NAME;

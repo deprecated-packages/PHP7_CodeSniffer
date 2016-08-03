@@ -19,17 +19,11 @@ final class SniffsOptionResolver implements OptionResolverInterface
      */
     const NAME = 'sniffs';
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName() : string
     {
         return self::NAME;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolve(array $value) : array
     {
         $optionsResolver = new OptionsResolver();

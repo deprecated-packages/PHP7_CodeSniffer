@@ -30,9 +30,6 @@ final class StandardsOptionResolver implements OptionResolverInterface
         $this->standardFinder = $standardFinder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName() : string
     {
         return self::NAME;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Symplify\PHP7_CodeSniffer\Configuration\Tests;
+namespace Symplify\PHP7_CodeSniffer\Tests\Configuration;
 
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
