@@ -7,41 +7,22 @@
 
 namespace Symplify\PHP7_CodeSniffer\Configuration;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symplify\PHP7_CodeSniffer\Contract\Configuration\OptionResolver\OptionResolverInterface;
 
 final class ConfigurationResolver
 {
     /**
-     * @var OptionsResolver
+     * @var OptionResolverInterface[]
      */
-    private $optionsResolver;
+    private $optionResolvers = [];
 
-    public function __construct(OptionsResolver $optionsResolver)
+    public function addOptionResolver(OptionResolverInterface $optionResolver)
     {
-        $this->optionsResolver = $optionsResolver;
+        $this->optionResolvers[$optionResolver->getName()] = $optionResolver;
     }
 
-    public function resolveSource(array $source) : array
+    public function resolve(string $name, array $source) : array
     {
-        return $this->resolveSingleOption($source, 'source');
-    }
-
-    public function resolveStandards(array $standards) : array
-    {
-        return $this->resolveSingleOption($standards, 'standards');
-    }
-
-    public function resolveSniffs(array $sniffs) : array
-    {
-        return $this->resolveSingleOption($sniffs, 'sniffs');
-    }
-
-    private function resolveSingleOption(array $value, string $optionName) : array
-    {
-        $options = $this->optionsResolver->resolve([
-            $optionName => $value
-        ]);
-
-        return $options[$optionName];
+        return $this->optionResolvers[$name]->resolve($source);
     }
 }
