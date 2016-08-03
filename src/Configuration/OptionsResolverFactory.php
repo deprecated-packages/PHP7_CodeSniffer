@@ -72,7 +72,7 @@ final class OptionsResolverFactory
             foreach ($standards as $standardName) {
                 if (!array_key_exists($standardName, $availableStandards)) {
                     throw new StandardNotFoundException(sprintf(
-                        'Standard "%s" is not supported. Pick one of: %s',
+                        'Standard "%s" is not supported. Pick one of: %s.',
                         $standardName,
                         implode(array_keys($availableStandards), ', ')
                     ));

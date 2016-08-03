@@ -22,9 +22,28 @@ final class ConfigurationResolverTest extends TestCase
 
     /**
      * @expectedException \Symplify\PHP7_CodeSniffer\Exception\Configuration\StandardNotFoundException
+     * @expectedExceptionMessage Standard "fake" is not supported. Pick one of: PSR1, MySource, PSR2, Zend, PEAR, Squiz, Generic.
      */
     public function testNonExistingStandard()
     {
         $this->configurationResolver->resolveStandards(['fake']);
+    }
+
+    public function test()
+    {
+        $this->assertSame(
+            [__DIR__],
+            $this->configurationResolver->resolveSource([__DIR__])
+        );
+
+        $this->assertArrayHasKey(
+            'PSR2',
+            $this->configurationResolver->resolveStandards(['PSR2'])
+        );
+
+        $this->assertSame(
+            ['One.Two.Three'],
+            $this->configurationResolver->resolveSniffs(['One.Two.Three'])
+        );
     }
 }
