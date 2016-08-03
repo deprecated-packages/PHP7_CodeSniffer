@@ -1,10 +1,10 @@
 <?php
 
-namespace Symplify\PHP7_CodeSniffer\Tests\Event;
+namespace Symplify\PHP7_CodeSniffer\Tests\EventDispatcher\Event;
 
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Contract\File\FileInterface;
-use Symplify\PHP7_CodeSniffer\Event\CheckFileTokenEvent;
+use Symplify\PHP7_CodeSniffer\EventDispatcher\Event\CheckFileTokenEvent;
 
 final class CheckFileTokenEventTest extends TestCase
 {

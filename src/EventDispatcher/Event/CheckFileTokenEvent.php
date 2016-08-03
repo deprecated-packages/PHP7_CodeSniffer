@@ -5,7 +5,7 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\Event;
+namespace Symplify\PHP7_CodeSniffer\EventDispatcher\Event;
 
 use PHP_CodeSniffer\Files\File;
 use Symfony\Component\EventDispatcher\Event;
