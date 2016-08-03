@@ -37,52 +37,9 @@ final class OptionsResolverFactory
 
     private function setAllowedValues(OptionsResolver $optionsResolver)
     {
-        $optionsResolver->setAllowedValues('standards', function (array $standards) {
-            $standards = $this->normalizeCommaSeparatedValues($standards);
-
-            $availableStandards = $this->standardFinder->getStandards();
-            foreach ($standards as $standardName) {
-                if (!array_key_exists($standardName, $availableStandards)) {
-                    throw new StandardNotFoundException(sprintf(
-                        'Standard "%s" is not supported. Pick one of: %s',
-                        $standardName,
-                        implode(array_keys($availableStandards), ', ')
-                    ));
-                }
-            }
-
-            return true;
-        });
-
-        $optionsResolver->setAllowedValues('sniffs', function (array $sniffs) {
-            $sniffs = $this->normalizeCommaSeparatedValues($sniffs);
-
-            foreach ($sniffs as $sniff) {
-                if (substr_count($sniff, '.') !== 2) {
-                    throw new InvalidSniffCodeException(sprintf(
-                        'The specified sniff code "%s" is invalid.'.
-                        PHP_EOL.
-                        'Correct format is "StandardName.Category.SniffName".',
-                        $sniff
-                    ));
-                }
-            }
-
-            return true;
-        });
-
-        $optionsResolver->setAllowedValues('source', function (array $source) {
-            foreach ($source as $singleSource) {
-                if (!file_exists($singleSource)) {
-                    throw new SourceNotFoundException(sprintf(
-                        'Source "%s" does not exist.',
-                        $singleSource
-                    ));
-                }
-            }
-
-            return true;
-        });
+        $this->setStandardsAllowedValues($optionsResolver);
+        $this->setSniffsAllowedValues($optionsResolver);
+        $this->setSourceAllowedValues($optionsResolver);
     }
 
     private function setNormalizers(OptionsResolver $optionsResolver)
@@ -104,5 +61,61 @@ final class OptionsResolverFactory
         }
 
         return $newValues;
+    }
+
+    private function setStandardsAllowedValues(OptionsResolver $optionsResolver)
+    {
+        $optionsResolver->setAllowedValues('standards', function (array $standards) {
+            $standards = $this->normalizeCommaSeparatedValues($standards);
+
+            $availableStandards = $this->standardFinder->getStandards();
+            foreach ($standards as $standardName) {
+                if (!array_key_exists($standardName, $availableStandards)) {
+                    throw new StandardNotFoundException(sprintf(
+                        'Standard "%s" is not supported. Pick one of: %s',
+                        $standardName,
+                        implode(array_keys($availableStandards), ', ')
+                    ));
+                }
+            }
+
+            return true;
+        });
+    }
+
+    private function setSniffsAllowedValues(OptionsResolver $optionsResolver)
+    {
+        $optionsResolver->setAllowedValues('sniffs', function (array $sniffs) {
+            $sniffs = $this->normalizeCommaSeparatedValues($sniffs);
+
+            foreach ($sniffs as $sniff) {
+                if (substr_count($sniff, '.') !== 2) {
+                    throw new InvalidSniffCodeException(sprintf(
+                        'The specified sniff code "%s" is invalid.' .
+                        PHP_EOL .
+                        'Correct format is "StandardName.Category.SniffName".',
+                        $sniff
+                    ));
+                }
+            }
+
+            return true;
+        });
+    }
+
+    private function setSourceAllowedValues(OptionsResolver $optionsResolver)
+    {
+        $optionsResolver->setAllowedValues('source', function (array $source) {
+            foreach ($source as $singleSource) {
+                if (!file_exists($singleSource)) {
+                    throw new SourceNotFoundException(sprintf(
+                        'Source "%s" does not exist.',
+                        $singleSource
+                    ));
+                }
+            }
+
+            return true;
+        });
     }
 }
