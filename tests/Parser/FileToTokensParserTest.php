@@ -17,6 +17,7 @@ final class FileToTokensParserTest extends TestCase
     protected function setUp()
     {
         new Tokens();
+        define('PHP_CODESNIFFER_VERBOSITY', 0);
         $this->fileToTokensParser = new FileToTokensParser(new EolCharDetector());
     }
 

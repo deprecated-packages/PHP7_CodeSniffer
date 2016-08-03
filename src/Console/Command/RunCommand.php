@@ -142,14 +142,18 @@ final class RunCommand extends Command
             $this->reportCollector->getUnfixableErrorMessages()
         );
 
-        $this->codeSnifferStyle->success(sprintf(
-            'Congrats! %d errors were fixed.',
-            $this->reportCollector->getFixableErrorCount()
-        ));
-
-        $this->codeSnifferStyle->error(sprintf(
-            '%d errors could not be fixed. You have to do it manually.',
-            $this->reportCollector->getUnfixableErrorCount()
-        ));
+        if ($this->reportCollector->getFixableErrorCount()) {
+            $this->codeSnifferStyle->success(sprintf(
+                'Congrats! %d errors were fixed.',
+                $this->reportCollector->getFixableErrorCount()
+            ));
+        }
+        
+        if ($this->reportCollector->getUnfixableErrorCount()) {
+            $this->codeSnifferStyle->error(sprintf(
+                '%d errors could not be fixed. You have to do it manually.',
+                $this->reportCollector->getUnfixableErrorCount()
+            ));
+        }
     }
 }

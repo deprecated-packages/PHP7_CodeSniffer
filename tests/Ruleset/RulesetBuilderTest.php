@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
 use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
 use Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder;
+use Symplify\PHP7_CodeSniffer\SniffFinder\SniffClassFilter;
+use Symplify\PHP7_CodeSniffer\SniffFinder\SniffClassRobotLoaderFactory;
 use Symplify\PHP7_CodeSniffer\SniffFinder\SniffFinder;
 use Symplify\PHP7_CodeSniffer\Standard\StandardFinder;
 
@@ -20,12 +22,12 @@ final class RulesetBuilderTest extends TestCase
     protected function setUp()
     {
         new Tokens();
+        $sniffFinder = $this->createSniffFinder();
 
         $this->rulesetBuilder = new RulesetBuilder(
-            new SniffFinder(),
+            $sniffFinder,
             new StandardFinder(),
-            new ReferenceNormalizer(new SniffFinder(), new StandardFinder(), new Router(new SniffFinder())),
-            new Router(new SniffFinder())
+            new ReferenceNormalizer($sniffFinder, new StandardFinder(), new Router($sniffFinder))
         );
     }
 
@@ -44,5 +46,13 @@ final class RulesetBuilderTest extends TestCase
            'Generic.NamingConventions.UpperCaseConstantName' => 'PHP_CodeSniffer\Standards\Generic\Sniffs\NamingConventions\UpperCaseConstantNameSniff',
            'Generic.Files.LineEndings' => 'PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineEndingsSniff',
         ], $ruleset);
+    }
+
+    private function createSniffFinder() : SniffFinder
+    {
+        return new SniffFinder(
+            new SniffClassRobotLoaderFactory(),
+            new SniffClassFilter()
+        );
     }
 }
