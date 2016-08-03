@@ -26,13 +26,19 @@ final class CurrentListenerSniffCodeProviderTest extends TestCase
 
     public function testGetCurrentListenerSniffCodeForEmpty()
     {
-        $this->assertSame('', $this->currentListenerSniffCodeProvider->getCurrentListenerSniffCode());
+        $this->assertSame(
+            '',
+            $this->currentListenerSniffCodeProvider->getCurrentListenerSniffCode()
+        );
     }
 
     public function testGetCurrentListenerSniffCodeForArray()
     {
         $this->currentListenerSniffCodeProvider->setCurrentListener(['someListener', 'someMethod']);
-        $this->assertSame('', $this->currentListenerSniffCodeProvider->getCurrentListenerSniffCode());
+        $this->assertSame(
+            '',
+            $this->currentListenerSniffCodeProvider->getCurrentListenerSniffCode()
+        );
     }
 
     public function testGetCurrentListenerSniffCodeForCallable()

@@ -18,7 +18,7 @@ final class ErrorMessageSorter
                 continue;
             }
 
-            uasort($errorMessagesForFile, function ($first, $second) {
+            usort($errorMessagesForFile, function ($first, $second) {
                 return ($first['line'] > $second['line']);
             });
 

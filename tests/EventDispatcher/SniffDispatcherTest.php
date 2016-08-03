@@ -10,7 +10,6 @@ namespace Symplify\PHP7_CodeSniffer\Tests\EventDispatcher;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Standards\PSR2\Sniffs\Classes\ClassDeclarationSniff;
 use PHPUnit\Framework\TestCase;
-use Symplify\PHP7_CodeSniffer\Contract\File\FileInterface;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\CurrentListenerSniffCodeProvider;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\Event\CheckFileTokenEvent;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\SniffDispatcher;
