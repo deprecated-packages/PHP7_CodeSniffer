@@ -25,7 +25,7 @@ final class SniffDispatcher extends EventDispatcher
     }
 
     /**
-     * @param array|string[] $sniffs
+     * @param Sniff[] $sniffs
      */
     public function addSniffListeners(array $sniffs)
     {

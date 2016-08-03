@@ -14,7 +14,7 @@ use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 final class CurrentListenerSniffCodeProvider
 {
     /**
-     * @var mixed
+     * @var array|callable
      */
     private $currentListener;
 
@@ -29,7 +29,7 @@ final class CurrentListenerSniffCodeProvider
     }
 
     /**
-     * @param array|object $currentListener
+     * @param array|callable $currentListener
      */
     public function setCurrentListener($currentListener)
     {
@@ -38,16 +38,22 @@ final class CurrentListenerSniffCodeProvider
 
     public function getCurrentListenerSniffCode() : string
     {
+        if (!is_callable($this->currentListener)) {
+            return '';
+        }
+
         if (isset($this->sniffClassToSniffCodeMap[$this->currentListener])) {
             return $this->sniffClassToSniffCodeMap[$this->currentListener];
         }
 
         $closureReflection = new ReflectionFunction($this->currentListener);
+        if (!isset($closureReflection->getStaticVariables()['sniffObject'])) {
+            return '';
+        }
+
         $sniffClass = get_class($closureReflection->getStaticVariables()['sniffObject']);
         $sniffCode = SniffNaming::guessSniffCodeBySniffClass($sniffClass);
 
-        $this->sniffClassToSniffCodeMap[$this->currentListener] = $sniffCode;
-
-        return $sniffCode;
+        return $this->sniffClassToSniffCodeMap[$this->currentListener] = $sniffCode;
     }
 }
