@@ -13,7 +13,7 @@ use Symplify\PHP7_CodeSniffer\Exception\RuntimeException;
 use Symplify\PHP7_CodeSniffer\File\File;
 use Symplify\PHP7_CodeSniffer\File\Provider\FilesProvider;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffFactory;
-use Symplify\PHP7_CodeSniffer\SniffFinder\SniffClassesResolver;
+use Symplify\PHP7_CodeSniffer\Sniff\SniffClassesResolver;
 
 final class Php7CodeSniffer
 {
