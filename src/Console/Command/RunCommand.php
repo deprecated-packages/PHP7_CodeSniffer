@@ -100,7 +100,9 @@ final class RunCommand extends Command
                 return ExitCode::ERROR;
             }
 
-            $this->codeSnifferStyle->success('Great job! Your code is completely fine. Take a break and look around you.');
+            $this->codeSnifferStyle->success(
+                'Great job! Your code is completely fine. Take a break and look around you.'
+            );
 
             return ExitCode::SUCCESS;
         } catch (Throwable $throwable) {
@@ -136,11 +138,15 @@ final class RunCommand extends Command
 
     private function printUnfixedErrors()
     {
-        $this->codeSnifferStyle->writeErrorReports($this->reportCollector->getUnfixableErrorMessages());
+        $this->codeSnifferStyle->writeErrorReports(
+            $this->reportCollector->getUnfixableErrorMessages()
+        );
+
         $this->codeSnifferStyle->success(sprintf(
             'Congrats! %d errors were fixed.',
             $this->reportCollector->getFixableErrorCount()
         ));
+
         $this->codeSnifferStyle->error(sprintf(
             '%d errors could not be fixed. You have to do it manually.',
             $this->reportCollector->getUnfixableErrorCount()

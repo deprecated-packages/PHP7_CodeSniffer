@@ -19,7 +19,7 @@ final class FileToTokensParserTest extends TestCase
         new Tokens();
         $this->fileToTokensParser = new FileToTokensParser(new EolCharDetector());
     }
-    
+
     public function testParseFromFilePath()
     {
         $tokens = $this->fileToTokensParser->parseFromFilePath(
