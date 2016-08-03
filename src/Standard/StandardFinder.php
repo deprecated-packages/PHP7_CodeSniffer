@@ -9,7 +9,7 @@ namespace Symplify\PHP7_CodeSniffer\Standard;
 
 use Exception;
 use Symfony\Component\Finder\Finder;
-use Symplify\PHP7_CodeSniffer\SniffFinder\Composer\VendorDirProvider;
+use Symplify\PHP7_CodeSniffer\Composer\VendorDirProvider;
 
 final class StandardFinder
 {

@@ -12,8 +12,8 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 final class SniffFactory
 {
     /**
-     * @param array|string[] $sniffClasses
-     * @return array|Sniff[]
+     * @param string[] $sniffClasses
+     * @return Sniff[]
      */
     public function createFromSniffClassNames(array $sniffClasses) : array
     {

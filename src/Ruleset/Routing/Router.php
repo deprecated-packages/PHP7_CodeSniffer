@@ -7,7 +7,7 @@
 
 namespace Symplify\PHP7_CodeSniffer\Ruleset\Routing;
 
-use Symplify\PHP7_CodeSniffer\SniffFinder\SniffFinder;
+use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 
 final class Router
 {

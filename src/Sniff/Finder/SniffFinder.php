@@ -5,10 +5,9 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\SniffFinder;
+namespace Symplify\PHP7_CodeSniffer\Sniff\Finder;
 
-use Symfony\Component\Finder\Finder;
-use Symplify\PHP7_CodeSniffer\SniffFinder\Composer\VendorDirProvider;
+use Symplify\PHP7_CodeSniffer\Composer\VendorDirProvider;
 
 final class SniffFinder
 {

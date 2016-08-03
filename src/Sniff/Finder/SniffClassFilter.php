@@ -5,10 +5,10 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\SniffFinder;
+namespace Symplify\PHP7_CodeSniffer\Sniff\Finder;
 
 use ReflectionClass;
-use Symplify\PHP7_CodeSniffer\SniffFinder\Naming\SniffNaming;
+use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 
 final class SniffClassFilter
 {

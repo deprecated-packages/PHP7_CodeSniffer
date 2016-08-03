@@ -5,7 +5,7 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\SniffFinder;
+namespace Symplify\PHP7_CodeSniffer\Sniff;
 
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder;
