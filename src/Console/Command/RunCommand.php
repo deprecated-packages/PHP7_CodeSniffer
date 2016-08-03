@@ -148,7 +148,7 @@ final class RunCommand extends Command
                 $this->reportCollector->getFixableErrorCount()
             ));
         }
-        
+
         if ($this->reportCollector->getUnfixableErrorCount()) {
             $this->codeSnifferStyle->error(sprintf(
                 '%d errors could not be fixed. You have to do it manually.',

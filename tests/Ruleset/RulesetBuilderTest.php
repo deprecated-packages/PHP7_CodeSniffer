@@ -2,6 +2,14 @@
 
 namespace Symplify\PHP7_CodeSniffer\Ruleset\Tests;
 
+use PHP_CodeSniffer\Standards\Generic\Sniffs\Files\ByteOrderMarkSniff;
+use PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineEndingsSniff;
+use PHP_CodeSniffer\Standards\Generic\Sniffs\NamingConventions\UpperCaseConstantNameSniff;
+use PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\DisallowShortOpenTagSniff;
+use PHP_CodeSniffer\Standards\PSR1\Sniffs\Classes\ClassDeclarationSniff;
+use PHP_CodeSniffer\Standards\PSR1\Sniffs\Files\SideEffectsSniff;
+use PHP_CodeSniffer\Standards\PSR1\Sniffs\Methods\CamelCapsMethodNameSniff;
+use PHP_CodeSniffer\Standards\Squiz\Sniffs\Classes\ValidClassNameSniff;
 use PHP_CodeSniffer\Util\Tokens;
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
@@ -33,18 +41,21 @@ final class RulesetBuilderTest extends TestCase
 
     public function testBuildFromRulesetXml()
     {
-        $ruleset = $this->rulesetBuilder->buildFromRulesetXml(__DIR__ . '/RulesetBuilderSource/ruleset.xml');
+        $ruleset = $this->rulesetBuilder->buildFromRulesetXml(
+            __DIR__ . '/RulesetBuilderSource/ruleset.xml'
+        );
+
         $this->assertInternalType('array', $ruleset);
 
         $this->assertSame([
-           'PSR1.Classes.ClassDeclaration' => 'PHP_CodeSniffer\Standards\PSR1\Sniffs\Classes\ClassDeclarationSniff',
-           'PSR1.Files.SideEffects' => 'PHP_CodeSniffer\Standards\PSR1\Sniffs\Files\SideEffectsSniff',
-           'PSR1.Methods.CamelCapsMethodName' => 'PHP_CodeSniffer\Standards\PSR1\Sniffs\Methods\CamelCapsMethodNameSniff',
-           'Generic.PHP.DisallowShortOpenTag.EchoFound' => 'PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\DisallowShortOpenTagSniff',
-           'Generic.Files.ByteOrderMark' => 'PHP_CodeSniffer\Standards\Generic\Sniffs\Files\ByteOrderMarkSniff',
-           'Squiz.Classes.ValidClassName' => 'PHP_CodeSniffer\Standards\Squiz\Sniffs\Classes\ValidClassNameSniff',
-           'Generic.NamingConventions.UpperCaseConstantName' => 'PHP_CodeSniffer\Standards\Generic\Sniffs\NamingConventions\UpperCaseConstantNameSniff',
-           'Generic.Files.LineEndings' => 'PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineEndingsSniff',
+           'PSR1.Classes.ClassDeclaration' => ClassDeclarationSniff::class,
+           'PSR1.Files.SideEffects' => SideEffectsSniff::class,
+           'PSR1.Methods.CamelCapsMethodName' => CamelCapsMethodNameSniff::class,
+           'Generic.PHP.DisallowShortOpenTag.EchoFound' => DisallowShortOpenTagSniff::class,
+           'Generic.Files.ByteOrderMark' => ByteOrderMarkSniff::class,
+           'Squiz.Classes.ValidClassName' => ValidClassNameSniff::class,
+           'Generic.NamingConventions.UpperCaseConstantName' => UpperCaseConstantNameSniff::class,
+           'Generic.Files.LineEndings' => LineEndingsSniff::class,
         ], $ruleset);
     }
 

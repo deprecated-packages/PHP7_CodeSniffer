@@ -13,7 +13,8 @@ class SniffNamingTest extends TestCase
     {
         $sniffClass = SniffNaming::guessSniffClassBySniffCode('Standard.Category.SniffName');
         $this->assertSame(
-            'PHP_CodeSniffer\Standards\Standard\Sniffs\Category\SniffNameSniff', $sniffClass
+            'PHP_CodeSniffer\Standards\Standard\Sniffs\Category\SniffNameSniff',
+            $sniffClass
         );
     }
 
@@ -23,8 +24,10 @@ class SniffNamingTest extends TestCase
      */
     public function testCodingStandardAutoload()
     {
-        // $sniffClass = SniffNaming::guessSniffClassBySniffCode('Symplify.Naming.AbstractClassName');
-        // $this->assertSame('SymplifyCodingStandard\Sniffs\Naming\AbstractClassNameSniff', $sniffClass);
+        // $sniffClass = SniffNaming::guessSniffClassBySniffCode
+        // ('Symplify.Naming.AbstractClassName');
+        // $this->assertSame('SymplifyCodingStandard
+        // \Sniffs\Naming\AbstractClassNameSniff', $sniffClass);
     }
 
     public function testGuessSniffCodeByClassName()
