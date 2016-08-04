@@ -24,7 +24,10 @@ final class FileTest extends TestCase
     public function testErrorDataCollector()
     {
         /** @var ErrorDataCollector $errorDataCollector */
-        $errorDataCollector = PHPUnit_Framework_Assert::getObjectAttribute($this->file, 'errorDataCollector');
+        $errorDataCollector = PHPUnit_Framework_Assert::getObjectAttribute(
+            $this->file,
+            'errorDataCollector'
+        );
         $this->assertSame(0, $errorDataCollector->getErrorCount());
 
         $this->file->addError('Some Error', 1, 'code');

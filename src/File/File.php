@@ -39,14 +39,14 @@ final class File extends BaseFile implements FileInterface
         string $path,
         array $tokens,
         Fixer $fixer,
-        ErrorDataCollector $reportCollector,
+        ErrorDataCollector $errorDataCollector,
         bool $isFixer,
         string $eolChar
     ) {
         $this->path = $path;
         $this->tokens = $tokens;
         $this->fixer = $fixer;
-        $this->errorDataCollector = $reportCollector;
+        $this->errorDataCollector = $errorDataCollector;
         $this->eolChar = $eolChar;
 
         $this->numTokens = count($this->tokens);
