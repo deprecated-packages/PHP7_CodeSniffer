@@ -38,18 +38,17 @@ To fix the issues just add `--fix`:
 ./vendor/bin/php7cs src --sniffs=PSR2.Classes.ClassDeclaration,Zend.Files.ClosingTag
 ```
 
-### Or Use Standard Without One Sniff?
-
-```bash
-./vendor/bin/php7cs src --standards=PSR2 --exclude-sniffs=PSR2.Namespaces.UseDeclaration
-```
-
 You can combine them as well:
 
 ```bash
 ./vendor/bin/php7cs src --standards=PSR2 --sniffs=Zend.Files.ClosingTag
 ```
 
+### Or Use Standard Without One Sniff?
+
+```bash
+./vendor/bin/php7cs src --standards=PSR2 --exclude-sniffs=PSR2.Namespaces.UseDeclaration
+```
 
 ## Contributing
 
