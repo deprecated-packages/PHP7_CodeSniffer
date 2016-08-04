@@ -45,11 +45,12 @@ final class SniffsOptionResolver implements OptionResolverInterface
         $optionsResolver->setNormalizer(
             self::NAME,
             function (OptionsResolver $optionsResolver, array $sniffCodes) {
-                $sniffCodeToClassList = [];
+                $sniffCodeToClasses = [];
                 foreach ($sniffCodes as $sniffCode) {
-                    $sniffCodeToClassList[$sniffCode] = SniffNaming::guessSniffClassBySniffCode($sniffCode);
+                    $sniffCodeToClasses[$sniffCode] = SniffNaming::guessClassByCode($sniffCode);
                 }
-                return $sniffCodeToClassList;
+
+                return $sniffCodeToClasses;
             }
         );
     }

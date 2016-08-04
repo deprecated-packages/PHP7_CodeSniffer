@@ -24,7 +24,7 @@ final class SniffClassFilter
                 continue;
             }
 
-            $sniffCode = SniffNaming::guessSniffCodeBySniffClass($sniffClass);
+            $sniffCode = SniffNaming::guessCodeByClass($sniffClass);
             $finalSniffClasses[$sniffCode] = $sniffClass;
         }
 

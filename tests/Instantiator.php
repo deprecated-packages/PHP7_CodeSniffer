@@ -37,7 +37,9 @@ final class Instantiator
     public static function createConfigurationResolver() : ConfigurationResolver
     {
         $configurationResolver = new ConfigurationResolver();
-        $configurationResolver->addOptionResolver(new StandardsOptionResolver(new StandardFinder()));
+        $configurationResolver->addOptionResolver(new StandardsOptionResolver(
+            new StandardFinder()
+        ));
         $configurationResolver->addOptionResolver(new SniffsOptionResolver());
         $configurationResolver->addOptionResolver(new SourceOptionResolver());
 

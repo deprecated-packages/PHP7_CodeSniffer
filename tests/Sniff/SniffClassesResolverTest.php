@@ -26,15 +26,18 @@ final class SniffClassesResolverTest extends TestCase
 
     public function testResolveFromStandardsAndSniffs()
     {
-//        $this->assertSame(
-//            [],
-//            $this->sniffClassesResolver->resolveFromStandardsAndSniffs([], [])
-//        );
+        $this->assertSame(
+            [],
+            $this->sniffClassesResolver->resolveFromStandardsAndSniffs([], [])
+        );
 
-//        $sniffList = $this->sniffClassesResolver->resolveFromStandardsAndSniffs(['PSR2'], []);
-//        $this->assertCount(43, $sniffList);
+        $sniffList = $this->sniffClassesResolver->resolveFromStandardsAndSniffs(['PSR2'], []);
+        $this->assertCount(43, $sniffList);
 
-        $sniffList = $this->sniffClassesResolver->resolveFromStandardsAndSniffs(['PSR2'], ['PEAR.Commenting.ClassComment']);
+        $sniffList = $this->sniffClassesResolver->resolveFromStandardsAndSniffs(
+            ['PSR2'],
+            ['PEAR.Commenting.ClassComment']
+        );
         $this->assertCount(44, $sniffList);
     }
 }

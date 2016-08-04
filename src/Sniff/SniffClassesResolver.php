@@ -41,7 +41,10 @@ final class SniffClassesResolver
 
         $sniffs = [];
         foreach ($standards as $rulesetXmlPath) {
-            $sniffs = array_merge($sniffs, $this->rulesetBuilder->buildFromRulesetXml($rulesetXmlPath));
+            $sniffs = array_merge(
+                $sniffs,
+                $this->rulesetBuilder->buildFromRulesetXml($rulesetXmlPath)
+            );
         }
 
         $extraSniffs = $this->configurationResolver->resolve('sniffs', $extraSniffs);

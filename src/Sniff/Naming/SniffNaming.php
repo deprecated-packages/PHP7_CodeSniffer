@@ -14,7 +14,7 @@ use Symplify\PHP7_CodeSniffer\Exception\Sniff\Naming\SniffClassCouldNotBeFoundEx
 
 final class SniffNaming
 {
-    public static function guessSniffClassBySniffCode(string $sniffCode) : string
+    public static function guessClassByCode(string $sniffCode) : string
     {
         self::ensureSniffCodeIsValid($sniffCode);
 
@@ -40,9 +40,9 @@ final class SniffNaming
         self::reportClassCouldNotBeFound($sniffCode, [$firstGuess, $secondGuess, $thirdGuess]);
     }
 
-    public static function guessSniffCodeBySniffClass(string $sniffClass) : string
+    public static function guessCodeByClass(string $sniffClass) : string
     {
-        self::ensureSniffClassNameIsValid($sniffClass);
+        self::ensureClassNameIsValid($sniffClass);
 
         $parts = explode('\\', $sniffClass);
 
@@ -62,7 +62,7 @@ final class SniffNaming
     private static function ensureSniffCodeIsValid(string $sniffCode)
     {
         $parts = explode('.', $sniffCode);
-        
+
         if (count($parts) !== 3) {
             throw new InvalidSniffCodeException(
                 sprintf(
@@ -74,7 +74,7 @@ final class SniffNaming
         }
     }
 
-    private static function ensureSniffClassNameIsValid(string $sniffClass)
+    private static function ensureClassNameIsValid(string $sniffClass)
     {
         $parts = explode('\\', $sniffClass);
 
@@ -91,7 +91,7 @@ final class SniffNaming
     private static function reportClassCouldNotBeFound(string $sniffCode, array $guessedClasses)
     {
         throw new SniffClassCouldNotBeFoundException(sprintf(
-            'Sniff class for code "%s" could not be found. We tried these options:'.PHP_EOL.' - %s ',
+            'Sniff class for code "%s" could not be found. We tried:'.PHP_EOL.' - %s ',
             $sniffCode,
             implode(PHP_EOL . ' - ', $guessedClasses)
         ));

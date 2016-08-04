@@ -52,7 +52,7 @@ final class CurrentListenerSniffCodeProvider
         }
 
         $sniffClass = get_class($closureReflection->getStaticVariables()['sniffObject']);
-        $sniffCode = SniffNaming::guessSniffCodeBySniffClass($sniffClass);
+        $sniffCode = SniffNaming::guessCodeByClass($sniffClass);
 
         return $this->sniffClassToSniffCodeMap[$this->currentListener] = $sniffCode;
     }

@@ -13,7 +13,7 @@ class SniffNamingTest extends TestCase
      */
     public function testIncorrectCode()
     {
-        SniffNaming::guessSniffClassBySniffCode('Standard.Category');
+        SniffNaming::guessClassByCode('Standard.Category');
     }
 
     /**
@@ -21,7 +21,7 @@ class SniffNamingTest extends TestCase
      */
     public function testMissingClass()
     {
-        SniffNaming::guessSniffClassBySniffCode('Standard.Category.SniffName');
+        SniffNaming::guessClassByCode('Standard.Category.SniffName');
     }
 
     /**
@@ -29,12 +29,12 @@ class SniffNamingTest extends TestCase
      */
     public function testIncorrectClass()
     {
-        SniffNaming::guessSniffCodeBySniffClass('SomeClass');
+        SniffNaming::guessCodeByClass('SomeClass');
     }
 
     public function testGuessSniffCodeByClassName()
     {
-        $sniffName = SniffNaming::guessSniffCodeBySniffClass(ClassDeclarationSniff::class);
+        $sniffName = SniffNaming::guessCodeByClass(ClassDeclarationSniff::class);
         $this->assertSame('PSR2.Classes.ClassDeclaration', $sniffName);
     }
 }
