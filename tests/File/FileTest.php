@@ -30,11 +30,11 @@ final class FileTest extends TestCase
         );
         $this->assertSame(0, $errorDataCollector->getErrorCount());
 
-        $this->file->addError('Some Error', 1, 'code');
+        $this->file->addError('Some Error', 0, 'code');
         $this->assertSame(1, $errorDataCollector->getErrorCount());
         $this->assertSame(0, $errorDataCollector->getFixableErrorCount());
 
-        $this->file->addFixableError('Some Other Error', 1, 'code');
+        $this->file->addFixableError('Some Other Error', 0, 'code');
         $this->assertSame(2, $errorDataCollector->getErrorCount());
         $this->assertSame(1, $errorDataCollector->getFixableErrorCount());
     }

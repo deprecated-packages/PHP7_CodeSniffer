@@ -9,5 +9,4 @@ namespace Symplify\PHP7_CodeSniffer\Contract\File;
 
 interface FileInterface
 {
-    public function getContent() : string;
 }

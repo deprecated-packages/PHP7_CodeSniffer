@@ -133,12 +133,4 @@ final class File extends BaseFile implements FileInterface
 
         return true;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getContent() : string
-    {
-        return $this->getTokensAsString(0, count($this->tokens));
-    }
 }
