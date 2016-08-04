@@ -5,7 +5,7 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\Exception\Configuration;
+namespace Symplify\PHP7_CodeSniffer\Exception\Configuration\OptionResolver;
 
 use Exception;
 

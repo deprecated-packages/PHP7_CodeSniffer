@@ -5,10 +5,11 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\Exception\Configuration;
+namespace Symplify\PHP7_CodeSniffer\Exception\Sniff\Naming;
 
 use Exception;
 
-final class SourceNotFoundException extends Exception
+final class SniffClassCouldNotBeFoundException extends Exception
 {
+
 }

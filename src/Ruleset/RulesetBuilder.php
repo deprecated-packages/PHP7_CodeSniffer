@@ -79,7 +79,8 @@ final class RulesetBuilder
         $this->includedSniffs = array_unique(array_merge($ownSniffs, $this->includedSniffs));
         $this->excludedSniffs = array_unique($this->excludedSniffs);
 
-        return $this->filterOutExcludedSniffs();
+        $sniffs = $this->filterOutExcludedSniffs();
+        return $this->sortSniffs($sniffs);
     }
 
     public function getRuleset() : array
@@ -182,7 +183,7 @@ final class RulesetBuilder
 
     private function processExcludedRules(SimpleXMLElement $rule)
     {
-        if (isset($rule->exclude) === true) {
+        if (isset($rule->exclude)) {
             foreach ($rule->exclude as $exclude) {
                 $this->excludedSniffs = array_merge(
                     $this->excludedSniffs,
@@ -201,6 +202,12 @@ final class RulesetBuilder
             }
         }
 
+        return $sniffs;
+    }
+
+    private function sortSniffs(array $sniffs) : array
+    {
+        ksort($sniffs);
         return $sniffs;
     }
 }

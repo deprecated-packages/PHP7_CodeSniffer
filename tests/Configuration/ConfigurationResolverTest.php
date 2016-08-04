@@ -2,13 +2,10 @@
 
 namespace Symplify\PHP7_CodeSniffer\Tests\Configuration;
 
+use PHP_CodeSniffer\Standards\PEAR\Sniffs\Commenting\ClassCommentSniff;
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
-use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\SniffsOptionResolver;
-use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\SourceOptionResolver;
-use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\StandardsOptionResolver;
-use Symplify\PHP7_CodeSniffer\Configuration\OptionResolverFactory;
-use Symplify\PHP7_CodeSniffer\Standard\StandardFinder;
+use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
 
 final class ConfigurationResolverTest extends TestCase
 {
@@ -19,16 +16,11 @@ final class ConfigurationResolverTest extends TestCase
 
     protected function setUp()
     {
-        $this->configurationResolver = new ConfigurationResolver();
-        $this->configurationResolver->addOptionResolver(new SniffsOptionResolver());
-        $this->configurationResolver->addOptionResolver(new SourceOptionResolver());
-        $this->configurationResolver->addOptionResolver(new StandardsOptionResolver(
-            new StandardFinder()
-        ));
+        $this->configurationResolver = Instantiator::createConfigurationResolver();
     }
 
     /**
-     * @expectedException \Symplify\PHP7_CodeSniffer\Exception\Configuration\StandardNotFoundException
+     * @expectedException \Symplify\PHP7_CodeSniffer\Exception\Configuration\OptionResolver\StandardNotFoundException
      */
     public function testNonExistingStandard()
     {
@@ -48,8 +40,8 @@ final class ConfigurationResolverTest extends TestCase
         );
 
         $this->assertSame(
-            ['One.Two.Three'],
-            $this->configurationResolver->resolve('sniffs', ['One.Two.Three'])
+            ['PEAR.Commenting.ClassComment' => ClassCommentSniff::class],
+            $this->configurationResolver->resolve('sniffs', ['PEAR.Commenting.ClassComment'])
         );
     }
 }

@@ -9,7 +9,7 @@ namespace Symplify\PHP7_CodeSniffer\Configuration\OptionResolver;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symplify\PHP7_CodeSniffer\Contract\Configuration\OptionResolver\OptionResolverInterface;
-use Symplify\PHP7_CodeSniffer\Exception\Configuration\SourceNotFoundException;
+use Symplify\PHP7_CodeSniffer\Exception\Configuration\OptionResolver\SourceNotFoundException;
 
 final class SourceOptionResolver implements OptionResolverInterface
 {

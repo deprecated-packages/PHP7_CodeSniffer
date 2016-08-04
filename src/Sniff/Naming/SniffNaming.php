@@ -8,11 +8,16 @@
 namespace Symplify\PHP7_CodeSniffer\Sniff\Naming;
 
 use Nette\Utils\Strings;
+use Symplify\PHP7_CodeSniffer\Exception\Sniff\Naming\InvalidSniffClassException;
+use Symplify\PHP7_CodeSniffer\Exception\Sniff\Naming\InvalidSniffCodeException;
+use Symplify\PHP7_CodeSniffer\Exception\Sniff\Naming\SniffClassCouldNotBeFoundException;
 
 final class SniffNaming
 {
-    public static function guessSniffClassBySniffCode(string $sniffCode) : string
+    public static function guessClassByCode(string $sniffCode) : string
     {
+        self::ensureSniffCodeIsValid($sniffCode);
+
         $parts = explode('.', $sniffCode);
 
         $firstGuess = $parts[0].'CodingStandard\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff';
@@ -27,14 +32,19 @@ final class SniffNaming
 
         $thirdGuess = 'PHP_CodeSniffer\\Standards\\'.$parts[0]
             .'\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff';
-        return $thirdGuess;
+
+        if (class_exists($thirdGuess)) {
+            return $thirdGuess;
+        }
+
+        self::reportClassCouldNotBeFound($sniffCode, [$firstGuess, $secondGuess, $thirdGuess]);
     }
 
-    public static function guessSniffCodeBySniffClass(string $sniffClass) : string
+    public static function guessCodeByClass(string $sniffClass) : string
     {
-        $parts = explode('\\', $sniffClass);
+        self::ensureClassNameIsValid($sniffClass);
 
-        self::ensureSniffClassNameIsValid($sniffClass, $parts);
+        $parts = explode('\\', $sniffClass);
 
         $standardName = $parts[count($parts)-4];
         if (Strings::endsWith($standardName, 'CodingStandard')) {
@@ -49,15 +59,41 @@ final class SniffNaming
         return $standardName.'.'.$categoryName.'.'.$sniffName;
     }
 
-    private static function ensureSniffClassNameIsValid(string $sniffClass, array $parts)
+    private static function ensureSniffCodeIsValid(string $sniffCode)
     {
+        $parts = explode('.', $sniffCode);
+
+        if (count($parts) !== 3) {
+            throw new InvalidSniffCodeException(
+                sprintf(
+                    '"%s" is not valid sniff code. Code in form "%s" is expected.',
+                    $sniffCode,
+                    'Standard.Category.Specific'
+                )
+            );
+        }
+    }
+
+    private static function ensureClassNameIsValid(string $sniffClass)
+    {
+        $parts = explode('\\', $sniffClass);
+
         if (count($parts) < 4) {
-            throw new \Exception(sprintf(
-                '"%s" is not valid sniff class name. Name in form %s or %s is expected.',
+            throw new InvalidSniffClassException(sprintf(
+                '"%s" is not valid sniff class name. Name in form "%s" or "%s" is expected.',
                 $sniffClass,
                 '<Name>CodingStandard\Sniffs\<Category>\<Name>Sniff',
                 '<Name>\CodingStandard\Sniffs\<Category>\<Name>Sniff'
             ));
         }
+    }
+
+    private static function reportClassCouldNotBeFound(string $sniffCode, array $guessedClasses)
+    {
+        throw new SniffClassCouldNotBeFoundException(sprintf(
+            'Sniff class for code "%s" could not be found. We tried:'.PHP_EOL.' - %s ',
+            $sniffCode,
+            implode(PHP_EOL . ' - ', $guessedClasses)
+        ));
     }
 }

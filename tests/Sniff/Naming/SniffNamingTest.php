@@ -8,33 +8,33 @@ use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 
 class SniffNamingTest extends TestCase
 {
-    public function testGuessSniffClassBySniffCode()
+    /**
+     * @expectedException \Symplify\PHP7_CodeSniffer\Exception\Sniff\Naming\InvalidSniffCodeException
+     */
+    public function testIncorrectCode()
     {
-        $sniffClass = SniffNaming::guessSniffClassBySniffCode('Standard.Category.SniffName');
-        $this->assertSame(
-            'PHP_CodeSniffer\Standards\Standard\Sniffs\Category\SniffNameSniff',
-            $sniffClass
-        );
+        SniffNaming::guessClassByCode('Standard.Category');
     }
 
     /**
-     * Depends on CodeSniffer 2.5.
-     * Temporary down, due to missing Sniff interface in CodeSniffer 3.0.
+     * @expectedException \Symplify\PHP7_CodeSniffer\Exception\Sniff\Naming\SniffClassCouldNotBeFoundException
      */
-    public function testCodingStandardAutoload()
+    public function testMissingClass()
     {
-        // $sniffClass = SniffNaming::guessSniffClassBySniffCode
-        // ('Symplify.Naming.AbstractClassName');
-        // $this->assertSame('SymplifyCodingStandard
-        // \Sniffs\Naming\AbstractClassNameSniff', $sniffClass);
+        SniffNaming::guessClassByCode('Standard.Category.SniffName');
+    }
+
+    /**
+     * @expectedException \Symplify\PHP7_CodeSniffer\Exception\Sniff\Naming\InvalidSniffClassException
+     */
+    public function testIncorrectClass()
+    {
+        SniffNaming::guessCodeByClass('SomeClass');
     }
 
     public function testGuessSniffCodeByClassName()
     {
-        $sniffName = SniffNaming::guessSniffCodeBySniffClass(ClassDeclarationSniff::class);
+        $sniffName = SniffNaming::guessCodeByClass(ClassDeclarationSniff::class);
         $this->assertSame('PSR2.Classes.ClassDeclaration', $sniffName);
-
-        $sniffName = SniffNaming::guessSniffCodeBySniffClass(AbstractClassNameSniff::class);
-        $this->assertSame('Tests.Naming.AbstractClassName', $sniffName);
     }
 }
