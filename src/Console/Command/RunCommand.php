@@ -90,6 +90,7 @@ final class RunCommand extends Command
                 $input->getOption('sniffs'),
                 $input->getOption('exclude-sniffs')
             );
+
             $this->php7CodeSniffer->runForSource(
                 $input->getArgument('source'),
                 $input->getOption('fix')

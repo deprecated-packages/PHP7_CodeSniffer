@@ -31,11 +31,17 @@ To fix the issues just add `--fix`:
 ./vendor/bin/php7cs src --standards=PSR2 --fix
 ```
 
-### How to Use Specific Sniff?
+### How to Use Specific Sniff Only?
 
 ```bash
 ./vendor/bin/php7cs src --sniffs=PSR2.Classes.ClassDeclaration
 ./vendor/bin/php7cs src --sniffs=PSR2.Classes.ClassDeclaration,Zend.Files.ClosingTag
+```
+
+### Or Use Standard Without One Sniff?
+
+```bash
+./vendor/bin/php7cs src --standards=PSR2 --exclude-sniffs=PSR2.Namespaces.UseDeclaration
 ```
 
 You can combine them as well:
