@@ -30,16 +30,20 @@ final class SniffClassesResolver
         $this->rulesetBuilder = $rulesetBuilder;
     }
 
-    /**
-     * @param string[] $standards
-     * @param string[] $extraSniffs
-     * @return string[]
-     */
-    public function resolveFromStandardsAndSniffs(array $standards, array $extraSniffs) : array
+    public function resolveFromStandardsAndSniffs(
+        array $standards,
+        array $extraSniffs,
+        array $excludedSniffs
+    ) : array {
+        $sniffs = [];
+        $sniffs = $this->addStandardSniffs($sniffs, $standards);
+        $sniffs = $this->addExtraSniffs($sniffs, $extraSniffs);
+        return $this->removeExcludeSniffs($sniffs, $excludedSniffs);
+    }
+
+    private function addStandardSniffs(array $sniffs, array $standards) : array
     {
         $standards = $this->configurationResolver->resolve('standards', $standards);
-
-        $sniffs = [];
         foreach ($standards as $rulesetXmlPath) {
             $sniffs = array_merge(
                 $sniffs,
@@ -47,13 +51,25 @@ final class SniffClassesResolver
             );
         }
 
-        $extraSniffs = $this->configurationResolver->resolve('sniffs', $extraSniffs);
-        return $this->mergeSniffs($sniffs, $extraSniffs);
+        return $sniffs;
     }
 
-    private function mergeSniffs(array $sniffs, array $extraSniffs) : array
+    private function addExtraSniffs(array $sniffs, array $extraSniffs) : array
     {
-        $sniffs = array_merge($sniffs, $extraSniffs);
+        $extraSniffs = $this->configurationResolver->resolve('sniffs', $extraSniffs);
+        return array_merge($sniffs, $extraSniffs);
+    }
+
+    private function removeExcludeSniffs(array $sniffs, array $excludedSniffs) : array
+    {
+        $excludedSniffs = $this->configurationResolver->resolve('sniffs', $excludedSniffs);
+
+        foreach ($excludedSniffs as $sniffCode => $sniffClass) {
+            if (isset($sniffs[$sniffCode])) {
+                unset($sniffs[$sniffCode]);
+            }
+        }
+
         return $sniffs;
     }
 }

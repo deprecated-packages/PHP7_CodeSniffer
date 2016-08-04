@@ -74,6 +74,12 @@ final class RunCommand extends Command
             InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'List of sniff codes to use.'
         );
+        $this->addOption(
+            'exclude-sniffs',
+            null,
+            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+            'List of sniff codes to be excluded.'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -81,7 +87,8 @@ final class RunCommand extends Command
         try {
             $this->php7CodeSniffer->registerSniffs(
                 $input->getOption('standards'),
-                $input->getOption('sniffs')
+                $input->getOption('sniffs'),
+                $input->getOption('exclude-sniffs')
             );
             $this->php7CodeSniffer->runForSource(
                 $input->getArgument('source'),
