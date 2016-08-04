@@ -1,2 +1,2 @@
 services:
-    - Symplify\PHP7_CodeSniffer\Standard\StandardFinder
+    - Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder

@@ -7,6 +7,7 @@
 
 namespace Symplify\PHP7_CodeSniffer\File;
 
+use Nette\FileNotFoundException;
 use Symplify\PHP7_CodeSniffer\Fixer;
 use Symplify\PHP7_CodeSniffer\Parser\EolCharDetector;
 use Symplify\PHP7_CodeSniffer\Parser\FileToTokensParser;
@@ -49,6 +50,8 @@ final class FileFactory
 
     public function create(string $filePath, bool $isFixer) : File
     {
+        $this->ensureFileExists($filePath);
+
         $tokens = $this->fileToTokenParser->parseFromFilePath($filePath);
         $eolChar = $this->eolCharDetector->detectForFilePath($filePath);
 
@@ -60,5 +63,15 @@ final class FileFactory
             $isFixer,
             $eolChar
         );
+    }
+
+    private function ensureFileExists(string $filePath)
+    {
+        if (!is_file($filePath) || !file_exists($filePath)) {
+            throw new FileNotFoundException(sprintf(
+                'File "%s" was not found.',
+                $filePath
+            ));
+        }
     }
 }

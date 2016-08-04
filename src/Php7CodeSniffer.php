@@ -51,21 +51,33 @@ final class Php7CodeSniffer
         $this->setupRequirements();
     }
 
-    public function registerSniffs(array $standards, array $extraSniffs, array $excludedSniffs)
+    public function runCommand(Php7CodeSnifferCommand $command)
+    {
+        $this->registerSniffs(
+            $command->getStandards(),
+            $command->getSniffs(),
+            $command->getExcludedSniffs()
+        );
+
+        $this->ensureSniffsAreRegistered();
+
+        $this->runForSource($command->getSource(), $command->isFixer());
+    }
+
+    private function registerSniffs(array $standards, array $extraSniffs, array $excludedSniffs)
     {
         $sniffClasses = $this->sniffClassesResolver->resolveFromStandardsAndSniffs(
             $standards,
             $extraSniffs,
             $excludedSniffs
         );
-        $extraSniffs = $this->sniffFactory->createFromSniffClassNames($sniffClasses);
-        $this->sniffDispatcher->addSniffListeners($extraSniffs);
+
+        $sniffs = $this->sniffFactory->createFromSniffClassNames($sniffClasses);
+        $this->sniffDispatcher->addSniffListeners($sniffs);
     }
 
-    public function runForSource(array $source, bool $isFixer)
+    private function runForSource(array $source, bool $isFixer)
     {
-        $this->ensureSniffsAreRegistered();
-
         $files = $this->filesProvider->getFilesForSource($source, $isFixer);
 
         foreach ($files as $file) {

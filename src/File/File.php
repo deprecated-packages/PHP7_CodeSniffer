@@ -28,7 +28,7 @@ final class File extends BaseFile implements FileInterface
     /**
      * @var ErrorDataCollector
      */
-    private $reportCollector;
+    private $errorDataCollector;
 
     /**
      * @var bool
@@ -39,14 +39,14 @@ final class File extends BaseFile implements FileInterface
         string $path,
         array $tokens,
         Fixer $fixer,
-        ErrorDataCollector $reportCollector,
+        ErrorDataCollector $errorDataCollector,
         bool $isFixer,
         string $eolChar
     ) {
         $this->path = $path;
         $this->tokens = $tokens;
         $this->fixer = $fixer;
-        $this->reportCollector = $reportCollector;
+        $this->errorDataCollector = $errorDataCollector;
         $this->eolChar = $eolChar;
 
         $this->numTokens = count($this->tokens);
@@ -77,6 +77,28 @@ final class File extends BaseFile implements FileInterface
     /**
      * {@inheritdoc}
      */
+    public function getErrorCount()
+    {
+        throw new NotImplementedException(sprintf(
+            'This is not needed to be public. Use "%s" service.',
+            ErrorDataCollector::class
+        ));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getErrors()
+    {
+        throw new NotImplementedException(sprintf(
+            'This is not needed to be public. Use "%s" service.',
+            ErrorDataCollector::class
+        ));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function addFixableError($error, $stackPtr, $code, $data=[], $severity=0)
     {
         $this->addError($error, $stackPtr, $code, $data, $severity, true);
@@ -100,7 +122,7 @@ final class File extends BaseFile implements FileInterface
             return false;
         }
 
-        $this->reportCollector->addErrorMessage(
+        $this->errorDataCollector->addErrorMessage(
             $this->path,
             $message,
             $line,
@@ -110,13 +132,5 @@ final class File extends BaseFile implements FileInterface
         );
 
         return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getContent() : string
-    {
-        return $this->getTokensAsString(0, count($this->tokens));
     }
 }

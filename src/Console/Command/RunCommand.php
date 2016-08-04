@@ -14,7 +14,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symplify\PHP7_CodeSniffer\Console\ExitCode;
 use Symplify\PHP7_CodeSniffer\Console\Style\CodeSnifferStyle;
+use Symplify\PHP7_CodeSniffer\Console\Output\InfoMessagePrinter;
 use Symplify\PHP7_CodeSniffer\Php7CodeSniffer;
+use Symplify\PHP7_CodeSniffer\Php7CodeSnifferCommand;
 use Symplify\PHP7_CodeSniffer\Report\ErrorDataCollector;
 use Throwable;
 
@@ -28,21 +30,28 @@ final class RunCommand extends Command
     /**
      * @var ErrorDataCollector
      */
-    private $reportCollector;
+    private $errorDataCollector;
 
     /**
      * @var Php7CodeSniffer
      */
     private $php7CodeSniffer;
 
+    /**
+     * @var InfoMessagePrinter
+     */
+    private $infoMessagePrinter;
+
     public function __construct(
         CodeSnifferStyle $codeSnifferStyle,
         ErrorDataCollector $reportCollector,
-        Php7CodeSniffer $php7CodeSniffer
+        Php7CodeSniffer $php7CodeSniffer,
+        InfoMessagePrinter $infoMessagePrinter
     ) {
         $this->codeSnifferStyle = $codeSnifferStyle;
-        $this->reportCollector = $reportCollector;
+        $this->errorDataCollector = $reportCollector;
         $this->php7CodeSniffer = $php7CodeSniffer;
+        $this->infoMessagePrinter = $infoMessagePrinter;
 
         parent::__construct();
     }
@@ -54,56 +63,32 @@ final class RunCommand extends Command
     {
         $this->setName('run');
         $this->setDescription('Checks code against coding standard.');
-
         $this->addArgument(
             'source',
             InputArgument::REQUIRED | InputArgument::IS_ARRAY,
             'Files or directories to process.'
         );
         $this->addOption('fix', null, null, 'Fix all fixable errors.');
-
-        $this->addOption(
-            'standards',
-            null,
-            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-            'List of coding standards to use.'
-        );
-        $this->addOption(
-            'sniffs',
-            null,
-            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-            'List of sniff codes to use.'
-        );
-        $this->addOption(
-            'exclude-sniffs',
-            null,
-            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-            'List of sniff codes to be excluded.'
-        );
+        $this->addArrayOption('standards', 'List of coding standards to use.');
+        $this->addArrayOption('sniffs', 'List of sniff codes to use.');
+        $this->addArrayOption('exclude-sniffs', 'List of sniff codes to be excluded.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $this->php7CodeSniffer->registerSniffs(
+            $php7CodeSnifferCommand = new Php7CodeSnifferCommand(
+                $input->getArgument('source'),
                 $input->getOption('standards'),
                 $input->getOption('sniffs'),
-                $input->getOption('exclude-sniffs')
-            );
-
-            $this->php7CodeSniffer->runForSource(
-                $input->getArgument('source'),
+                $input->getOption('exclude-sniffs'),
                 $input->getOption('fix')
             );
 
-            // 2. print found errors to the output
-            if ($this->reportCollector->getErrorCount()) {
-                if ($input->getOption('fix')) {
-                    $this->printUnfixedErrors();
-                } else {
-                    $this->printErrors();
-                    $this->printFixingNote();
-                }
+            $this->php7CodeSniffer->runCommand($php7CodeSnifferCommand);
+
+            if ($this->errorDataCollector->getErrorCount()) {
+                $this->infoMessagePrinter->printFoundErrorsStatus($input->getOption('fix'));
 
                 return ExitCode::ERROR;
             }
@@ -120,48 +105,13 @@ final class RunCommand extends Command
         }
     }
 
-    private function printErrors()
+    private function addArrayOption(string $name, string $description)
     {
-        $this->codeSnifferStyle->writeErrorReports($this->reportCollector->getErrorMessages());
-        $this->codeSnifferStyle->error(sprintf(
-            '%d errors were found.',
-            $this->reportCollector->getErrorCount()
-        ));
-    }
-
-    private function printFixingNote()
-    {
-        if ($fixableCount = $this->reportCollector->getFixableErrorCount()) {
-            $howMany = $fixableCount;
-            if ($fixableCount === $this->reportCollector->getErrorCount()) {
-                $howMany = 'all';
-            }
-
-            $this->codeSnifferStyle->success(sprintf(
-                'Good news is, we can fix %s of them for you. Just add "--fix".',
-                $howMany
-            ));
-        }
-    }
-
-    private function printUnfixedErrors()
-    {
-        $this->codeSnifferStyle->writeErrorReports(
-            $this->reportCollector->getUnfixableErrorMessages()
+        $this->addOption(
+            $name,
+            null,
+            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+            $description
         );
-
-        if ($this->reportCollector->getFixableErrorCount()) {
-            $this->codeSnifferStyle->success(sprintf(
-                'Congrats! %d errors were fixed.',
-                $this->reportCollector->getFixableErrorCount()
-            ));
-        }
-
-        if ($this->reportCollector->getUnfixableErrorCount()) {
-            $this->codeSnifferStyle->error(sprintf(
-                '%d errors could not be fixed. You have to do it manually.',
-                $this->reportCollector->getUnfixableErrorCount()
-            ));
-        }
     }
 }

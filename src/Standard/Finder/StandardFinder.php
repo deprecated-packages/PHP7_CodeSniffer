@@ -5,7 +5,7 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\Standard;
+namespace Symplify\PHP7_CodeSniffer\Standard\Finder;
 
 use Exception;
 use Symfony\Component\Finder\Finder;

@@ -22,7 +22,12 @@ final class SourceFinder
 
         foreach ($source as $singleSource) {
             if (is_file($singleSource)) {
-                $files[$singleSource] = new SplFileInfo($singleSource);
+                $fileInfo = new SplFileInfo($singleSource);
+                if ($fileInfo->getExtension() !== 'php') {
+                    continue;
+                }
+
+                $files[$singleSource] = $fileInfo;
             } else {
                 $finder = (new Finder())->files()
                     ->name('*.php')

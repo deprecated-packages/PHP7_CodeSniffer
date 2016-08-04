@@ -91,7 +91,7 @@ final class SniffNaming
     private static function reportClassCouldNotBeFound(string $sniffCode, array $guessedClasses)
     {
         throw new SniffClassCouldNotBeFoundException(sprintf(
-            'Sniff class for code "%s" could not be found. We tried:'.PHP_EOL.' - %s ',
+            'Sniff class for code "%s" could not be found. We tried:'.PHP_EOL.PHP_EOL.' - %s ',
             $sniffCode,
             implode(PHP_EOL . ' - ', $guessedClasses)
         ));

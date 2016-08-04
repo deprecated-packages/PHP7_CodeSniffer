@@ -24,10 +24,12 @@ final class Ruleset
     /**
      * @param array|Sniff[] $sniffs
      */
-    public function decorateSniffsWithCustomRules(array $sniffs)
+    public function decorateSniffsWithCustomRules(array $sniffs, array $ruleset)
     {
+        dump($ruleset);
+        die;
         // todo: put to SniffDispatcher on sniff loading?
-        $ruleset = $this->rulesetBuilder->getRuleset();
+        //        $ruleset = $this->rulesetBuilder->getRuleset();
 
         foreach ($sniffs as $sniffCode => $sniffObject) {
             if (!isset($ruleset[$sniffCode]['properties'])) {
