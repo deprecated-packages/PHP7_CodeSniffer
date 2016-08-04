@@ -53,4 +53,13 @@ final class Instantiator
             new SniffClassFilter()
         );
     }
+
+    public static function createRuleset() : RulesetBuilder
+    {
+        return new RulesetBuilder(
+            self::createSniffFinder(),
+            new StandardFinder(),
+            self::createReferenceNormalizer()
+        );
+    }
 }
