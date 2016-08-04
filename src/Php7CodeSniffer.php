@@ -51,14 +51,15 @@ final class Php7CodeSniffer
         $this->setupRequirements();
     }
 
-    public function registerSniffs(array $standards, array $sniffs)
+    public function registerSniffs(array $standards, array $extraSniffs, array $excludedSniffs)
     {
         $sniffClasses = $this->sniffClassesResolver->resolveFromStandardsAndSniffs(
             $standards,
-            $sniffs
+            $extraSniffs,
+            $excludedSniffs
         );
-        $sniffs = $this->sniffFactory->createFromSniffClassNames($sniffClasses);
-        $this->sniffDispatcher->addSniffListeners($sniffs);
+        $extraSniffs = $this->sniffFactory->createFromSniffClassNames($sniffClasses);
+        $this->sniffDispatcher->addSniffListeners($extraSniffs);
     }
 
     public function runForSource(array $source, bool $isFixer)

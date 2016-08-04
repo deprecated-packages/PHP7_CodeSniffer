@@ -24,20 +24,39 @@ final class SniffClassesResolverTest extends TestCase
         );
     }
 
-    public function testResolveFromStandardsAndSniffs()
+    /**
+     * @dataProvider provideDataForResolver()
+     */
+    public function testResolveFromStandardsAndSniffs(
+        array $standards,
+        array $extraSniffs,
+        array $excludedSniffs,
+        int $sniffCount
+    ) {
+        $sniffs = $this->sniffClassesResolver->resolveFromStandardsAndSniffs(
+            $standards,
+            $extraSniffs,
+            $excludedSniffs
+        );
+
+        $this->assertCount($sniffCount, $sniffs);
+    }
+
+    public function provideDataForResolver() : array
     {
-        $this->assertSame(
-            [],
-            $this->sniffClassesResolver->resolveFromStandardsAndSniffs([], [])
-        );
-
-        $sniffList = $this->sniffClassesResolver->resolveFromStandardsAndSniffs(['PSR2'], []);
-        $this->assertCount(43, $sniffList);
-
-        $sniffList = $this->sniffClassesResolver->resolveFromStandardsAndSniffs(
-            ['PSR2'],
-            ['PEAR.Commenting.ClassComment']
-        );
-        $this->assertCount(44, $sniffList);
+        return [
+            [
+                [], [], [], 0
+            ], [
+                ['PSR2'], [], [], 43
+            ], [
+                ['PSR2'], ['PEAR.Commenting.ClassComment'], [], 44
+            ], [
+                ['PSR2'],
+                ['PEAR.Commenting.ClassComment'],
+                ['PEAR.Commenting.ClassComment', 'PSR2.Namespaces.UseDeclaration'],
+                42
+            ],
+        ];
     }
 }
