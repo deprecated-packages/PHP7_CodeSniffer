@@ -4,10 +4,9 @@ namespace Symplify\PHP7_CodeSniffer\Tests\Sniff\Finder;
 
 use PHP_CodeSniffer\Util\Tokens;
 use PHPUnit\Framework\TestCase;
-use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassFilter;
-use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassRobotLoaderFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
-use Symplify\PHP7_CodeSniffer\Standard\StandardFinder;
+use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
+use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
 
 final class SniffFinderTest extends TestCase
 {
@@ -25,10 +24,7 @@ final class SniffFinderTest extends TestCase
     {
         new Tokens();
 
-        $this->sniffFinder = new SniffFinder(
-            new SniffClassRobotLoaderFactory(),
-            new SniffClassFilter()
-        );
+        $this->sniffFinder = Instantiator::createSniffFinder();
         $this->standardFinder = new StandardFinder();
     }
 

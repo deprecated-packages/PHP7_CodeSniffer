@@ -10,7 +10,7 @@ namespace Symplify\PHP7_CodeSniffer\Ruleset;
 use SimpleXMLElement;
 use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
-use Symplify\PHP7_CodeSniffer\Standard\StandardFinder;
+use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
 
 final class RulesetBuilder
 {

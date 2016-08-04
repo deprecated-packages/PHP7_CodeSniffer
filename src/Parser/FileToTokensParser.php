@@ -36,8 +36,10 @@ final class FileToTokensParser
         return $this->parseLegacyWithFileContentAndEolChar($fileContent, $eolChar);
     }
 
-    private function parseLegacyWithFileContentAndEolChar($fileContent, $eolChar) : array
-    {
+    private function parseLegacyWithFileContentAndEolChar(
+        string $fileContent,
+        string $eolChar
+    ) : array {
         return (new PHP($fileContent, $this->getLegacyConfig(), $eolChar))->getTokens();
     }
 
