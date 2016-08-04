@@ -2,7 +2,6 @@
 
 namespace Symplify\PHP7_CodeSniffer\Tests\Sniff;
 
-use PHP_CodeSniffer\Util\Tokens;
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffClassesResolver;
 use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
@@ -16,8 +15,6 @@ final class SniffClassesResolverTest extends TestCase
 
     protected function setUp()
     {
-        new Tokens();
-
         $this->sniffClassesResolver = new SniffClassesResolver(
             Instantiator::createConfigurationResolver(),
             Instantiator::createRulesetBuilder()
@@ -48,14 +45,14 @@ final class SniffClassesResolverTest extends TestCase
             [
                 [], [], [], 0
             ], [
-                ['PSR2'], [], [], 43
+                ['PSR2'], [], [], 42
             ], [
-                ['PSR2'], ['PEAR.Commenting.ClassComment'], [], 44
+                ['PSR2'], ['PEAR.Commenting.ClassComment'], [], 43
             ], [
                 ['PSR2'],
                 ['PEAR.Commenting.ClassComment'],
                 ['PEAR.Commenting.ClassComment', 'PSR2.Namespaces.UseDeclaration'],
-                42
+                41
             ],
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace Symplify\PHP7_CodeSniffer\Tests\Ruleset\Routing;
 
+use PHP_CodeSniffer\Standards\Generic\Sniffs\WhiteSpace\DisallowSpaceIndentSniff;
 use PHP_CodeSniffer\Standards\PSR2\Sniffs\Classes\ClassDeclarationSniff;
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
@@ -22,13 +23,18 @@ final class RouterTest extends TestCase
     public function testGetClassFromSniffName()
     {
         $this->assertSame(
+            DisallowSpaceIndentSniff::class,
+            $this->router->getClassFromSniffCode('Generic.WhiteSpace.DisallowSpaceIndent')
+        );
+
+        $this->assertSame(
             ClassDeclarationSniff::class,
-            $this->router->getClassFromSniffName('PSR2.Classes.ClassDeclaration')
+            $this->router->getClassFromSniffCode('PSR2.Classes.ClassDeclaration')
         );
     }
 
     public function testGetClassFromSniffNameRandom()
     {
-        $this->assertSame('', $this->router->getClassFromSniffName(random_bytes(65)));
+        $this->assertSame('', $this->router->getClassFromSniffCode('Non.Existing.Sniff'));
     }
 }
