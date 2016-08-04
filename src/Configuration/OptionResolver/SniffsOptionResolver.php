@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symplify\PHP7_CodeSniffer\Configuration\ValueNormalizer;
 use Symplify\PHP7_CodeSniffer\Contract\Configuration\OptionResolver\OptionResolverInterface;
 use Symplify\PHP7_CodeSniffer\Exception\Configuration\OptionResolver\InvalidSniffCodeException;
+use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 
 final class SniffsOptionResolver implements OptionResolverInterface
 {
@@ -28,6 +29,8 @@ final class SniffsOptionResolver implements OptionResolverInterface
     {
         $optionsResolver = new OptionsResolver();
         $optionsResolver->setDefined(self::NAME);
+
+        $this->setNormalizer($optionsResolver);
         $this->setSniffsAllowedValues($optionsResolver);
 
         $values = $optionsResolver->resolve([
@@ -35,6 +38,22 @@ final class SniffsOptionResolver implements OptionResolverInterface
         ]);
 
         return $values[self::NAME];
+    }
+
+    private function setNormalizer(OptionsResolver $optionsResolver)
+    {
+        $optionsResolver->setNormalizer(
+            self::NAME,
+            function (OptionsResolver $optionsResolver, array $sniffCodes) {
+                $sniffCodeToClassList = [];
+                foreach ($sniffCodes as $sniffCode) {
+                    $sniffCodeToClassList[$sniffCode] = SniffNaming::guessSniffClassBySniffCode($sniffCode);
+                }
+                dump($sniffCodeToClassList);
+                die;
+                return $sniffs;
+            }
+        );
     }
 
     private function setSniffsAllowedValues(OptionsResolver $optionsResolver)

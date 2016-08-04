@@ -34,9 +34,8 @@ final class Router
 
         $sniffClasses = $this->sniffFinder->findAllSniffClasses();
         $sniffClass = $this->findClosesMatch($sniffClasses, $sniffName);
-        $this->foundClasses[$sniffName] = $sniffClass;
 
-        return $sniffClass;
+        return $this->foundClasses[$sniffName] = $sniffClass;
     }
 
     private function findClosesMatch(array $words, string $input)

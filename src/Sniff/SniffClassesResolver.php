@@ -30,10 +30,17 @@ final class SniffClassesResolver
         $this->rulesetBuilder = $rulesetBuilder;
     }
 
+    /**
+     * @param string[] $standards
+     * @param string[] $includedSniffs
+     * @return string[]
+     */
     public function resolveFromStandardsAndSniffs(array $standards, array $includedSniffs) : array
     {
         $standards = $this->configurationResolver->resolve('standards', $standards);
         $includedSniffs = $this->configurationResolver->resolve('sniffs', $includedSniffs);
+        dump($includedSniffs);
+        die;
 
         $sniffs = [];
         foreach ($standards as $rulesetXmlPath) {
@@ -42,16 +49,19 @@ final class SniffClassesResolver
         }
 
         if ($includedSniffs) {
-            $sniffs = $this->excludeRestrictedSniffs($sniffs, $includedSniffs);
+            $sniffs = $this->addSniffs($sniffs, $includedSniffs);
         }
 
         return $sniffs;
     }
 
-    private function excludeRestrictedSniffs(array $sniffs, array $exclusivelyIncludedSniffs)
+    private function addSniffs(array $sniffs, array $exclusivelyIncludedSniffs)
     {
         $finalSniffs = [];
         foreach ($sniffs as $sniffCode => $sniffClass) {
+            dump($exclusivelyIncludedSniffs);
+            die;
+
             if (isset($exclusivelyIncludedSniffs[$sniffCode]) === false) {
                 continue;
             }
