@@ -80,6 +80,6 @@ final class ReferenceNormalizer
 
     private function normalizeSniffNameToClass(string $name) : string
     {
-        return $this->router->getClassFromSniffName($name);
+        return $this->router->getClassFromSniffCode($name);
     }
 }

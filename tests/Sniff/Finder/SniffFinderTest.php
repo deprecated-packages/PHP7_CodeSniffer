@@ -2,7 +2,6 @@
 
 namespace Symplify\PHP7_CodeSniffer\Tests\Sniff\Finder;
 
-use PHP_CodeSniffer\Util\Tokens;
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
@@ -22,8 +21,6 @@ final class SniffFinderTest extends TestCase
 
     protected function setUp()
     {
-        new Tokens();
-
         $this->sniffFinder = Instantiator::createSniffFinder();
         $this->standardFinder = new StandardFinder();
     }

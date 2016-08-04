@@ -7,9 +7,9 @@
 
 namespace Symplify\PHP7_CodeSniffer\Standard\Finder;
 
-use Exception;
 use Symfony\Component\Finder\Finder;
 use Symplify\PHP7_CodeSniffer\Composer\VendorDirProvider;
+use Symplify\PHP7_CodeSniffer\Exception\Configuration\OptionResolver\StandardNotFoundException;
 
 final class StandardFinder
 {
@@ -38,9 +38,9 @@ final class StandardFinder
             return $this->getStandards()[$standardName];
         }
 
-        throw new Exception(
+        throw new StandardNotFoundException(
             sprintf(
-                'Ruleset for standard "%s" was not found. Found standards are: %s.',
+                'Standard "%s" was not found. Found standards are: %s.',
                 $standardName,
                 implode($this->getRulesetNames(), ', ')
             )

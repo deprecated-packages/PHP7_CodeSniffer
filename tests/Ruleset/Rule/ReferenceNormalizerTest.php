@@ -2,7 +2,6 @@
 
 namespace Symplify\PHP7_CodeSniffer\Ruleset\Tests\Rule;
 
-use PHP_CodeSniffer\Util\Tokens;
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
 use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
@@ -16,8 +15,6 @@ final class ReferenceNormalizerTest extends TestCase
 
     protected function setUp()
     {
-        new Tokens();
-
         $this->referenceNormalizer = Instantiator::createReferenceNormalizer();
     }
 

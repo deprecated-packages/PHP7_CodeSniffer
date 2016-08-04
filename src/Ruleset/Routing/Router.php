@@ -26,34 +26,48 @@ final class Router
         $this->sniffFinder = $sniffFinder;
     }
 
-    public function getClassFromSniffName(string $sniffName) : string
+    public function getClassFromSniffCode(string $sniffCode) : string
     {
-        if (isset($this->foundClasses[$sniffName])) {
-            return $this->foundClasses[$sniffName];
+        $sniffCode = $this->normalizeToSniffClassCode($sniffCode);
+
+        if (isset($this->foundClasses[$sniffCode])) {
+            return $this->foundClasses[$sniffCode];
         }
 
         $sniffClasses = $this->sniffFinder->findAllSniffClasses();
-        $sniffClass = $this->findClosesMatch($sniffClasses, $sniffName);
+        if (isset($sniffClasses[$sniffCode])) {
+            return $sniffClasses[$sniffCode];
+        }
 
-        return $this->foundClasses[$sniffName] = $sniffClass;
+        return $this->foundClasses[$sniffCode] = $this->findClosesMatch($sniffClasses, $sniffCode);
     }
 
-    private function findClosesMatch(array $words, string $input)
+    private function findClosesMatch(array $sniffClasses, string $seekedSniffCode)
     {
         $shortestDistance = -1;
         $closest = '';
-        foreach ($words as $word) {
-            $levenshtein = levenshtein($input, $word);
+        foreach ($sniffClasses as $sniffCode => $sniffClass) {
+            $levenshtein = levenshtein($seekedSniffCode, $sniffClass);
             if ($levenshtein <= $shortestDistance || $shortestDistance < 0) {
-                $closest = $word;
+                $closest = $sniffClass;
                 $shortestDistance = $levenshtein;
             }
         }
 
-        if ($shortestDistance <= 60) {
+        if ($shortestDistance <= 30) {
             return $closest;
         }
 
         return '';
+    }
+
+    private function normalizeToSniffClassCode(string $sniffCode) : string
+    {
+        $parts = explode('.', $sniffCode);
+        if (count($parts) === 4) {
+            return $parts[0].'.'.$parts[1].'.'.$parts[2];
+        }
+
+        return $sniffCode;
     }
 }
