@@ -13,18 +13,22 @@ final class Php7CodeSnifferCommand
      * @var array
      */
     private $source;
+
     /**
      * @var array
      */
     private $standards;
+
     /**
      * @var array
      */
     private $sniffs;
+
     /**
      * @var array
      */
     private $excludedSniffs;
+
     /**
      * @var bool
      */
