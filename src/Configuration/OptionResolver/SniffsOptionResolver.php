@@ -49,9 +49,7 @@ final class SniffsOptionResolver implements OptionResolverInterface
                 foreach ($sniffCodes as $sniffCode) {
                     $sniffCodeToClassList[$sniffCode] = SniffNaming::guessSniffClassBySniffCode($sniffCode);
                 }
-                dump($sniffCodeToClassList);
-                die;
-                return $sniffs;
+                return $sniffCodeToClassList;
             }
         );
     }

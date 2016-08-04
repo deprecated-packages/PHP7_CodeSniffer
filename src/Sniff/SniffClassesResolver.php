@@ -32,43 +32,25 @@ final class SniffClassesResolver
 
     /**
      * @param string[] $standards
-     * @param string[] $includedSniffs
+     * @param string[] $extraSniffs
      * @return string[]
      */
-    public function resolveFromStandardsAndSniffs(array $standards, array $includedSniffs) : array
+    public function resolveFromStandardsAndSniffs(array $standards, array $extraSniffs) : array
     {
         $standards = $this->configurationResolver->resolve('standards', $standards);
-        $includedSniffs = $this->configurationResolver->resolve('sniffs', $includedSniffs);
-        dump($includedSniffs);
-        die;
 
         $sniffs = [];
         foreach ($standards as $rulesetXmlPath) {
-            $newSniffs = $this->rulesetBuilder->buildFromRulesetXml($rulesetXmlPath);
-            $sniffs = array_merge($sniffs, $newSniffs);
+            $sniffs = array_merge($sniffs, $this->rulesetBuilder->buildFromRulesetXml($rulesetXmlPath));
         }
 
-        if ($includedSniffs) {
-            $sniffs = $this->addSniffs($sniffs, $includedSniffs);
-        }
-
-        return $sniffs;
+        $extraSniffs = $this->configurationResolver->resolve('sniffs', $extraSniffs);
+        return $this->mergeSniffs($sniffs, $extraSniffs);
     }
 
-    private function addSniffs(array $sniffs, array $exclusivelyIncludedSniffs)
+    private function mergeSniffs(array $sniffs, array $extraSniffs) : array
     {
-        $finalSniffs = [];
-        foreach ($sniffs as $sniffCode => $sniffClass) {
-            dump($exclusivelyIncludedSniffs);
-            die;
-
-            if (isset($exclusivelyIncludedSniffs[$sniffCode]) === false) {
-                continue;
-            }
-
-            $finalSniffs[$sniffCode] = $sniffClass;
-        }
-
-        return $finalSniffs;
+        $sniffs = array_merge($sniffs, $extraSniffs);
+        return $sniffs;
     }
 }

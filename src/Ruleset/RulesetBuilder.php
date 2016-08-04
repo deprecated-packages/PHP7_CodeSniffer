@@ -79,7 +79,10 @@ final class RulesetBuilder
         $this->includedSniffs = array_unique(array_merge($ownSniffs, $this->includedSniffs));
         $this->excludedSniffs = array_unique($this->excludedSniffs);
 
-        return $this->filterOutExcludedSniffs();
+        $sniffs = $this->filterOutExcludedSniffs();
+        ksort($sniffs);
+
+        return $sniffs;
     }
 
     public function getRuleset() : array

@@ -4,6 +4,7 @@ namespace Symplify\PHP7_CodeSniffer\Tests;
 
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\SniffsOptionResolver;
+use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\SourceOptionResolver;
 use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\StandardsOptionResolver;
 use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
 use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
@@ -38,6 +39,7 @@ final class Instantiator
         $configurationResolver = new ConfigurationResolver();
         $configurationResolver->addOptionResolver(new StandardsOptionResolver(new StandardFinder()));
         $configurationResolver->addOptionResolver(new SniffsOptionResolver());
+        $configurationResolver->addOptionResolver(new SourceOptionResolver());
 
         return $configurationResolver;
     }

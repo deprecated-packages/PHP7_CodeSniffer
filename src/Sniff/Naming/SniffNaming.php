@@ -76,7 +76,7 @@ final class SniffNaming
 
     private static function ensureSniffClassNameIsValid(string $sniffClass)
     {
-        $parts =explode('\\', $sniffClass);
+        $parts = explode('\\', $sniffClass);
 
         if (count($parts) < 4) {
             throw new InvalidSniffClassException(sprintf(

@@ -48,14 +48,14 @@ final class RulesetBuilderTest extends TestCase
         $this->assertInternalType('array', $ruleset);
 
         $this->assertSame([
-           'PSR1.Classes.ClassDeclaration' => ClassDeclarationSniff::class,
-           'PSR1.Files.SideEffects' => SideEffectsSniff::class,
-           'PSR1.Methods.CamelCapsMethodName' => CamelCapsMethodNameSniff::class,
-           'Generic.PHP.DisallowShortOpenTag.EchoFound' => DisallowShortOpenTagSniff::class,
-           'Generic.Files.ByteOrderMark' => ByteOrderMarkSniff::class,
-           'Squiz.Classes.ValidClassName' => ValidClassNameSniff::class,
-           'Generic.NamingConventions.UpperCaseConstantName' => UpperCaseConstantNameSniff::class,
-           'Generic.Files.LineEndings' => LineEndingsSniff::class,
+            'Generic.Files.ByteOrderMark' => ByteOrderMarkSniff::class,
+            'Generic.Files.LineEndings' => LineEndingsSniff::class,
+            'Generic.NamingConventions.UpperCaseConstantName' => UpperCaseConstantNameSniff::class,
+            'Generic.PHP.DisallowShortOpenTag.EchoFound' => DisallowShortOpenTagSniff::class,
+            'PSR1.Classes.ClassDeclaration' => ClassDeclarationSniff::class,
+            'PSR1.Files.SideEffects' => SideEffectsSniff::class,
+            'PSR1.Methods.CamelCapsMethodName' => CamelCapsMethodNameSniff::class,
+            'Squiz.Classes.ValidClassName' => ValidClassNameSniff::class,
         ], $ruleset);
     }
 
