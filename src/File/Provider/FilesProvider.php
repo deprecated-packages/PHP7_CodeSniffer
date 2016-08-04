@@ -55,7 +55,7 @@ final class FilesProvider
     /**
      * @param SplFileInfo[] $files
      * @param bool $isFixer
-     * @return array|File[]
+     * @return File[]
      */
     private function wrapFilesToValueObjects(array $files, bool $isFixer) : array
     {
