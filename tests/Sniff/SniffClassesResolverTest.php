@@ -46,16 +46,16 @@ final class SniffClassesResolverTest extends TestCase
     {
         return [
             [
-                ['PSR2'],
-                ['PEAR.Commenting.ClassComment'],
-                ['PEAR.Commenting.ClassComment', 'PSR2.Namespaces.UseDeclaration'],
-                42
-            ], [
                 [], [], [], 0
             ], [
                 ['PSR2'], [], [], 43
             ], [
                 ['PSR2'], ['PEAR.Commenting.ClassComment'], [], 44
+            ], [
+                ['PSR2'],
+                ['PEAR.Commenting.ClassComment'],
+                ['PEAR.Commenting.ClassComment', 'PSR2.Namespaces.UseDeclaration'],
+                42
             ],
         ];
     }
