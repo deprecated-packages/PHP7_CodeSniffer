@@ -10,7 +10,7 @@ namespace Symplify\PHP7_CodeSniffer\Configuration\OptionResolver;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symplify\PHP7_CodeSniffer\Configuration\ValueNormalizer;
 use Symplify\PHP7_CodeSniffer\Contract\Configuration\OptionResolver\OptionResolverInterface;
-use Symplify\PHP7_CodeSniffer\Exception\Configuration\StandardNotFoundException;
+use Symplify\PHP7_CodeSniffer\Exception\Configuration\OptionResolver\StandardNotFoundException;
 use Symplify\PHP7_CodeSniffer\Standard\StandardFinder;
 
 final class StandardsOptionResolver implements OptionResolverInterface

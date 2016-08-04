@@ -9,6 +9,6 @@ namespace Symplify\PHP7_CodeSniffer\Exception\Configuration;
 
 use Exception;
 
-final class SourceNotFoundException extends Exception
+final class MissingOptionResolverException extends Exception
 {
 }

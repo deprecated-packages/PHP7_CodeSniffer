@@ -5,10 +5,9 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer;
+namespace Symplify\PHP7_CodeSniffer\Ruleset;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
-use Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder;
 
 final class Ruleset
 {

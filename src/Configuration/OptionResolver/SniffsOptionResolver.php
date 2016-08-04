@@ -10,7 +10,7 @@ namespace Symplify\PHP7_CodeSniffer\Configuration\OptionResolver;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symplify\PHP7_CodeSniffer\Configuration\ValueNormalizer;
 use Symplify\PHP7_CodeSniffer\Contract\Configuration\OptionResolver\OptionResolverInterface;
-use Symplify\PHP7_CodeSniffer\Exception\Configuration\InvalidSniffCodeException;
+use Symplify\PHP7_CodeSniffer\Exception\Configuration\OptionResolver\InvalidSniffCodeException;
 
 final class SniffsOptionResolver implements OptionResolverInterface
 {
