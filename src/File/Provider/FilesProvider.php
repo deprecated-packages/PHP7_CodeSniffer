@@ -11,7 +11,6 @@ use SplFileInfo;
 use Symplify\PHP7_CodeSniffer\File\File;
 use Symplify\PHP7_CodeSniffer\File\FileFactory;
 use Symplify\PHP7_CodeSniffer\File\Finder\SourceFinder;
-use Symplify\PHP7_CodeSniffer\Ruleset;
 
 final class FilesProvider
 {
