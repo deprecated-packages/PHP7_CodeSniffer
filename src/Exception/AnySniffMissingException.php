@@ -9,7 +9,7 @@ namespace Symplify\PHP7_CodeSniffer\Exception;
 
 use RuntimeException as BaseRuntimeException;
 
-final class RuntimeException extends BaseRuntimeException
+final class AnySniffMissingException extends BaseRuntimeException
 {
 
 }
