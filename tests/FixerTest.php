@@ -96,6 +96,10 @@ final class FixerTest extends TestCase
         $this->fixer->substrToken(6, 3);
         $token = $this->fixer->getTokenContent(6);
         $this->assertSame('7', $token);
+
+        $this->fixer->substrToken(8, 3, 0);
+        $token = $this->fixer->getTokenContent(8);
+        $this->assertSame('', $token);
     }
 
     public function testLegacyEmptyMethods()

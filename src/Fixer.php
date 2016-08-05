@@ -57,7 +57,7 @@ final class Fixer
     {
         $current = $this->getTokenContent($stackPtr);
 
-        if ($length) {
+        if ($length !== null) {
             $newContent = substr($current, $start, $length);
         } else {
             $newContent = substr($current, $start);
