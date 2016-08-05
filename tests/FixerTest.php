@@ -97,4 +97,11 @@ final class FixerTest extends TestCase
         $token = $this->fixer->getTokenContent(6);
         $this->assertSame('7', $token);
     }
+
+    public function testLegacyEmptyMethods()
+    {
+        $this->fixer->startFile($this->file);
+        $this->fixer->beginChangeset();
+        $this->fixer->endChangeset();
+    }
 }
