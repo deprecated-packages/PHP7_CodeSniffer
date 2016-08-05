@@ -20,24 +20,19 @@ final class SniffNaming
 
         $parts = explode('.', $sniffCode);
 
-        $firstGuess = $parts[0].'CodingStandard\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff';
-        if (class_exists($firstGuess)) {
-            return $firstGuess;
+        $possibleClasses = [
+            $parts[0].'CodingStandard\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff',
+            $parts[0].'\\CodingStandard\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff',
+            'PHP_CodeSniffer\\Standards\\'.$parts[0].'\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff',
+        ];
+
+        foreach ($possibleClasses as $possibleClass) {
+            if (class_exists($possibleClass)) {
+                return $possibleClass;
+            }
         }
 
-        $secondGuess = $parts[0].'\\CodingStandard\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff';
-        if (class_exists($secondGuess)) {
-            return $secondGuess;
-        }
-
-        $thirdGuess = 'PHP_CodeSniffer\\Standards\\'.$parts[0]
-            .'\\Sniffs\\'.$parts[1].'\\'.$parts[2].'Sniff';
-
-        if (class_exists($thirdGuess)) {
-            return $thirdGuess;
-        }
-
-        self::reportClassCouldNotBeFound($sniffCode, [$firstGuess, $secondGuess, $thirdGuess]);
+        self::reportClassCouldNotBeFound($sniffCode, $possibleClasses);
     }
 
     public static function guessCodeByClass(string $sniffClass) : string
