@@ -99,8 +99,16 @@ final class Instantiator
         return new Php7CodeSniffer(
             new SniffDispatcher(new CurrentListenerSniffCodeProvider()),
             new FilesProvider(new SourceFinder(), self::createFileFactory()),
-            new SniffClassesResolver(self::createConfigurationResolver(), self::createRulesetBuilder()),
+            self::createSniffCassesResolver(),
             new SniffFactory()
+        );
+    }
+
+    public static function createSniffCassesResolver() : SniffClassesResolver
+    {
+        return new SniffClassesResolver(
+            self::createConfigurationResolver(),
+            self::createRulesetBuilder()
         );
     }
 }
