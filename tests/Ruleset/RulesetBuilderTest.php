@@ -45,4 +45,20 @@ final class RulesetBuilderTest extends TestCase
             'Squiz.Classes.ValidClassName' => ValidClassNameSniff::class,
         ], $ruleset);
     }
+
+    public function testGetRuleset()
+    {
+        $this->rulesetBuilder->buildFromRulesetXml(
+            __DIR__ . '/RulesetBuilderSource/ruleset.xml'
+        );
+
+        $ruleset = $this->rulesetBuilder->getRuleset();
+        $this->assertSame([
+            'Generic.Files.LineEndings' => [
+                'properties' => [
+                    'eolChar' => '\n'
+                ]
+            ]
+        ], $ruleset);
+    }
 }

@@ -17,6 +17,7 @@ use Symplify\PHP7_CodeSniffer\Parser\FileToTokensParser;
 use Symplify\PHP7_CodeSniffer\Php7CodeSniffer;
 use Symplify\PHP7_CodeSniffer\Report\ErrorDataCollector;
 use Symplify\PHP7_CodeSniffer\Report\ErrorMessageSorter;
+use Symplify\PHP7_CodeSniffer\Ruleset\Extractor\CustomPropertyValuesExtractor;
 use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
 use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
 use Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder;
@@ -34,8 +35,9 @@ final class Instantiator
         return new RulesetBuilder(
             self::createSniffFinder(),
             new StandardFinder(),
-            self::createReferenceNormalizer()
-        );
+            self::createReferenceNormalizer(),
+            new CustomPropertyValuesExtractor()
+       );
     }
 
     public static function createReferenceNormalizer() : ReferenceNormalizer
