@@ -22,7 +22,8 @@ final class CustomPropertyValuesExtractor
         $modifiedPropertyValues = [];
         foreach ($ruleElement->properties->property as $property) {
             $name = (string) $property['name'];
-            $modifiedPropertyValues[$sniffCode]['properties'][$name] = $this->resolveValue($property);
+            $value = $this->resolveValue($property);
+            $modifiedPropertyValues[$sniffCode]['properties'][$name] = $value;
         }
 
         return $modifiedPropertyValues;

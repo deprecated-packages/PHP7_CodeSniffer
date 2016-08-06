@@ -37,7 +37,7 @@ final class Instantiator
             new StandardFinder(),
             self::createReferenceNormalizer(),
             new CustomPropertyValuesExtractor()
-       );
+        );
     }
 
     public static function createReferenceNormalizer() : ReferenceNormalizer

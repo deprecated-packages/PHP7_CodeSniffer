@@ -5,4 +5,4 @@ services:
     - Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer
 
     # xml
-    - Symplify\PHP7_CodeSniffer\Ruleset\Rule\RuleProcessor
+    - Symplify\PHP7_CodeSniffer\Ruleset\Extractor\CustomPropertyValuesExtractor
