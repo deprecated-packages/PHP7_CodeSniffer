@@ -59,19 +59,24 @@ final class RulesetBuilder
         $includedSniffs = [];
         $excludedSniffs = [];
 
+        $this->ruleset = array_merge(
+            $this->ruleset,
+            $this->customPropertyValuesExtractor->extractFromRulesetXmlFile($rulesetXmlFile)
+        );
+
         foreach ($rulesetXml->rule as $rule) {
-            if (isset($rule['ref']) === false) {
+            if (!isset($rule['ref'])) {
                 continue;
             }
 
             $expandedSniffs = $this->normalizeReference($rule['ref']);
-            $newSniffs = array_diff($expandedSniffs, $includedSniffs);
-
             $includedSniffs = array_merge($includedSniffs, $expandedSniffs);
-
             $excludedSniffs = $this->processExcludedRules($excludedSniffs, $rule);
 
-            $this->ruleset = $this->customPropertyValuesExtractor->extractFromRuleXmlElement($rule);
+//            $this->ruleset = array_merge(
+//                $this->ruleset,
+//                $this->customPropertyValuesExtractor->extractFromRuleXmlElement($rule)
+//            );
         }
 
         $ownSniffs = $this->getOwnSniffsFromRuleset($rulesetXmlFile);
@@ -80,7 +85,6 @@ final class RulesetBuilder
         $excludedSniffs = array_unique($excludedSniffs);
 
         $sniffs = $this->filterOutExcludedSniffs($includedSniffs, $excludedSniffs);
-
         $sniffs = $this->sortSniffs($sniffs);
 
         // todo: decorate with custom rules!
