@@ -72,15 +72,9 @@ final class RulesetBuilder
             $expandedSniffs = $this->normalizeReference($rule['ref']);
             $includedSniffs = array_merge($includedSniffs, $expandedSniffs);
             $excludedSniffs = $this->processExcludedRules($excludedSniffs, $rule);
-
-//            $this->ruleset = array_merge(
-//                $this->ruleset,
-//                $this->customPropertyValuesExtractor->extractFromRuleXmlElement($rule)
-//            );
         }
 
         $ownSniffs = $this->getOwnSniffsFromRuleset($rulesetXmlFile);
-
         $includedSniffs = array_unique(array_merge($ownSniffs, $includedSniffs));
         $excludedSniffs = array_unique($excludedSniffs);
 
