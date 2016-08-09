@@ -12,6 +12,8 @@ services:
     - Symplify\PHP7_CodeSniffer\Fixer
     - Symplify\PHP7_CodeSniffer\Php7CodeSniffer
 
+    - Symplify\PHP7_CodeSniffer\Composer\ClassLoaderDecorator
+
     # tokenizer / parser
     - Symplify\PHP7_CodeSniffer\Parser\FileToTokensParser
     - Symplify\PHP7_CodeSniffer\Parser\EolCharDetector

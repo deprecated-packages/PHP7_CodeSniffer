@@ -8,6 +8,7 @@
 namespace Symplify\PHP7_CodeSniffer\Ruleset;
 
 use SimpleXMLElement;
+use Symplify\PHP7_CodeSniffer\Ruleset\Extractor\CustomPropertyValuesExtractor;
 use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
@@ -30,121 +31,64 @@ final class RulesetBuilder
     private $ruleset = [];
 
     /**
-     * @var array
-     */
-    private $includedSniffs = [];
-
-    /**
-     * @var array
-     */
-    private $excludedSniffs = [];
-
-    /**
      * @var StandardFinder
      */
     private $standardFinder;
 
+    /**
+     * @var CustomPropertyValuesExtractor
+     */
+    private $customPropertyValuesExtractor;
+
     public function __construct(
         SniffFinder $sniffFinder,
         StandardFinder $standardFinder,
-        ReferenceNormalizer $ruleReferenceNormalizer
+        ReferenceNormalizer $ruleReferenceNormalizer,
+        CustomPropertyValuesExtractor $customPropertyValuesExtractor
     ) {
         $this->sniffFinder = $sniffFinder;
         $this->standardFinder = $standardFinder;
         $this->ruleReferenceNormalizer = $ruleReferenceNormalizer;
+        $this->customPropertyValuesExtractor = $customPropertyValuesExtractor;
     }
 
     public function buildFromRulesetXml(string $rulesetXmlFile) : array
     {
-        $this->cleanCache();
-
         $rulesetXml = simplexml_load_file($rulesetXmlFile);
+
+        $includedSniffs = [];
+        $excludedSniffs = [];
+
+        $this->ruleset = array_merge(
+            $this->ruleset,
+            $this->customPropertyValuesExtractor->extractFromRulesetXmlFile($rulesetXmlFile)
+        );
+
         foreach ($rulesetXml->rule as $rule) {
-            if (isset($rule['ref']) === false) {
+            if (!isset($rule['ref'])) {
                 continue;
             }
 
             $expandedSniffs = $this->normalizeReference($rule['ref']);
-            $newSniffs = array_diff($expandedSniffs, $this->includedSniffs);
-
-            $this->includedSniffs = array_merge($this->includedSniffs, $expandedSniffs);
-
-            $this->processExcludedRules($rule);
-
-            $this->processRule($rule, $newSniffs);
+            $includedSniffs = array_merge($includedSniffs, $expandedSniffs);
+            $excludedSniffs = $this->processExcludedRules($excludedSniffs, $rule);
         }
 
         $ownSniffs = $this->getOwnSniffsFromRuleset($rulesetXmlFile);
+        $includedSniffs = array_unique(array_merge($ownSniffs, $includedSniffs));
+        $excludedSniffs = array_unique($excludedSniffs);
 
-        $this->includedSniffs = array_unique(array_merge($ownSniffs, $this->includedSniffs));
-        $this->excludedSniffs = array_unique($this->excludedSniffs);
+        $sniffs = $this->filterOutExcludedSniffs($includedSniffs, $excludedSniffs);
+        $sniffs = $this->sortSniffs($sniffs);
 
-        $sniffs = $this->filterOutExcludedSniffs();
-        return $this->sortSniffs($sniffs);
+        // todo: decorate with custom rules!
+
+        return $sniffs;
     }
 
     public function getRuleset() : array
     {
         return $this->ruleset;
-    }
-
-    /**
-     * Processes a rule from a ruleset XML file, overriding built-in defaults.
-     */
-    private function processRule(SimpleXMLElement $rule, array $newSniffs)
-    {
-        $ref  = (string) $rule['ref'];
-        $todo = [$ref];
-
-        $parts = explode('.', $ref);
-        if (count($parts) <= 2) {
-            // We are processing a standard or a category of sniffs.
-            foreach ($newSniffs as $sniffFile) {
-                $parts = explode(DIRECTORY_SEPARATOR, $sniffFile);
-                $sniffName = array_pop($parts);
-                $sniffCategory = array_pop($parts);
-                array_pop($parts);
-                $sniffStandard = array_pop($parts);
-                $todo[] = $sniffStandard.'.'.$sniffCategory.'.'.substr($sniffName, 0, -9);
-            }
-        }
-
-        foreach ($todo as $code) {
-            // Custom properties.
-            if (isset($rule->properties) === true) {
-                foreach ($rule->properties->property as $prop) {
-                    if (isset($this->ruleset[$code]) === false) {
-                        $this->ruleset[$code] = [
-                            'properties' => [],
-                        ];
-                    } else if (isset($this->ruleset[$code]['properties']) === false) {
-                        $this->ruleset[$code]['properties'] = [];
-                    }
-
-                    $name = (string) $prop['name'];
-                    if (isset($prop['type']) === true
-                        && (string) $prop['type'] === 'array'
-                    ) {
-                        $value  = (string) $prop['value'];
-                        $values = [];
-                        foreach (explode(',', $value) as $val) {
-                            $v = '';
-
-                            list($k,$v) = explode('=>', $val.'=>');
-                            if ($v !== '') {
-                                $values[$k] = $v;
-                            } else {
-                                $values[] = $k;
-                            }
-                        }
-
-                        $this->ruleset[$code]['properties'][$name] = $values;
-                    } else {
-                        $this->ruleset[$code]['properties'][$name] = (string) $prop['value'];
-                    }
-                }
-            }
-        }
     }
 
     private function normalizeReference(string $reference)
@@ -161,12 +105,6 @@ final class RulesetBuilder
         return $this->ruleReferenceNormalizer->normalize($reference);
     }
 
-    private function cleanCache()
-    {
-        $this->includedSniffs = [];
-        $this->excludedSniffs = [];
-    }
-
     /**
      * @return string[]
      */
@@ -181,23 +119,25 @@ final class RulesetBuilder
         return [];
     }
 
-    private function processExcludedRules(SimpleXMLElement $rule)
+    private function processExcludedRules($excludedSniffs, SimpleXMLElement $rule) : array
     {
         if (isset($rule->exclude)) {
             foreach ($rule->exclude as $exclude) {
-                $this->excludedSniffs = array_merge(
-                    $this->excludedSniffs,
+                $excludedSniffs = array_merge(
+                    $excludedSniffs,
                     $this->normalizeReference($exclude['name'])
                 );
             }
         }
+
+        return $excludedSniffs;
     }
 
-    private function filterOutExcludedSniffs() : array
+    private function filterOutExcludedSniffs(array $includedSniffs, array $excludedSniffs) : array
     {
         $sniffs = [];
-        foreach ($this->includedSniffs as $sniffCode => $sniffClass) {
-            if (!in_array($sniffCode, $this->excludedSniffs)) {
+        foreach ($includedSniffs as $sniffCode => $sniffClass) {
+            if (!in_array($sniffCode, $excludedSniffs)) {
                 $sniffs[$sniffCode] = $sniffClass;
             }
         }

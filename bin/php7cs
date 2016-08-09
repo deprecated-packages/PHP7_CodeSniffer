@@ -1,16 +1,24 @@
 #!/usr/bin/env php
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+/** @var Composer\Autoload\ClassLoader $classLoader */
+$classLoader = require __DIR__ . '/../vendor/autoload.php';
+
+Symplify\PHP7_CodeSniffer\Legacy\ClassAliases::registerAliases();
 
 // 1. build DI container
 $containerFactory = new Symplify\PHP7_CodeSniffer\DI\ContainerFactory();
 $container = $containerFactory->create();
 
-// 2. get Console Application
+// 2. autoload sniffs, if not yet
+/** @var Symplify\PHP7_CodeSniffer\Composer\ClassLoaderDecorator $classLoaderDecorator */
+$classLoaderDecorator = $container->getByType(Symplify\PHP7_CodeSniffer\Composer\ClassLoaderDecorator::class);
+$classLoaderDecorator->decorate($classLoader);
+
+// 3. get Console Application
 /** @var Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication $codeSnifferApplication */
 $codeSnifferApplication = $container->getByType(Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication::class);
 
-// 3. run it!
+// 4. run it!
 $codeSnifferApplication->setDefaultCommand('run', true);
 $codeSnifferApplication->run();

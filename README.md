@@ -50,6 +50,20 @@ vendor/bin/php7cs src --standards=PSR2 --sniffs=Zend.Files.ClosingTag
 vendor/bin/php7cs src --standards=PSR2 --exclude-sniffs=PSR2.Namespaces.UseDeclaration
 ```
 
+## Testing
+
+```bash
+bin/php7cs src tests --standards=PSR2
+vendor/bin/phpunit
+```
+
+
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for information.
+Rules are simple:
+
+- new feature needs tests
+- all tests must pass
+- 1 feature per PR
+
+I'd be happy to merge your feature then.

@@ -20,7 +20,7 @@ final class StandardFinderTest extends TestCase
     public function testGetStandards()
     {
         $standards = $this->standardFinder->getStandards();
-        $this->assertCount(7, $standards);
+        $this->assertCount(8, $standards);
     }
 
     public function testGetRulesetPathForStandardName()

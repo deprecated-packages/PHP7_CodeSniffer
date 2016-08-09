@@ -46,7 +46,6 @@ final class SniffFinder
         }
 
         $robotLoader = $this->sniffClassRobotLoaderFactory->createForDirectory($directory);
-
         $sniffClasses = $this->sniffClassFilter->filterOutAbstractAndNonPhpSniffClasses(
             array_keys($robotLoader->getIndexedClasses())
         );

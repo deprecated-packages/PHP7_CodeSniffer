@@ -9,7 +9,7 @@ namespace Symplify\PHP7_CodeSniffer;
 
 use Symplify\PHP7_CodeSniffer\EventDispatcher\Event\CheckFileTokenEvent;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\SniffDispatcher;
-use Symplify\PHP7_CodeSniffer\Exception\RuntimeException;
+use Symplify\PHP7_CodeSniffer\Exception\AnySniffMissingException;
 use Symplify\PHP7_CodeSniffer\File\File;
 use Symplify\PHP7_CodeSniffer\File\Provider\FilesProvider;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffFactory;
@@ -135,14 +135,16 @@ final class Php7CodeSniffer
 
     private function setupVerbosityToMakeLegacyCodeRun()
     {
-        define('PHP_CODESNIFFER_VERBOSITY', 0);
+        if (!defined('PHP_CODESNIFFER_VERBOSITY')) {
+            define('PHP_CODESNIFFER_VERBOSITY', 0);
+        }
     }
 
     private function ensureSniffsAreRegistered()
     {
         $listeners = $this->sniffDispatcher->getListeners();
         if ($listeners === []) {
-            throw new RuntimeException(
+            throw new AnySniffMissingException(
                 'You need to specify some sniffs with "--standards=..." or "--sniffs=...".'
             );
         }
