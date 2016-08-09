@@ -75,7 +75,7 @@ final class InfoMessagePrinter
         if ($fixableCount = $this->errorDataCollector->getFixableErrorCount()) {
             $howMany = $fixableCount;
             if ($fixableCount === $this->errorDataCollector->getErrorCount()) {
-                $howMany = 'all';
+                $howMany = 'ALL';
             }
 
             $this->codeSnifferStyle->success(sprintf(

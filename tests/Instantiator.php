@@ -2,10 +2,14 @@
 
 namespace Symplify\PHP7_CodeSniffer\Tests;
 
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Tests\Output\TestOutput;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\SniffsOptionResolver;
 use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\SourceOptionResolver;
 use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\StandardsOptionResolver;
+use Symplify\PHP7_CodeSniffer\Console\Style\CodeSnifferStyle;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\CurrentListenerSniffCodeProvider;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\SniffDispatcher;
 use Symplify\PHP7_CodeSniffer\File\FileFactory;
@@ -88,7 +92,7 @@ final class Instantiator
         );
     }
 
-    private static function createErrorDataCollector() : ErrorDataCollector
+    public static function createErrorDataCollector() : ErrorDataCollector
     {
         return new ErrorDataCollector(
             new CurrentListenerSniffCodeProvider(),
@@ -111,6 +115,14 @@ final class Instantiator
         return new SniffClassesResolver(
             self::createConfigurationResolver(),
             self::createRulesetBuilder()
+        );
+    }
+
+    public static function createCodeSnifferStyle() : CodeSnifferStyle
+    {
+        return new CodeSnifferStyle(
+            new ArgvInput(),
+            new TestOutput()
         );
     }
 }
