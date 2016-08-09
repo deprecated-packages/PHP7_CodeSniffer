@@ -1,7 +1,7 @@
 <?php
 
 /** @var Composer\Autoload\ClassLoader $classLoader */
-$classLoader = require_once __DIR__ . '/../vendor/autoload.php';
+$classLoader = require __DIR__ . '/../vendor/autoload.php';
 
 Symplify\PHP7_CodeSniffer\Legacy\ClassAliases::registerAliases();
 
