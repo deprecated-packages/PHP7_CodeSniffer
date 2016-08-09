@@ -19,7 +19,6 @@ final class Php7CodeSnifferApplicationTest extends TestCase
             PHPUnit_Framework_Assert::getObjectAttribute($application, 'dispatcher')
         );
 
-
         $definition = $application->getDefinition();
 
         $this->assertCount(1, $definition->getArguments());

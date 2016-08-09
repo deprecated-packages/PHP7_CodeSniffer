@@ -57,7 +57,14 @@ final class InfoMessagePrinterTest extends TestCase
     public function testFixableError()
     {
         $this->errorDataCollector->addErrorMessage('someFile.php', 'Message', 1, 'Code', [], true);
-        $this->errorDataCollector->addErrorMessage('someOtherFile.php', 'Other Message', 1, 'Code', [], false);
+        $this->errorDataCollector->addErrorMessage(
+            'someOtherFile.php',
+            'Other Message',
+            1,
+            'Code',
+            [],
+            false
+        );
 
         $this->infoMessagePrinter->printFoundErrorsStatus(true);
         $this->assertContains(
