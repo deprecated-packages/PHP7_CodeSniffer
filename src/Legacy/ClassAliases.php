@@ -14,7 +14,12 @@ final class ClassAliases
 {
     public static function registerAliases()
     {
-        class_alias(File::class, 'PHP_CodeSniffer_File');
-        class_alias(Sniff::class, 'PHP_CodeSniffer_Sniff');
+        if (!class_exists('PHP_CodeSniffer_File')) {
+            class_alias(File::class, 'PHP_CodeSniffer_File');
+        }
+
+        if (!interface_exists('PHP_CodeSniffer_Sniff')) {
+            class_alias(Sniff::class, 'PHP_CodeSniffer_Sniff');
+        }
     }
 }
