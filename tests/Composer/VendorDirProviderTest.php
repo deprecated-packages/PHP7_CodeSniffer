@@ -9,6 +9,16 @@ final class VendorDirProviderTest extends TestCase
 {
     public function testProvide()
     {
+        $vendorDirProvider = new VendorDirProvider;
+
+        $this->assertSame(
+            realpath(__DIR__.'/../../vendor'),
+            $vendorDirProvider::provide()
+        );
+    }
+
+    public function testCachedProvide()
+    {
         $this->assertSame(
             realpath(__DIR__.'/../../vendor'),
             VendorDirProvider::provide()

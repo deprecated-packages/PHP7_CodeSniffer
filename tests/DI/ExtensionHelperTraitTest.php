@@ -28,7 +28,6 @@ final class ExtensionHelperTraitTest extends TestCase
         );
     }
 
-
     public function testAddServicesToCollector()
     {
         $containerBuilder = $this->extensionWithTrait->getContainerBuilder();
