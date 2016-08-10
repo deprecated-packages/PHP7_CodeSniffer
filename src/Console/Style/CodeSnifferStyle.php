@@ -23,14 +23,6 @@ final class CodeSnifferStyle
         $this->symfonyStyle = new SymfonyStyle($input, $output);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function text(string $message)
-    {
-        $this->symfonyStyle->text($message);
-    }
-
     public function success(string $message)
     {
         $this->symfonyStyle->success($message);
@@ -39,16 +31,6 @@ final class CodeSnifferStyle
     public function error(string $message)
     {
         $this->symfonyStyle->error($message);
-    }
-
-    public function note(string $message)
-    {
-        $this->symfonyStyle->note($message);
-    }
-
-    public function newLine()
-    {
-        $this->symfonyStyle->newLine();
     }
 
     public function writeErrorReports(array $errorReports)

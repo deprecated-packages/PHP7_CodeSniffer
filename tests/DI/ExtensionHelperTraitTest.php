@@ -43,7 +43,11 @@ final class ExtensionHelperTraitTest extends TestCase
 
         $this->assertSame([], $collectorDefinition->getSetup());
 
-        $this->extensionWithTrait->addServicesToCollector(Collector::class, Collected::class, 'add');
+        $this->extensionWithTrait->addServicesToCollector(
+            Collector::class,
+            Collected::class,
+            'add'
+        );
 
         $this->assertNotSame([], $collectorDefinition->getSetup());
         $this->assertEquals(

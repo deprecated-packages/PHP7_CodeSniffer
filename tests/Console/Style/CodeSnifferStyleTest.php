@@ -25,8 +25,36 @@ final class CodeSnifferStyleTest extends TestCase
         $this->codeSnifferStyle = new CodeSnifferStyle(new ArgvInput(), $this->consoleOutput);
     }
 
-    public function test()
+    public function testSuccess()
     {
-        // $this->codeSnifferStyle->error(); // todo:
+        $this->codeSnifferStyle->success('ok message');
+        $this->assertContains(' [OK] ok message ', $this->consoleOutput->fetch());
+    }
+
+    public function testError()
+    {
+        $this->codeSnifferStyle->error('error message');
+        $this->assertContains(' [ERROR] error message ', $this->consoleOutput->fetch());
+    }
+
+    public function testWriteErrorReports()
+    {
+        $errorMessages['someFile.php'][] = [
+            'line' => 1,
+            'message' => 'some message',
+            'sniffCode' => 'code',
+            'isFixable'  => true
+        ];
+
+        $this->codeSnifferStyle->writeErrorReports($errorMessages);
+
+        $this->assertContains(
+            'FILE: someFile.php',
+            $output = $this->consoleOutput->fetch()
+        );
+        $this->assertContains(
+            '1      some message   code         YES',
+            $output
+        );
     }
 }
