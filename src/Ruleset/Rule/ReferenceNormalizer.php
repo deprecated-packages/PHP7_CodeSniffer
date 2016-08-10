@@ -41,10 +41,6 @@ final class ReferenceNormalizer
 
     public function normalize(string $reference) : array
     {
-        if ($this->isSniffFileReference($reference)) {
-            return [$reference];
-        }
-
         return [
             $reference => $this->normalizeSniffNameToClass($reference)
         ];
@@ -63,15 +59,6 @@ final class ReferenceNormalizer
     {
         $standards = $this->standardFinder->getStandards();
         if (isset($standards[$reference])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private function isSniffFileReference(string $reference) : bool
-    {
-        if (Strings::endsWith($reference, 'Sniff.php')) {
             return true;
         }
 

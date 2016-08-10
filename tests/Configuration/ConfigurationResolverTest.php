@@ -44,4 +44,12 @@ final class ConfigurationResolverTest extends TestCase
             $this->configurationResolver->resolve('sniffs', ['PEAR.Commenting.ClassComment'])
         );
     }
+
+    /**
+     * @expectedException \Symplify\PHP7_CodeSniffer\Exception\Configuration\MissingOptionResolverException
+     */
+    public function testResolveNonExistingOption()
+    {
+        $this->configurationResolver->resolve('random', []);
+    }
 }
