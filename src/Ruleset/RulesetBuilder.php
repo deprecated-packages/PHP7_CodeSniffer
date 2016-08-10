@@ -93,10 +93,6 @@ final class RulesetBuilder
 
     private function normalizeReference(string $reference)
     {
-        if ($this->ruleReferenceNormalizer->isRulesetReference($reference)) {
-            return $this->buildFromRulesetXml($reference);
-        }
-
         if ($this->ruleReferenceNormalizer->isStandardReference($reference)) {
             $ruleset = $this->standardFinder->getRulesetPathForStandardName($reference);
             return $this->buildFromRulesetXml($ruleset);

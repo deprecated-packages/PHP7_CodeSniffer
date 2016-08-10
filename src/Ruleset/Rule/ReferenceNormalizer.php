@@ -46,15 +46,6 @@ final class ReferenceNormalizer
         ];
     }
 
-    public function isRulesetReference(string $reference) : bool
-    {
-        if (Strings::endsWith($reference, 'ruleset.xml')) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function isStandardReference(string $reference) : bool
     {
         $standards = $this->standardFinder->getStandards();
