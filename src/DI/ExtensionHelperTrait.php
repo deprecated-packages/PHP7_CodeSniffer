@@ -15,7 +15,7 @@ use Nette\DI\ServiceDefinition;
  */
 trait ExtensionHelperTrait
 {
-    private function addServicesToCollector(
+    public function addServicesToCollector(
         string $collectorClass,
         string $collectedClass,
         string $adderMethodName
@@ -31,7 +31,7 @@ trait ExtensionHelperTrait
         }
     }
 
-    private function getDefinitionByType(string $type) : ServiceDefinition
+    public function getDefinitionByType(string $type) : ServiceDefinition
     {
         $containerBuilder = $this->getContainerBuilder();
         $definitionName = $containerBuilder->getByType($type);
