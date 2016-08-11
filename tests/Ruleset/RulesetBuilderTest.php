@@ -48,9 +48,12 @@ final class RulesetBuilderTest extends TestCase
 
     public function testGetRuleset()
     {
-        $this->rulesetBuilder->buildFromRulesetXml(
+        $ruleset = $this->rulesetBuilder->buildFromRulesetXml(
             __DIR__ . '/RulesetBuilderSource/ruleset.xml'
         );
+
+        dump($ruleset);
+        die;
 
         $ruleset = $this->rulesetBuilder->getRuleset();
         $this->assertSame([

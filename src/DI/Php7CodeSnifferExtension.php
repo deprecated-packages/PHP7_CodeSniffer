@@ -12,6 +12,9 @@ use Symfony\Component\Console\Command\Command;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication;
 use Symplify\PHP7_CodeSniffer\Contract\Configuration\OptionResolver\OptionResolverInterface;
+use Symplify\PHP7_CodeSniffer\Contract\Ruleset\ToSniffNormalizer\ToSniffNormalizerInterface;
+use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
+use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\RulesetXmlToSniffNormalizer;
 
 final class Php7CodeSnifferExtension extends CompilerExtension
 {
@@ -30,8 +33,11 @@ final class Php7CodeSnifferExtension extends CompilerExtension
      */
     public function beforeCompile()
     {
+        $this->loadToSniffNormalizersToReferenceNormalizer();
         $this->loadConsoleCommandsToConsoleApplication();
         $this->loadOptionResolversToConfigurationResolver();
+
+        $this->injectReferenceNormalizer();
     }
 
     private function loadServicesFromConfig()
@@ -45,6 +51,15 @@ final class Php7CodeSnifferExtension extends CompilerExtension
         $this->addServicesToCollector(Php7CodeSnifferApplication::class, Command::class, 'add');
     }
 
+    private function loadToSniffNormalizersToReferenceNormalizer()
+    {
+        $this->addServicesToCollector(
+            ReferenceNormalizer::class,
+            ToSniffNormalizerInterface::class,
+            'addNormalizer'
+        );
+    }
+
     private function loadOptionResolversToConfigurationResolver()
     {
         $this->addServicesToCollector(
@@ -52,5 +67,13 @@ final class Php7CodeSnifferExtension extends CompilerExtension
             OptionResolverInterface::class,
             'addOptionResolver'
         );
+    }
+
+    private function injectReferenceNormalizer()
+    {
+        $definition = $this->getDefinitionByType(RulesetXmlToSniffNormalizer::class);
+        $definition->addSetup('setReferenceNormalizer', [
+            '@' . $this->getDefinitionByType(ReferenceNormalizer::class)
+        ]);
     }
 }

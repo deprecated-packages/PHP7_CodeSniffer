@@ -3,7 +3,6 @@
 namespace Symplify\PHP7_CodeSniffer\Tests;
 
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Tests\Output\TestOutput;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Configuration\OptionResolver\SniffsOptionResolver;
@@ -25,6 +24,9 @@ use Symplify\PHP7_CodeSniffer\Ruleset\Extractor\CustomPropertyValuesExtractor;
 use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
 use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
 use Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder;
+use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\RulesetXmlToSniffNormalizer;
+use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\SniffCodeToSniffNormalizer;
+use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\StandardNameToSniffNormalizer;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassFilter;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassRobotLoaderFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
@@ -38,7 +40,6 @@ final class Instantiator
     {
         return new RulesetBuilder(
             self::createSniffFinder(),
-            new StandardFinder(),
             self::createReferenceNormalizer(),
             new CustomPropertyValuesExtractor()
         );
@@ -46,11 +47,20 @@ final class Instantiator
 
     public static function createReferenceNormalizer() : ReferenceNormalizer
     {
-        return new ReferenceNormalizer(
+        $referenceNormalizer = new ReferenceNormalizer(
             self::createSniffFinder(),
             new StandardFinder(),
             new Router(self::createSniffFinder())
         );
+
+        $referenceNormalizer->addNormalizer(new SniffCodeToSniffNormalizer(self::createRouter()));
+        $referenceNormalizer->addNormalizer(new RulesetXmlToSniffNormalizer(
+            self::createSniffFinder(),
+            new CustomPropertyValuesExtractor()
+        ));
+        $referenceNormalizer->addNormalizer(new StandardNameToSniffNormalizer(new StandardFinder()));
+
+        return $referenceNormalizer;
     }
 
     public static function createConfigurationResolver() : ConfigurationResolver
@@ -124,5 +134,10 @@ final class Instantiator
             new ArgvInput(),
             new TestOutput()
         );
+    }
+
+    public static function createRouter() : Router
+    {
+        return new Router(self::createSniffFinder());
     }
 }

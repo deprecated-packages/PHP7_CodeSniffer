@@ -26,8 +26,6 @@ final class Ruleset
      */
     public function decorateSniffsWithCustomRules(array $sniffs, array $ruleset)
     {
-        dump($ruleset);
-        die;
         // todo: put to SniffDispatcher on sniff loading?
         //        $ruleset = $this->rulesetBuilder->getRuleset();
 

@@ -36,5 +36,6 @@ final class RulesetTest extends TestCase
 
     public function test()
     {
+        $this->assertSame(1, 1);
     }
 }

@@ -6,3 +6,8 @@ services:
 
     # xml
     - Symplify\PHP7_CodeSniffer\Ruleset\Extractor\CustomPropertyValuesExtractor
+
+    # normalizers
+    - Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\SniffCodeToSniffNormalizer
+    - Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\StandardNameToSniffNormalizer
+    - Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\RulesetXmlToSniffNormalizer
