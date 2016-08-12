@@ -46,7 +46,7 @@ final class RulesetXmlToSniffNormalizer implements ToSniffNormalizerInterface
 
     public function isMatch(string $reference) : bool
     {
-        return Strings::endsWith('ruleset.xml', $reference);
+        return Strings::endsWith($reference, 'ruleset.xml');
     }
 
     public function normalize(string $reference) : array

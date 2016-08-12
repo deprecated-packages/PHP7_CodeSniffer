@@ -8,27 +8,16 @@
 namespace Symplify\PHP7_CodeSniffer\Ruleset;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
-use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
 
 final class Ruleset
 {
-    /**
-     * @var ReferenceNormalizer
-     */
-    private $referenceNormalizer;
-
-    public function __construct(ReferenceNormalizer $referenceNormalizer)
-    {
-        $this->referenceNormalizer = $referenceNormalizer;
-    }
-
     /**
      * @param array|Sniff[] $sniffs
      */
     public function decorateSniffsWithCustomRules(array $sniffs, array $ruleset)
     {
         // todo: put to SniffDispatcher on sniff loading?
-        //        $ruleset = $this->rulesetBuilder->getRuleset();
+        // $ruleset = $this->rulesetBuilder->getRuleset();
 
         foreach ($sniffs as $sniffCode => $sniffObject) {
             if (!isset($ruleset[$sniffCode]['properties'])) {

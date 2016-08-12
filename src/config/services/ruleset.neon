@@ -1,12 +1,11 @@
 services:
-    - Symplify\PHP7_CodeSniffer\Ruleset\Ruleset
     - Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router
-    - Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer
 
     # xml
     - Symplify\PHP7_CodeSniffer\Ruleset\Extractor\CustomPropertyValuesExtractor
 
     # normalizers
+    - Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer
     - Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\SniffCodeToSniffNormalizer
     - Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\StandardNameToSniffNormalizer
     - Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\RulesetXmlToSniffNormalizer
