@@ -73,7 +73,7 @@ final class Php7CodeSnifferExtension extends CompilerExtension
     {
         $definition = $this->getDefinitionByType(RulesetXmlToSniffNormalizer::class);
         $definition->addSetup('setReferenceNormalizer', [
-            '@' . $this->getDefinitionByType(ReferenceNormalizer::class)
+            '@' . $this->getDefinitionByType(ReferenceNormalizer::class)->getClass()
         ]);
     }
 }

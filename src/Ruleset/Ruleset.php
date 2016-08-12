@@ -8,17 +8,18 @@
 namespace Symplify\PHP7_CodeSniffer\Ruleset;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
+use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
 
 final class Ruleset
 {
     /**
-     * @var RulesetBuilder
+     * @var ReferenceNormalizer
      */
-    private $rulesetBuilder;
+    private $referenceNormalizer;
 
-    public function __construct(RulesetBuilder $rulesetBuilder)
+    public function __construct(ReferenceNormalizer $referenceNormalizer)
     {
-        $this->rulesetBuilder = $rulesetBuilder;
+        $this->referenceNormalizer = $referenceNormalizer;
     }
 
     /**

@@ -31,7 +31,7 @@ final class RulesetTest extends TestCase
 
     protected function setUp()
     {
-        $this->ruleset = new Ruleset(Instantiator::createRulesetBuilder());
+        $this->ruleset = new Ruleset(Instantiator::createReferenceNormalizer());
     }
 
     public function test()

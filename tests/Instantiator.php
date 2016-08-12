@@ -23,7 +23,6 @@ use Symplify\PHP7_CodeSniffer\Report\ErrorMessageSorter;
 use Symplify\PHP7_CodeSniffer\Ruleset\Extractor\CustomPropertyValuesExtractor;
 use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
 use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
-use Symplify\PHP7_CodeSniffer\Ruleset\RulesetBuilder;
 use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\RulesetXmlToSniffNormalizer;
 use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\SniffCodeToSniffNormalizer;
 use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\StandardNameToSniffNormalizer;
@@ -36,15 +35,6 @@ use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
 
 final class Instantiator
 {
-    public static function createRulesetBuilder() : RulesetBuilder
-    {
-        return new RulesetBuilder(
-            self::createSniffFinder(),
-            self::createReferenceNormalizer(),
-            new CustomPropertyValuesExtractor()
-        );
-    }
-
     public static function createReferenceNormalizer() : ReferenceNormalizer
     {
         $referenceNormalizer = new ReferenceNormalizer(
@@ -91,15 +81,6 @@ final class Instantiator
         );
     }
 
-    public static function createRuleset() : RulesetBuilder
-    {
-        return new RulesetBuilder(
-            self::createSniffFinder(),
-            new StandardFinder(),
-            self::createReferenceNormalizer()
-        );
-    }
-
     public static function createFileFactory() : FileFactory
     {
         return new FileFactory(
@@ -132,7 +113,7 @@ final class Instantiator
     {
         return new SniffClassesResolver(
             self::createConfigurationResolver(),
-            self::createRulesetBuilder()
+            self::createReferenceNormalizer()
         );
     }
 

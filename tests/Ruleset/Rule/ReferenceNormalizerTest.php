@@ -20,7 +20,7 @@ final class ReferenceNormalizerTest extends TestCase
 
     public function testIsStandardReference()
     {
-        $this->assertTrue($this->referenceNormalizer->isStandardReference('PSR1'));
-        $this->assertFalse($this->referenceNormalizer->isStandardReference('non-existing'));
+        $this->referenceNormalizer->normalize('PSR2');
+        $this->referenceNormalizer->normalize('ruleset.xml');
     }
 }
