@@ -17,7 +17,7 @@ final class SniffClassesResolverTest extends TestCase
     {
         $this->sniffClassesResolver = new SniffClassesResolver(
             Instantiator::createConfigurationResolver(),
-            Instantiator::createReferenceNormalizer()
+            Instantiator::createRulesetXmlToSniffNormalizer()
         );
     }
 

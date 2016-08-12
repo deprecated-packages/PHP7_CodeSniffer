@@ -13,13 +13,10 @@ final class SniffFactory
 {
     /**
      * @param string[] $sniffClasses
-     * @param array[][][] $customProperties
      * @return Sniff[]
      */
-    public function createFromSniffClassNames(
-        array $sniffClasses,
-        array $customProperties=[]
-    ) : array {
+    public function createFromSniffClassNames(array $sniffClasses) : array
+    {
         $sniffs = [];
         foreach ($sniffClasses as $sniffCode => $sniffClass) {
             $sniffs[$sniffCode] = new $sniffClass;

@@ -8,7 +8,7 @@
 namespace Symplify\PHP7_CodeSniffer\Sniff;
 
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
-use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
+use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\RulesetXmlToSniffNormalizer;
 
 final class SniffClassesResolver
 {
@@ -18,16 +18,16 @@ final class SniffClassesResolver
     private $configurationResolver;
 
     /**
-     * @var ReferenceNormalizer
+     * @var RulesetXmlToSniffNormalizer
      */
-    private $referenceNormalizer;
+    private $rulesetXmlToSniffNormalizer;
 
     public function __construct(
         ConfigurationResolver $configurationResolver,
-        ReferenceNormalizer $referenceNormalizer
+        RulesetXmlToSniffNormalizer $rulesetXmlToSniffNormalizer
     ) {
         $this->configurationResolver = $configurationResolver;
-        $this->referenceNormalizer = $referenceNormalizer;
+        $this->rulesetXmlToSniffNormalizer = $rulesetXmlToSniffNormalizer;
     }
 
     public function resolveFromStandardsAndSniffs(
@@ -47,7 +47,7 @@ final class SniffClassesResolver
         foreach ($standards as $rulesetXmlPath) {
             $sniffs = array_merge(
                 $sniffs,
-                $this->referenceNormalizer->normalize($rulesetXmlPath)
+                $this->rulesetXmlToSniffNormalizer->normalize($rulesetXmlPath)
             );
         }
 

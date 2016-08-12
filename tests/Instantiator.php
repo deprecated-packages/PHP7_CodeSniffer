@@ -61,6 +61,17 @@ final class Instantiator
         return $referenceNormalizer;
     }
 
+    public static function createRulesetXmlToSniffNormalizer() : RulesetXmlToSniffNormalizer
+    {
+        $rulesetXmlToSniffNormalizer = new RulesetXmlToSniffNormalizer(
+            self::createSniffFinder(),
+            new CustomPropertyValuesExtractor()
+        );
+        $rulesetXmlToSniffNormalizer->setReferenceNormalizer(self::createReferenceNormalizer());
+
+        return $rulesetXmlToSniffNormalizer;
+    }
+
     public static function createConfigurationResolver() : ConfigurationResolver
     {
         $configurationResolver = new ConfigurationResolver();
@@ -113,7 +124,7 @@ final class Instantiator
     {
         return new SniffClassesResolver(
             self::createConfigurationResolver(),
-            self::createReferenceNormalizer()
+            self::createRulesetXmlToSniffNormalizer()
         );
     }
 
