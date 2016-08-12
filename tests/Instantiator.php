@@ -29,7 +29,6 @@ use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\StandardNameToSniffNorma
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassFilter;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassRobotLoaderFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
-use Symplify\PHP7_CodeSniffer\Sniff\SniffClassesResolver;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffFactory;
 use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
 
@@ -115,16 +114,7 @@ final class Instantiator
         return new Php7CodeSniffer(
             new SniffDispatcher(new CurrentListenerSniffCodeProvider()),
             new FilesProvider(new SourceFinder(), self::createFileFactory()),
-            self::createSniffCassesResolver(),
-            new SniffFactory()
-        );
-    }
-
-    public static function createSniffCassesResolver() : SniffClassesResolver
-    {
-        return new SniffClassesResolver(
-            self::createConfigurationResolver(),
-            self::createRulesetXmlToSniffNormalizer()
+            self::createSniffFactory()
         );
     }
 
@@ -139,5 +129,13 @@ final class Instantiator
     public static function createRouter() : Router
     {
         return new Router(self::createSniffFinder());
+    }
+
+    public static function createSniffFactory() : SniffFactory
+    {
+        return new SniffFactory(
+            self::createConfigurationResolver(),
+            self::createRulesetXmlToSniffNormalizer()
+        );
     }
 }

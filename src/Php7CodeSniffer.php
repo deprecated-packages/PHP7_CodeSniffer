@@ -13,7 +13,6 @@ use Symplify\PHP7_CodeSniffer\Exception\AnySniffMissingException;
 use Symplify\PHP7_CodeSniffer\File\File;
 use Symplify\PHP7_CodeSniffer\File\Provider\FilesProvider;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffFactory;
-use Symplify\PHP7_CodeSniffer\Sniff\SniffClassesResolver;
 
 final class Php7CodeSniffer
 {
@@ -28,11 +27,6 @@ final class Php7CodeSniffer
     private $filesProvider;
 
     /**
-     * @var SniffClassesResolver
-     */
-    private $sniffClassesResolver;
-
-    /**
      * @var SniffFactory
      */
     private $sniffFactory;
@@ -40,12 +34,10 @@ final class Php7CodeSniffer
     public function __construct(
         SniffDispatcher $sniffDispatcher,
         FilesProvider $sourceFilesProvider,
-        SniffClassesResolver $sniffProvider,
         SniffFactory $sniffFactory
     ) {
         $this->sniffDispatcher = $sniffDispatcher;
         $this->filesProvider = $sourceFilesProvider;
-        $this->sniffClassesResolver = $sniffProvider;
         $this->sniffFactory = $sniffFactory;
 
         $this->setupRequirements();
@@ -66,13 +58,12 @@ final class Php7CodeSniffer
 
     private function registerSniffs(array $standards, array $extraSniffs, array $excludedSniffs)
     {
-        $sniffClasses = $this->sniffClassesResolver->resolveFromStandardsAndSniffs(
+        $sniffs = $this->sniffFactory->createFromStandardsAndSniffs(
             $standards,
             $extraSniffs,
             $excludedSniffs
         );
 
-        $sniffs = $this->sniffFactory->createFromSniffClassNames($sniffClasses);
         $this->sniffDispatcher->addSniffListeners($sniffs);
     }
 

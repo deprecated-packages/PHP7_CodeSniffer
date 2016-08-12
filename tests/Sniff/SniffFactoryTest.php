@@ -2,25 +2,55 @@
 
 namespace Symplify\PHP7_CodeSniffer\Tests\Sniff;
 
-use PHP_CodeSniffer\Standards\PSR2\Sniffs\Classes\ClassDeclarationSniff;
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffFactory;
+use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
 
 final class SniffFactoryTest extends TestCase
 {
-    public function testCreateFrom()
+    /**
+     * @var SniffFactory
+     */
+    private $sniffFactory;
+
+    protected function setUp()
     {
-        $sniffFactory = new SniffFactory();
+        $this->sniffFactory = Instantiator::createSniffFactory();
+    }
 
-        $sniffClassNames = [];
-        $sniffs = $sniffFactory->createFromSniffClassNames($sniffClassNames);
-        $this->assertSame([], $sniffs);
+    /**
+     * @dataProvider provideDataForResolver()
+     */
+    public function testResolveFromStandardsAndSniffs(
+        array $standards,
+        array $extraSniffs,
+        array $excludedSniffs,
+        int $sniffCount
+    ) {
+        $sniffs = $this->sniffFactory->createFromStandardsAndSniffs(
+            $standards,
+            $extraSniffs,
+            $excludedSniffs
+        );
 
-        $sniffClassNames = [
-            'Some.Code' => ClassDeclarationSniff::class
+        $this->assertCount($sniffCount, $sniffs);
+    }
+
+    public function provideDataForResolver() : array
+    {
+        return [
+            [
+                [], [], [], 0
+            ], [
+                ['PSR2'], [], [], 42
+            ], [
+                ['PSR2'], ['PEAR.Commenting.ClassComment'], [], 43
+            ], [
+                ['PSR2'],
+                ['PEAR.Commenting.ClassComment'],
+                ['PEAR.Commenting.ClassComment', 'PSR2.Namespaces.UseDeclaration'],
+                41
+            ],
         ];
-        $sniffs = $sniffFactory->createFromSniffClassNames($sniffClassNames);
-        $this->assertSame('Some.Code', key($sniffs));
-        $this->assertInstanceOf(ClassDeclarationSniff::class, $sniffs['Some.Code']);
     }
 }

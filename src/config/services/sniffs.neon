@@ -1,6 +1,5 @@
 services:
     - Symplify\PHP7_CodeSniffer\Sniff\SniffFactory
-    - Symplify\PHP7_CodeSniffer\Sniff\SniffClassesResolver
 
     - Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder
     - Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassFilter
