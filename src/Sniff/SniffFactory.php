@@ -9,7 +9,7 @@ namespace Symplify\PHP7_CodeSniffer\Sniff;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
-use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\RulesetXmlToSniffNormalizer;
+use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
 
 final class SniffFactory
 {
@@ -19,16 +19,16 @@ final class SniffFactory
     private $configurationResolver;
 
     /**
-     * @var RulesetXmlToSniffNormalizer
+     * @var ReferenceNormalizer
      */
-    private $rulesetXmlToSniffNormalizer;
+    private $referenceNormalizer;
 
     public function __construct(
         ConfigurationResolver $configurationResolver,
-        RulesetXmlToSniffNormalizer $rulesetXmlToSniffNormalizer
+        ReferenceNormalizer $referenceNormalizer
     ) {
         $this->configurationResolver = $configurationResolver;
-        $this->rulesetXmlToSniffNormalizer = $rulesetXmlToSniffNormalizer;
+        $this->referenceNormalizer = $referenceNormalizer;
     }
 
     /***
@@ -42,15 +42,12 @@ final class SniffFactory
         array $extraSniffs,
         array $excludedSniffs
     ) : array {
-        $sniffClasses = [];
-        $sniffClasses = $this->addStandardSniffs($sniffClasses, $standards);
-        $sniffClasses = $this->addExtraSniffs($sniffClasses, $extraSniffs);
-        $sniffClassNames = $this->removeExcludeSniffs($sniffClasses, $excludedSniffs);
+        $sniffClassNames = [];
+        $sniffClassNames = $this->addStandardSniffs($sniffClassNames, $standards);
+        $sniffClassNames = $this->addExtraSniffs($sniffClassNames, $extraSniffs);
+        $sniffClassNames = $this->removeExcludeSniffs($sniffClassNames, $excludedSniffs);
 
-        $sniffs = [];
-        foreach ($sniffClassNames as $sniffCode => $sniffClassName) {
-            $sniffs[$sniffCode] = new $sniffClassName;
-        }
+        $sniffs = $this->createSniffsFromSniffClassNames($sniffClassNames);
 
         // todo: decorate with custom properties
         // or hide in normalizer?
@@ -64,7 +61,7 @@ final class SniffFactory
         foreach ($standards as $rulesetXmlPath) {
             $sniffs = array_merge(
                 $sniffs,
-                $this->rulesetXmlToSniffNormalizer->normalize($rulesetXmlPath)
+                $this->referenceNormalizer->normalize($rulesetXmlPath)
             );
         }
 
@@ -80,7 +77,6 @@ final class SniffFactory
     private function removeExcludeSniffs(array $sniffs, array $excludedSniffs) : array
     {
         $excludedSniffs = $this->configurationResolver->resolve('sniffs', $excludedSniffs);
-
         foreach ($excludedSniffs as $sniffCode => $sniffClass) {
             if (isset($sniffs[$sniffCode])) {
                 unset($sniffs[$sniffCode]);
@@ -90,4 +86,16 @@ final class SniffFactory
         return $sniffs;
     }
 
+    /**
+     * @param string[] $sniffClassNames
+     * @return Sniff[]
+     */
+    private function createSniffsFromSniffClassNames(array $sniffClassNames) : array
+    {
+        $sniffs = [];
+        foreach ($sniffClassNames as $sniffCode => $sniffClassName) {
+            $sniffs[$sniffCode] = new $sniffClassName;
+        }
+        return $sniffs;
+    }
 }

@@ -8,6 +8,7 @@
 namespace Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer;
 
 use Nette\Utils\Strings;
+use PHP_CodeSniffer\Sniffs\Sniff;
 use SimpleXMLElement;
 use Symplify\PHP7_CodeSniffer\Contract\Ruleset\ToSniffNormalizer\ToSniffNormalizerInterface;
 use Symplify\PHP7_CodeSniffer\Ruleset\Extractor\CustomPropertyValuesExtractor;
@@ -61,7 +62,6 @@ final class RulesetXmlToSniffNormalizer implements ToSniffNormalizerInterface
         $includedSniffs = [];
         $excludedSniffs = [];
 
-        $ruleset = $this->customPropertyValuesExtractor->extractFromRulesetXmlFile($rulesetXmlFile);
 //        dump($ruleset);
 
         foreach ($rulesetXml->rule as $rule) {
@@ -79,10 +79,12 @@ final class RulesetXmlToSniffNormalizer implements ToSniffNormalizerInterface
         $excludedSniffs = array_unique($excludedSniffs);
 
         $sniffs = $this->filterOutExcludedSniffs($includedSniffs, $excludedSniffs);
-
         $sniffs = $this->sortSniffs($sniffs);
 
-        // todo: decorate with custom rules!
+        $customPropertyValues = $this->customPropertyValuesExtractor->extractFromRulesetXmlFile($rulesetXmlFile);
+        if (count($customPropertyValues)) {
+            $sniffs = $this->setCustomPropertyValueToSniffs($sniffs, $customPropertyValues);
+        }
 
         return $sniffs;
     }
@@ -131,5 +133,51 @@ final class RulesetXmlToSniffNormalizer implements ToSniffNormalizerInterface
     {
         ksort($sniffs);
         return $sniffs;
+    }
+
+    /**
+     * @param Sniff[] $sniffs
+     * @param array[] $customPropertyValues
+     * @return Sniff[]
+     */
+    private function setCustomPropertyValueToSniffs(array $sniffs, array $customPropertyValues) : array
+    {
+        foreach ($sniffs as $sniffCode => $sniffObject) {
+            if (!isset($customPropertyValues[$sniffCode]['properties'])) {
+                continue;
+            }
+
+            foreach ($customPropertyValues[$sniffCode]['properties'] as $name => $value) {
+                $this->setSniffProperty($sniffCode, $name, $value);
+            }
+        }
+
+        return $sniffs;
+    }
+
+    /**
+     * @param string $sniffCode
+     * @param string $name
+     * @param string|array $value
+     */
+    private function setSniffProperty(string $sniffCode, string $name, $value)
+    {
+        if (isset($sniffs[$sniffCode]) === false) {
+            return;
+        }
+
+        $name = trim($name);
+        if (is_string($value)) {
+            $value = trim($value);
+        }
+
+        // Special case for booleans.
+        if ($value === 'true') {
+            $value = true;
+        } elseif ($value === 'false') {
+            $value = false;
+        }
+
+        $sniffs[$sniffCode]->$name = $value;
     }
 }

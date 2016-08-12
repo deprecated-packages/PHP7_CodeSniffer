@@ -135,7 +135,7 @@ final class Instantiator
     {
         return new SniffFactory(
             self::createConfigurationResolver(),
-            self::createRulesetXmlToSniffNormalizer()
+            self::createReferenceNormalizer()
         );
     }
 }
