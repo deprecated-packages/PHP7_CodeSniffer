@@ -53,12 +53,20 @@ final class Instantiator
             new Router(self::createSniffFinder())
         );
 
-        $referenceNormalizer->addNormalizer(new SniffCodeToSniffNormalizer(self::createRouter()));
-        $referenceNormalizer->addNormalizer(new RulesetXmlToSniffNormalizer(
+        $rulesetXmlToSniffNormalizer = new RulesetXmlToSniffNormalizer(
             self::createSniffFinder(),
             new CustomPropertyValuesExtractor()
-        ));
-        $referenceNormalizer->addNormalizer(new StandardNameToSniffNormalizer(new StandardFinder()));
+        );
+        $rulesetXmlToSniffNormalizer->setReferenceNormalizer($referenceNormalizer);
+
+        $referenceNormalizer->addNormalizer(new SniffCodeToSniffNormalizer(self::createRouter()));
+        $referenceNormalizer->addNormalizer($rulesetXmlToSniffNormalizer);
+        $referenceNormalizer->addNormalizer(
+            new StandardNameToSniffNormalizer(
+                new StandardFinder(),
+                $rulesetXmlToSniffNormalizer
+            )
+        );
 
         return $referenceNormalizer;
     }

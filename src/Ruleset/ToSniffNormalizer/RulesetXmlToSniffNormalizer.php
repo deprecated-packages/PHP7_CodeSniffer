@@ -62,7 +62,7 @@ final class RulesetXmlToSniffNormalizer implements ToSniffNormalizerInterface
         $excludedSniffs = [];
 
         $ruleset = $this->customPropertyValuesExtractor->extractFromRulesetXmlFile($rulesetXmlFile);
-        dump($ruleset);
+//        dump($ruleset);
 
         foreach ($rulesetXml->rule as $rule) {
             if (!isset($rule['ref'])) {
@@ -79,6 +79,8 @@ final class RulesetXmlToSniffNormalizer implements ToSniffNormalizerInterface
         $excludedSniffs = array_unique($excludedSniffs);
 
         $sniffs = $this->filterOutExcludedSniffs($includedSniffs, $excludedSniffs);
+
+        $sniffs = $this->sortSniffs($sniffs);
 
         // todo: decorate with custom rules!
 
@@ -122,6 +124,12 @@ final class RulesetXmlToSniffNormalizer implements ToSniffNormalizerInterface
             }
         }
 
+        return $sniffs;
+    }
+
+    private function sortSniffs(array $sniffs) : array
+    {
+        ksort($sniffs);
         return $sniffs;
     }
 }

@@ -23,8 +23,8 @@ final class SniffCodeToSniffNormalizerTest extends TestCase
 
     public function testIsMatch()
     {
-        $this->assertFalse($this->sniffCodeToSniffNormalizer->isMatch('fail'));
         $this->assertTrue($this->sniffCodeToSniffNormalizer->isMatch('One.Two.Three'));
+        $this->assertFalse($this->sniffCodeToSniffNormalizer->isMatch('fail'));
     }
 
     public function testNormalizer()

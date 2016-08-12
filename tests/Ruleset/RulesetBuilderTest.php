@@ -34,7 +34,7 @@ final class RulesetBuilderTest extends TestCase
 
         $this->assertInternalType('array', $ruleset);
 
-        $this->assertSame([
+        $this->assertEquals([
             'Generic.Files.ByteOrderMark' => ByteOrderMarkSniff::class,
             'Generic.Files.LineEndings' => LineEndingsSniff::class,
             'Generic.NamingConventions.UpperCaseConstantName' => UpperCaseConstantNameSniff::class,

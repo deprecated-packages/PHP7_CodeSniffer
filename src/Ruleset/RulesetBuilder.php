@@ -43,7 +43,6 @@ final class RulesetBuilder
         $rulesetXml = simplexml_load_file($rulesetXmlFile);
 
         $sniffs = $this->ruleReferenceNormalizer->normalize($rulesetXml);
-        dump($sniffs);
 
         $sniffs = $this->sortSniffs($sniffs);
 

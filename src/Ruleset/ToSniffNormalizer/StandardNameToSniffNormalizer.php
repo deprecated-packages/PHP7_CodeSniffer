@@ -17,9 +17,15 @@ final class StandardNameToSniffNormalizer implements ToSniffNormalizerInterface
      */
     private $standardFinder;
 
-    public function __construct(StandardFinder $standardFinder)
+    /**
+     * @var RulesetXmlToSniffNormalizer
+     */
+    private $rulesetXmlToSniffNormalizer;
+
+    public function __construct(StandardFinder $standardFinder, RulesetXmlToSniffNormalizer $rulesetXmlToSniffNormalizer)
     {
         $this->standardFinder = $standardFinder;
+        $this->rulesetXmlToSniffNormalizer = $rulesetXmlToSniffNormalizer;
     }
 
     public function isMatch(string $reference) : bool
@@ -30,7 +36,7 @@ final class StandardNameToSniffNormalizer implements ToSniffNormalizerInterface
 
     public function normalize(string $reference) : array
     {
-        dump($reference);
-        die;
+        $rulesetXml = $this->standardFinder->getRulesetPathForStandardName($reference);
+        return $this->rulesetXmlToSniffNormalizer->normalize($rulesetXml);
     }
 }
