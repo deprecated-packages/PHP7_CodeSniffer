@@ -8,7 +8,6 @@
 namespace Symplify\PHP7_CodeSniffer\DI;
 
 use Nette\DI\ContainerBuilder;
-use Nette\DI\ServiceCreationException;
 use Nette\DI\ServiceDefinition;
 
 /**
