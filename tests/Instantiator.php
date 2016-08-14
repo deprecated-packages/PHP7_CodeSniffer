@@ -29,7 +29,7 @@ use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassFilter;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassRobotLoaderFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
-use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\CustomSniffPropertyDataCollector;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\CustomSniffPropertyValueDataCollector;
 use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
 use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
 
@@ -39,7 +39,7 @@ final class Instantiator
     {
         $rulesetXmlToSniffsFactory = new RulesetXmlToSniffsFactory(
             new ExcludedSniffDataCollector(),
-            new CustomSniffPropertyDataCollector()
+            new CustomSniffPropertyValueDataCollector()
         );
 
         $rulesetXmlToSniffsFactory->setSniffSetFactory(self::createSniffSetFactory());
@@ -90,7 +90,8 @@ final class Instantiator
         return new Php7CodeSniffer(
             new SniffDispatcher(new CurrentListenerSniffCodeProvider()),
             new FilesProvider(new SourceFinder(), self::createFileFactory()),
-            self::createSniffSetFactory()
+            self::createSniffSetFactory(),
+            new ExcludedSniffDataCollector()
         );
     }
 
@@ -124,7 +125,7 @@ final class Instantiator
     {
         return new SingleSniffFactory(
             new ExcludedSniffDataCollector(),
-            new CustomSniffPropertyDataCollector()
+            new CustomSniffPropertyValueDataCollector()
         );
     }
 

@@ -12,7 +12,7 @@ use PHP_CodeSniffer\Standards\Squiz\Sniffs\Classes\ValidClassNameSniff;
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToSniffsFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Factory\StandardNameToSniffsFactory;
-use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\CustomSniffPropertyDataCollector;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\CustomSniffPropertyValueDataCollector;
 use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
 use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
 use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
@@ -28,7 +28,7 @@ final class StandardNameToSniffsFactoryTest extends TestCase
     {
         $rulesetXmlToSniffsFactory = new RulesetXmlToSniffsFactory(
             new ExcludedSniffDataCollector(),
-            new CustomSniffPropertyDataCollector()
+            new CustomSniffPropertyValueDataCollector()
         );
 
         $sniffSetFactory = Instantiator::createSniffSetFactory();

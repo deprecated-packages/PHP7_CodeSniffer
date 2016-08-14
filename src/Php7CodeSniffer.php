@@ -7,13 +7,14 @@
 
 namespace Symplify\PHP7_CodeSniffer;
 
-use Symplify\PHP7_CodeSniffer\EventDispatcher\Event\CheckFileTokenEvent;
+use Symplify\PHP7_CodeSniffer\Application\FileProcessor;
+use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\SniffDispatcher;
 use Symplify\PHP7_CodeSniffer\Exception\AnySniffMissingException;
-use Symplify\PHP7_CodeSniffer\File\File;
 use Symplify\PHP7_CodeSniffer\File\Provider\FilesProvider;
-use Symplify\PHP7_CodeSniffer\Sniff\ExcludedSniffDataCollector;
+use Symplify\PHP7_CodeSniffer\Legacy\LegacyConfiguration;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
 
 final class Php7CodeSniffer
 {
@@ -30,119 +31,69 @@ final class Php7CodeSniffer
     /**
      * @var SniffSetFactory
      */
-    private $sniffFactory;
+    private $sniffSetFactory;
 
     /**
      * @var ExcludedSniffDataCollector
      */
     private $excludedSniffDataCollector;
 
+    /**
+     * @var ConfigurationResolver
+     */
+    private $configurationResolver;
+
+    /**
+     * @var FileProcessor
+     */
+    private $fileProcessor;
+
     public function __construct(
         SniffDispatcher $sniffDispatcher,
         FilesProvider $sourceFilesProvider,
         SniffSetFactory $sniffFactory,
-        ExcludedSniffDataCollector $excludedSniffDataCollector
+        ExcludedSniffDataCollector $excludedSniffDataCollector,
+        ConfigurationResolver $configurationResolver,
+        FileProcessor $fileProcessor
     ) {
         $this->sniffDispatcher = $sniffDispatcher;
         $this->filesProvider = $sourceFilesProvider;
-        $this->sniffFactory = $sniffFactory;
-
-        $this->setupRequirements();
+        $this->sniffSetFactory = $sniffFactory;
         $this->excludedSniffDataCollector = $excludedSniffDataCollector;
+        $this->configurationResolver = $configurationResolver;
+        $this->fileProcessor = $fileProcessor;
+
+        LegacyConfiguration::setup();
     }
 
     public function runCommand(Php7CodeSnifferCommand $command)
     {
-        $this->registerSniffs(
-            $command->getStandards(),
-            $command->getSniffs()
-        );
+        $standards = $this->configurationResolver->resolve('standards', $command->getStandards());
+        $sniffs = $this->configurationResolver->resolve('sniffs', $command->getSniffs());
+        $excludedSniffs = $this->configurationResolver->resolve('sniffs', $command->getExcludedSniffs());
 
-        $this->excludedSniffDataCollector->addExcludedSniffs($command->getExcludedSniffs());
-
-        $this->ensureSniffsAreRegistered();
+        $this->excludedSniffDataCollector->addExcludedSniffs($excludedSniffs);
+        $this->registerSniffs($standards, $sniffs);
 
         $this->runForSource($command->getSource(), $command->isFixer());
     }
 
     private function registerSniffs(array $standards, array $extraSniffs)
     {
-        $sniffs = $this->sniffFactory->createFromStandardsAndSniffs(
-            $standards,
-            $extraSniffs
-        );
-
+        $sniffs = $this->sniffSetFactory->createFromStandardsAndSniffs($standards, $extraSniffs);
+        $this->ensureAtLeastOneSniffIsRegistered($sniffs);
         $this->sniffDispatcher->addSniffListeners($sniffs);
     }
 
     private function runForSource(array $source, bool $isFixer)
     {
         $files = $this->filesProvider->getFilesForSource($source, $isFixer);
-
-        foreach ($files as $file) {
-            if ($isFixer) {
-                $this->processFileWithFixer($file);
-            } else {
-                $this->processFile($file);
-            }
-
-            $file->cleanUp(); // todo: check performance influence
-        }
+        $this->fileProcessor->processFiles($files, $isFixer);
     }
 
-    private function processFile(File $file)
+    private function ensureAtLeastOneSniffIsRegistered(array $sniffs)
     {
-        foreach ($file->getTokens() as $stackPointer => $token) {
-            $this->sniffDispatcher->dispatch(
-                $token['code'],
-                new CheckFileTokenEvent($file, $stackPointer)
-            );
-        }
-    }
-
-    private function processFileWithFixer(File $file)
-    {
-        // 1. puts tokens into fixer
-        $file->fixer->startFile($file);
-
-        // 2. run all Sniff fixers
-        $this->processFile($file);
-
-        // 3. load changes to tokens
-        $file->fixer->endChangeset();
-
-        // 4. content has changed, save it!
-        $newContent = $file->fixer->getContents();
-
-        file_put_contents($file->getFilename(), $newContent);
-    }
-
-    private function setupRequirements()
-    {
-        $this->ensureLineEndingsAreDetected();
-        $this->setupVerbosityToMakeLegacyCodeRun();
-    }
-
-    /**
-     * Ensure this option is enabled or else line endings will not always
-     * be detected properly for files created on a Mac with the /r line ending.
-     */
-    private function ensureLineEndingsAreDetected()
-    {
-        ini_set('auto_detect_line_endings', true);
-    }
-
-    private function setupVerbosityToMakeLegacyCodeRun()
-    {
-        if (!defined('PHP_CODESNIFFER_VERBOSITY')) {
-            define('PHP_CODESNIFFER_VERBOSITY', 0);
-        }
-    }
-
-    private function ensureSniffsAreRegistered()
-    {
-        $listeners = $this->sniffDispatcher->getListeners();
-        if ($listeners === []) {
+        if (count($sniffs) < 1) {
             throw new AnySniffMissingException(
                 'You need to specify some sniffs with "--standards=..." or "--sniffs=...".'
             );

@@ -29,15 +29,15 @@ final class ExcludedSniffDataCollector
         $this->excludedSniffCodes[] = $excludedSniffCode;
     }
 
+    public function addExcludedSniffs(array $excludedSniffCodes)
+    {
+        $this->excludedSniffCodes = array_merge($this->excludedSniffCodes, $excludedSniffCodes);
+    }
+
     public function isSniffClassExcluded(string $sniffClassName) : bool
     {
         $sniffCode = SniffNaming::guessCodeByClass($sniffClassName);
         return $this->isSniffCodeExcluded($sniffCode);
-    }
-
-    private function addExcludedSniffs(array $excludedSniffCodes)
-    {
-        $this->excludedSniffCodes = array_merge($this->excludedSniffCodes, $excludedSniffCodes);
     }
 
     private function isSniffCodeExcluded(string $sniffCode) : bool

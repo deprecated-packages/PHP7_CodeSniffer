@@ -30,8 +30,8 @@ final class SniffsOptionResolver implements OptionResolverInterface
         $optionsResolver = new OptionsResolver();
         $optionsResolver->setDefined(self::NAME);
 
+        $this->setAllowedValues($optionsResolver);
         $this->setNormalizer($optionsResolver);
-        $this->setSniffsAllowedValues($optionsResolver);
 
         $values = $optionsResolver->resolve([
             self::NAME => $value
@@ -40,22 +40,7 @@ final class SniffsOptionResolver implements OptionResolverInterface
         return $values[self::NAME];
     }
 
-    private function setNormalizer(OptionsResolver $optionsResolver)
-    {
-        $optionsResolver->setNormalizer(
-            self::NAME,
-            function (OptionsResolver $optionsResolver, array $sniffCodes) {
-                $sniffCodeToClasses = [];
-                foreach ($sniffCodes as $sniffCode) {
-                    $sniffCodeToClasses[$sniffCode] = SniffNaming::guessClassByCode($sniffCode);
-                }
-
-                return $sniffCodeToClasses;
-            }
-        );
-    }
-
-    private function setSniffsAllowedValues(OptionsResolver $optionsResolver)
+    private function setAllowedValues(OptionsResolver $optionsResolver)
     {
         $optionsResolver->setAllowedValues(self::NAME, function (array $sniffs) {
             $sniffs = ValueNormalizer::normalizeCommaSeparatedValues($sniffs);
@@ -73,5 +58,15 @@ final class SniffsOptionResolver implements OptionResolverInterface
 
             return true;
         });
+    }
+
+    private function setNormalizer(OptionsResolver $optionsResolver)
+    {
+        $optionsResolver->setNormalizer(
+            self::NAME,
+            function (OptionsResolver $optionsResolver, array $sniffCodes) {
+                return ValueNormalizer::normalizeCommaSeparatedValues($sniffCodes);
+            }
+        );
     }
 }

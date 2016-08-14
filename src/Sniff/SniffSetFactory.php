@@ -23,10 +23,10 @@ final class SniffSetFactory
      */
     private $sniffFactories;
 
-    public function __construct(ConfigurationResolver $configurationResolver)
-    {
-        $this->configurationResolver = $configurationResolver;
-    }
+//    public function __construct(ConfigurationResolver $configurationResolver)
+//    {
+//        $this->configurationResolver = $configurationResolver;
+//    }
 
     public function addSniffFactory(SniffFactoryInterface $sniffFactory)
     {
@@ -41,38 +41,35 @@ final class SniffSetFactory
     public function createFromStandardsAndSniffs(
         array $standards,
         array $extraSniffs
-//        array $excludedSniffs
     ) : array {
         $sniffClassNames = [];
         $sniffClassNames = $this->addStandardSniffs($sniffClassNames, $standards);
         $sniffClassNames = $this->addExtraSniffs($sniffClassNames, $extraSniffs);
-//        $sniffClassNames = $this->removeExcludeSniffs($sniffClassNames, $excludedSniffs);
 
-//        foreach ($sniffClassNames as $sniffClassName) {
+        dump($sniffClassNames);
+        die;
+
         return $this->create($sniffClassNames);
-//        }
-
-        // here only resolve class names and that stuffs
-//        return $this->createSniffsFromSniffClassNames($sniffClassNames);
     }
 
     public function create(string $source) : array
     {
+        $sniffs = [];
         foreach ($this->sniffFactories as $sniffFactory) {
             if ($sniffFactory->isMatch($source)) {
-                return $sniffFactory->create($source);
+                $sniffs = array_merge($sniffs, $sniffFactory->create($source));
             }
         }
 
-        throw new \Exception(sprintf(
-            'Factory for "%s" type is not supported yet.',
-            $source
-        ));
+        return $sniffs;
     }
 
     private function addStandardSniffs(array $sniffs, array $standards) : array
     {
-        $standards = $this->configurationResolver->resolve('standards', $standards);
+        dump($standards);
+        die;
+
+//        $standards = $this->configurationResolver->resolve('standards', $standards);
         foreach ($standards as $rulesetXmlPath) {
             $sniffs = array_merge(
                 $sniffs,
@@ -85,20 +82,7 @@ final class SniffSetFactory
 
     private function addExtraSniffs(array $sniffs, array $extraSniffs) : array
     {
-        $extraSniffs = $this->configurationResolver->resolve('sniffs', $extraSniffs);
+//        $extraSniffs = $this->configurationResolver->resolve('sniffs', $extraSniffs);
         return array_merge($sniffs, $extraSniffs);
     }
-
-//    /**
-//     * @param string[] $sniffClassNames
-//     * @return Sniff[]
-//     */
-//    private function createSniffsFromSniffClassNames(array $sniffClassNames) : array
-//    {
-//        $sniffs = [];
-//        foreach ($sniffClassNames as $sniffCode => $sniffClassName) {
-//            $sniffs[$sniffCode] = new $sniffClassName;
-//        }
-//        return $sniffs;
-//    }
 }

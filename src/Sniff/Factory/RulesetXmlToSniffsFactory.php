@@ -13,7 +13,7 @@ use SimpleXMLElement;
 use Symplify\PHP7_CodeSniffer\Contract\Sniff\Factory\SniffFactoryInterface;
 use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 use Symplify\PHP7_CodeSniffer\Sniff\Sorter\SniffSorter;
-use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\CustomSniffPropertyDataCollector;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\CustomSniffPropertyValueDataCollector;
 use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 
@@ -30,13 +30,13 @@ final class RulesetXmlToSniffsFactory implements SniffFactoryInterface
     private $excludedSniffDataCollector;
 
     /**
-     * @var CustomSniffPropertyDataCollector
+     * @var CustomSniffPropertyValueDataCollector
      */
     private $customSniffPropertyDataCollector;
 
     public function __construct(
         ExcludedSniffDataCollector $excludedSniffDataCollector,
-        CustomSniffPropertyDataCollector $customSniffPropertyDataCollector
+        CustomSniffPropertyValueDataCollector $customSniffPropertyDataCollector
     ) {
         $this->customSniffPropertyDataCollector = $customSniffPropertyDataCollector;
         $this->excludedSniffDataCollector = $excludedSniffDataCollector;

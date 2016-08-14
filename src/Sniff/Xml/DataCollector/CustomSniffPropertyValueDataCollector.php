@@ -10,7 +10,7 @@ namespace Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector;
 use SimpleXMLElement;
 use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 
-final class CustomSniffPropertyDataCollector
+final class CustomSniffPropertyValueDataCollector
 {
     /**
      * @var array[]
