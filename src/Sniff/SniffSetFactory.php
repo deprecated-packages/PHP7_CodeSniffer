@@ -8,25 +8,14 @@
 namespace Symplify\PHP7_CodeSniffer\Sniff;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
-use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Contract\Sniff\Factory\SniffFactoryInterface;
 
 final class SniffSetFactory
 {
     /**
-     * @var ConfigurationResolver
-     */
-    private $configurationResolver;
-
-    /**
      * @var SniffFactoryInterface[]
      */
     private $sniffFactories;
-
-//    public function __construct(ConfigurationResolver $configurationResolver)
-//    {
-//        $this->configurationResolver = $configurationResolver;
-//    }
 
     public function addSniffFactory(SniffFactoryInterface $sniffFactory)
     {
@@ -34,22 +23,19 @@ final class SniffSetFactory
     }
 
     /***
-     * @param string[] $standards
-     * @param string[] $extraSniffs
+     * @param string[] $standardNames
+     * @param string[] $sniffCodes
      * @return Sniff[]
      */
     public function createFromStandardsAndSniffs(
-        array $standards,
-        array $extraSniffs
+        array $standardNames,
+        array $sniffCodes
     ) : array {
-        $sniffClassNames = [];
-        $sniffClassNames = $this->addStandardSniffs($sniffClassNames, $standards);
-        $sniffClassNames = $this->addExtraSniffs($sniffClassNames, $extraSniffs);
+        $sniffs = [];
+        $sniffs = $this->addStandardSniffs($sniffs, $standardNames);
+        $sniffs = $this->addExtraSniffs($sniffs, $sniffCodes);
+        return $sniffs;
 
-        dump($sniffClassNames);
-        die;
-
-        return $this->create($sniffClassNames);
     }
 
     public function create(string $source) : array
@@ -57,32 +43,42 @@ final class SniffSetFactory
         $sniffs = [];
         foreach ($this->sniffFactories as $sniffFactory) {
             if ($sniffFactory->isMatch($source)) {
-                $sniffs = array_merge($sniffs, $sniffFactory->create($source));
+                $newSniffs = $sniffFactory->create($source);
+                $sniffs = array_merge($sniffs, $newSniffs);
             }
         }
 
         return $sniffs;
     }
 
-    private function addStandardSniffs(array $sniffs, array $standards) : array
+    /**
+     * @param Sniff[] $sniffs
+     * @param string[] $standardNames
+     * @return Sniff[]
+     */
+    private function addStandardSniffs(array $sniffs, array $standardNames) : array
     {
-        dump($standards);
-        die;
-
-//        $standards = $this->configurationResolver->resolve('standards', $standards);
-        foreach ($standards as $rulesetXmlPath) {
+        foreach ($standardNames as $standardName) {
             $sniffs = array_merge(
                 $sniffs,
-                $this->create($rulesetXmlPath)
+                $this->create($standardName)
             );
         }
 
         return $sniffs;
     }
 
+    /**
+     * @param Sniff[] $sniffs
+     * @param string[] $extraSniffs
+     * @return Sniff[]
+     */
     private function addExtraSniffs(array $sniffs, array $extraSniffs) : array
     {
+        dump($extraSniffs);
+        die;
+//        $this->create($extraSniffs);
 //        $extraSniffs = $this->configurationResolver->resolve('sniffs', $extraSniffs);
-        return array_merge($sniffs, $extraSniffs);
+//        return array_merge($sniffs, $extraSniffs);
     }
 }

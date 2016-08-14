@@ -10,7 +10,6 @@ namespace Symplify\PHP7_CodeSniffer\Application;
 use PHP_CodeSniffer\Files\File;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\Event\CheckFileTokenEvent;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\SniffDispatcher;
-use Symplify\PHP7_CodeSniffer\Fixer;
 
 final class FileProcessor
 {

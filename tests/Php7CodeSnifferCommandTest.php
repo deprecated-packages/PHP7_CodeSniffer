@@ -3,13 +3,13 @@
 namespace Symplify\PHP7_CodeSniffer\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Symplify\PHP7_CodeSniffer\Php7CodeSnifferCommand;
+use Symplify\PHP7_CodeSniffer\Application\RunApplicationCommand;
 
 final class Php7CodeSnifferCommandTest extends TestCase
 {
     public function testConstructor()
     {
-        $command = new Php7CodeSnifferCommand(
+        $command = new RunApplicationCommand(
             $source = ['source'],
             $standards = ['standards'],
             $sniffs = ['sniffs'],

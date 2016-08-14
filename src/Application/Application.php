@@ -5,9 +5,9 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer;
+namespace Symplify\PHP7_CodeSniffer\Application;
 
-use Symplify\PHP7_CodeSniffer\Application\FileProcessor;
+use Symplify\PHP7_CodeSniffer\Application\Command\RunApplicationCommand;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\SniffDispatcher;
 use Symplify\PHP7_CodeSniffer\Exception\AnySniffMissingException;
@@ -16,7 +16,7 @@ use Symplify\PHP7_CodeSniffer\Legacy\LegacyConfiguration;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
 
-final class Php7CodeSniffer
+final class Application
 {
     /**
      * @var SniffDispatcher
@@ -66,19 +66,17 @@ final class Php7CodeSniffer
         LegacyConfiguration::setup();
     }
 
-    public function runCommand(Php7CodeSnifferCommand $command)
+    public function runCommand(RunApplicationCommand $command)
     {
-        $standards = $this->configurationResolver->resolve('standards', $command->getStandards());
-        $sniffs = $this->configurationResolver->resolve('sniffs', $command->getSniffs());
-        $excludedSniffs = $this->configurationResolver->resolve('sniffs', $command->getExcludedSniffs());
+        $command = $this->resolveCommandConfiguration($command);
 
-        $this->excludedSniffDataCollector->addExcludedSniffs($excludedSniffs);
-        $this->registerSniffs($standards, $sniffs);
+        $this->excludedSniffDataCollector->addExcludedSniffs($command->getExcludedSniffs());
+        $this->createAndRegisterSniffsToSniffDispatcher($command->getStandards(), $command->getSniffs());
 
         $this->runForSource($command->getSource(), $command->isFixer());
     }
 
-    private function registerSniffs(array $standards, array $extraSniffs)
+    private function createAndRegisterSniffsToSniffDispatcher(array $standards, array $extraSniffs)
     {
         $sniffs = $this->sniffSetFactory->createFromStandardsAndSniffs($standards, $extraSniffs);
         $this->ensureAtLeastOneSniffIsRegistered($sniffs);
@@ -98,5 +96,16 @@ final class Php7CodeSniffer
                 'You need to specify some sniffs with "--standards=..." or "--sniffs=...".'
             );
         }
+    }
+
+    private function resolveCommandConfiguration(RunApplicationCommand $command) : RunApplicationCommand
+    {
+        return new RunApplicationCommand(
+            $command->getSource(),
+            $this->configurationResolver->resolve('standards', $command->getStandards()),
+            $this->configurationResolver->resolve('sniffs', $command->getSniffs()),
+            $this->configurationResolver->resolve('sniffs', $command->getExcludedSniffs()),
+            $command->isFixer()
+        );
     }
 }

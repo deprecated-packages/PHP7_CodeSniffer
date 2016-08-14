@@ -5,9 +5,9 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer;
+namespace Symplify\PHP7_CodeSniffer\Application\Command;
 
-final class Php7CodeSnifferCommand
+final class RunApplicationCommand
 {
     /**
      * @var array

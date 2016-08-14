@@ -17,7 +17,7 @@ use Symplify\PHP7_CodeSniffer\File\Provider\FilesProvider;
 use Symplify\PHP7_CodeSniffer\Fixer;
 use Symplify\PHP7_CodeSniffer\Parser\EolCharDetector;
 use Symplify\PHP7_CodeSniffer\Parser\FileToTokensParser;
-use Symplify\PHP7_CodeSniffer\Php7CodeSniffer;
+use Symplify\PHP7_CodeSniffer\Application\Php7CodeSnifferApplication;
 use Symplify\PHP7_CodeSniffer\Report\ErrorDataCollector;
 use Symplify\PHP7_CodeSniffer\Report\ErrorMessageSorter;
 use Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToOwnSniffsFactory;
@@ -85,9 +85,9 @@ final class Instantiator
         );
     }
 
-    public static function createPhp7CodeSniffer() : Php7CodeSniffer
+    public static function createPhp7CodeSniffer() : Php7CodeSnifferApplication
     {
-        return new Php7CodeSniffer(
+        return new Php7CodeSnifferApplication(
             new SniffDispatcher(new CurrentListenerSniffCodeProvider()),
             new FilesProvider(new SourceFinder(), self::createFileFactory()),
             self::createSniffSetFactory(),

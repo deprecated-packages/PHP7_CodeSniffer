@@ -5,7 +5,7 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer;
+namespace Symplify\PHP7_CodeSniffer\Application;
 
 use Symplify\PHP7_CodeSniffer\File\File;
 
@@ -53,19 +53,6 @@ final class Fixer
         return true;
     }
 
-    public function substrToken(int $stackPtr, int $start, int $length=null) : bool
-    {
-        $current = $this->getTokenContent($stackPtr);
-
-        if ($length !== null) {
-            $newContent = substr($current, $start, $length);
-        } else {
-            $newContent = substr($current, $start);
-        }
-
-        return $this->replaceToken($stackPtr, $newContent);
-    }
-
     public function addContent(int $stackPtr, string $content) : bool
     {
         $current = $this->getTokenContent($stackPtr);
@@ -86,6 +73,19 @@ final class Fixer
     public function addNewlineBefore(int $stackPtr) : bool
     {
         return $this->addContentBefore($stackPtr, $this->currentFile->eolChar);
+    }
+
+    public function substrToken(int $stackPtr, int $start, int $length=null) : bool
+    {
+        $current = $this->getTokenContent($stackPtr);
+
+        if ($length !== null) {
+            $newContent = substr($current, $start, $length);
+        } else {
+            $newContent = substr($current, $start);
+        }
+
+        return $this->replaceToken($stackPtr, $newContent);
     }
 
     /**
