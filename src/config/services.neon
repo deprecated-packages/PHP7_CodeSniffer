@@ -3,7 +3,6 @@ includes:
     - services/console.neon
     - services/event-dispatcher.neon
     - services/files.neon
-    - services/ruleset.neon
     - services/sniffs.neon
     - services/standard.neon
     - services/report.neon

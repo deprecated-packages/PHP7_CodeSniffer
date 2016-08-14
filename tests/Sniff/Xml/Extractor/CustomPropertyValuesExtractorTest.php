@@ -1,21 +1,21 @@
 <?php
 
-namespace Symplify\PHP7_CodeSniffer\Tests\Ruleset\Extractor;
+namespace Symplify\PHP7_CodeSniffer\Tests\Sniff\Xml\Extractor;
 
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use Symplify\PHP7_CodeSniffer\Ruleset\Extractor\CustomPropertyValuesExtractor;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\Extractor\CustomSniffPropertyValuesExtractor;
 
-final class CustomPropertyValuesExtractorTest extends TestCase
+final class CustomSniffPropertyValuesExtractorTest extends TestCase
 {
     /**
-     * @var CustomPropertyValuesExtractor
+     * @var CustomSniffPropertyValuesExtractor
      */
-    private $customPropertyValuesExtractor;
+    private $customSniffPropertyValuesExtractor;
 
     protected function setUp()
     {
-        $this->customPropertyValuesExtractor = new CustomPropertyValuesExtractor();
+        $this->customSniffPropertyValuesExtractor = new CustomSniffPropertyValuesExtractor();
     }
 
     /**
@@ -24,7 +24,7 @@ final class CustomPropertyValuesExtractorTest extends TestCase
     public function testProcess(string $elementData, array $expectedCustomPropertyValues)
     {
         $rule = new SimpleXMLElement($elementData);
-        $ruleset = $this->customPropertyValuesExtractor->extractFromRuleXmlElement($rule);
+        $ruleset = $this->customSniffPropertyValuesExtractor->extractFromRuleXmlElement($rule);
         $this->assertSame($expectedCustomPropertyValues, $ruleset);
     }
 

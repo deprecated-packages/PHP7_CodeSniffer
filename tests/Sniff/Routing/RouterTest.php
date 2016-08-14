@@ -1,11 +1,11 @@
 <?php
 
-namespace Symplify\PHP7_CodeSniffer\Tests\Ruleset\Routing;
+namespace Symplify\PHP7_CodeSniffer\Tests\Sniff\Routing;
 
 use PHP_CodeSniffer\Standards\Generic\Sniffs\WhiteSpace\DisallowSpaceIndentSniff;
 use PHP_CodeSniffer\Standards\PSR2\Sniffs\Classes\ClassDeclarationSniff;
 use PHPUnit\Framework\TestCase;
-use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
+use Symplify\PHP7_CodeSniffer\Sniff\Routing\Router;
 use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
 
 final class RouterTest extends TestCase

@@ -37,4 +37,16 @@ class SniffNamingTest extends TestCase
         $sniffName = SniffNaming::guessCodeByClass(ClassDeclarationSniff::class);
         $this->assertSame('PSR2.Classes.ClassDeclaration', $sniffName);
     }
+
+    public function testIsSniffCode()
+    {
+        $this->assertTrue(SniffNaming::isSniffCode('Standard.Category.Sniff'));
+        $this->assertFalse(SniffNaming::isSniffCode('Standard.Category.Sniff.Part'));
+    }
+
+    public function testIsSniffPartCode()
+    {
+        $this->assertFalse(SniffNaming::isSniffPartCode('Standard.Category.Sniff'));
+        $this->assertTrue(SniffNaming::isSniffPartCode('Standard.Category.Sniff.Part'));
+    }
 }

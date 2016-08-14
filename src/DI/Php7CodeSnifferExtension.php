@@ -12,9 +12,8 @@ use Symfony\Component\Console\Command\Command;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication;
 use Symplify\PHP7_CodeSniffer\Contract\Configuration\OptionResolver\OptionResolverInterface;
-use Symplify\PHP7_CodeSniffer\Contract\Ruleset\ToSniffNormalizer\ToSniffNormalizerInterface;
-use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
-use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\RulesetXmlToSniffNormalizer;
+use Symplify\PHP7_CodeSniffer\Contract\Sniff\Factory\SniffFactoryInterface;
+use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 
 final class Php7CodeSnifferExtension extends CompilerExtension
 {
@@ -33,11 +32,11 @@ final class Php7CodeSnifferExtension extends CompilerExtension
      */
     public function beforeCompile()
     {
-        $this->loadToSniffNormalizersToReferenceNormalizer();
+        $this->loadSniffFactoriesToSniffSetFactory();
         $this->loadConsoleCommandsToConsoleApplication();
         $this->loadOptionResolversToConfigurationResolver();
 
-        $this->injectReferenceNormalizer();
+//        $this->injectReferenceNormalizer();
     }
 
     private function loadServicesFromConfig()
@@ -51,12 +50,12 @@ final class Php7CodeSnifferExtension extends CompilerExtension
         $this->addServicesToCollector(Php7CodeSnifferApplication::class, Command::class, 'add');
     }
 
-    private function loadToSniffNormalizersToReferenceNormalizer()
+    private function loadSniffFactoriesToSniffSetFactory()
     {
         $this->addServicesToCollector(
-            ReferenceNormalizer::class,
-            ToSniffNormalizerInterface::class,
-            'addNormalizer'
+            SniffSetFactory::class,
+            SniffFactoryInterface::class,
+            'addSniffFactory'
         );
     }
 
@@ -69,9 +68,9 @@ final class Php7CodeSnifferExtension extends CompilerExtension
         );
     }
 
-    private function injectReferenceNormalizer()
-    {
-        $definition = $this->getDefinitionByType(RulesetXmlToSniffNormalizer::class);
-        $definition->addSetup('setReferenceNormalizer', ['@' . ReferenceNormalizer::class]);
-    }
+//    private function injectReferenceNormalizer()
+//    {
+//        $definition = $this->getDefinitionByType(RulesetXmlToSniffNormalizer::class);
+//        $definition->addSetup('setReferenceNormalizer', ['@' . ReferenceNormalizer::class]);
+//    }
 }

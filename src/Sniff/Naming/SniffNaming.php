@@ -54,11 +54,21 @@ final class SniffNaming
         return $standardName.'.'.$categoryName.'.'.$sniffName;
     }
 
+    public static function isSniffCode(string $possibleSniffCode) : bool
+    {
+        $parts = explode('.', $possibleSniffCode);
+        return (count($parts) === 3);
+    }
+
+    public static function isSniffPartCode(string $possibleSniffPartCode) : bool
+    {
+        $parts = explode('.', $possibleSniffPartCode);
+        return (count($parts) === 4);
+    }
+
     private static function ensureSniffCodeIsValid(string $sniffCode)
     {
-        $parts = explode('.', $sniffCode);
-
-        if (count($parts) !== 3) {
+        if (!self::isSniffCode($sniffCode)) {
             throw new InvalidSniffCodeException(
                 sprintf(
                     '"%s" is not valid sniff code. Code in form "%s" is expected.',

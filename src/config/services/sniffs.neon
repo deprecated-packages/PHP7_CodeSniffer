@@ -1,6 +1,20 @@
 services:
-    - Symplify\PHP7_CodeSniffer\Sniff\SniffFactory
+    # factory
+    - Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory
+    - Symplify\PHP7_CodeSniffer\Sniff\Factory\SniffCodeToSniffsFactory
+    - Symplify\PHP7_CodeSniffer\Sniff\Factory\StandardNameToSniffsFactory
+    - Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToSniffsFactory
+    - Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToOwnSniffsFactory
 
+    # finder
     - Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder
     - Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassFilter
     - Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassRobotLoaderFactory
+
+    # xml
+    - Symplify\PHP7_CodeSniffer\Sniff\Xml\Extractor\CustomPropertyValuesExtractor
+    - Symplify\PHP7_CodeSniffer\Sniff\Xml\DataColletor\ExcludedSniffDataCollector
+    - Symplify\PHP7_CodeSniffer\Sniff\Xml\DataColletor\CustomSniffPropertyDataCollector
+    - Symplify\PHP7_CodeSniffer\Sniff\Xml\DataColletor\SniffDataCollector
+
+    - Symplify\PHP7_CodeSniffer\Sniff\Routing\Router

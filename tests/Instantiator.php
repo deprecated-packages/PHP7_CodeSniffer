@@ -20,55 +20,31 @@ use Symplify\PHP7_CodeSniffer\Parser\FileToTokensParser;
 use Symplify\PHP7_CodeSniffer\Php7CodeSniffer;
 use Symplify\PHP7_CodeSniffer\Report\ErrorDataCollector;
 use Symplify\PHP7_CodeSniffer\Report\ErrorMessageSorter;
-use Symplify\PHP7_CodeSniffer\Ruleset\Extractor\CustomPropertyValuesExtractor;
-use Symplify\PHP7_CodeSniffer\Ruleset\Routing\Router;
-use Symplify\PHP7_CodeSniffer\Ruleset\Rule\ReferenceNormalizer;
-use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\RulesetXmlToSniffNormalizer;
-use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\SniffCodeToSniffNormalizer;
-use Symplify\PHP7_CodeSniffer\Ruleset\ToSniffNormalizer\StandardNameToSniffNormalizer;
+use Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToOwnSniffsFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToSniffsFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\Factory\SingleSniffFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\Factory\SniffCodeToSniffsFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\Routing\Router;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassFilter;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassRobotLoaderFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
-use Symplify\PHP7_CodeSniffer\Sniff\SniffFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\CustomSniffPropertyDataCollector;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
 use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
 
 final class Instantiator
 {
-    public static function createReferenceNormalizer() : ReferenceNormalizer
+    public static function createRulesetXmlToSniffsFactory() : RulesetXmlToSniffsFactory
     {
-        $referenceNormalizer = new ReferenceNormalizer(
-            self::createSniffFinder(),
-            new StandardFinder(),
-            new Router(self::createSniffFinder())
+        $rulesetXmlToSniffsFactory = new RulesetXmlToSniffsFactory(
+            new ExcludedSniffDataCollector(),
+            new CustomSniffPropertyDataCollector()
         );
 
-        $rulesetXmlToSniffNormalizer = new RulesetXmlToSniffNormalizer(
-            self::createSniffFinder(),
-            new CustomPropertyValuesExtractor()
-        );
-        $rulesetXmlToSniffNormalizer->setReferenceNormalizer($referenceNormalizer);
+        $rulesetXmlToSniffsFactory->setSniffSetFactory(self::createSniffSetFactory());
 
-        $referenceNormalizer->addNormalizer(new SniffCodeToSniffNormalizer(self::createRouter()));
-        $referenceNormalizer->addNormalizer($rulesetXmlToSniffNormalizer);
-        $referenceNormalizer->addNormalizer(
-            new StandardNameToSniffNormalizer(
-                new StandardFinder(),
-                $rulesetXmlToSniffNormalizer
-            )
-        );
-
-        return $referenceNormalizer;
-    }
-
-    public static function createRulesetXmlToSniffNormalizer() : RulesetXmlToSniffNormalizer
-    {
-        $rulesetXmlToSniffNormalizer = new RulesetXmlToSniffNormalizer(
-            self::createSniffFinder(),
-            new CustomPropertyValuesExtractor()
-        );
-        $rulesetXmlToSniffNormalizer->setReferenceNormalizer(self::createReferenceNormalizer());
-
-        return $rulesetXmlToSniffNormalizer;
+        return $rulesetXmlToSniffsFactory;
     }
 
     public static function createConfigurationResolver() : ConfigurationResolver
@@ -114,7 +90,7 @@ final class Instantiator
         return new Php7CodeSniffer(
             new SniffDispatcher(new CurrentListenerSniffCodeProvider()),
             new FilesProvider(new SourceFinder(), self::createFileFactory()),
-            self::createSniffFactory()
+            self::createSniffSetFactory()
         );
     }
 
@@ -131,11 +107,32 @@ final class Instantiator
         return new Router(self::createSniffFinder());
     }
 
-    public static function createSniffFactory() : SniffFactory
+    public static function createSniffSetFactory() : SniffSetFactory
     {
-        return new SniffFactory(
-            self::createConfigurationResolver(),
-            self::createReferenceNormalizer()
+        $sniffSetFactory = new SniffSetFactory(
+            self::createConfigurationResolver()
+        );
+        $sniffSetFactory->addSniffFactory(new SniffCodeToSniffsFactory(
+            self::createRouter(),
+            self::createSingleSniffFactory()
+        ));
+
+        return $sniffSetFactory;
+    }
+
+    public static function createSingleSniffFactory() : SingleSniffFactory
+    {
+        return new SingleSniffFactory(
+            new ExcludedSniffDataCollector(),
+            new CustomSniffPropertyDataCollector()
+        );
+    }
+
+    public static function createRulesetXmlToOwnSniffsFactory() : RulesetXmlToOwnSniffsFactory
+    {
+        return new RulesetXmlToOwnSniffsFactory(
+            self::createSniffFinder(),
+            self::createSingleSniffFactory()
         );
     }
 }

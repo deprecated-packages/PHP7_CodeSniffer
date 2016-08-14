@@ -12,7 +12,8 @@ use Symplify\PHP7_CodeSniffer\EventDispatcher\SniffDispatcher;
 use Symplify\PHP7_CodeSniffer\Exception\AnySniffMissingException;
 use Symplify\PHP7_CodeSniffer\File\File;
 use Symplify\PHP7_CodeSniffer\File\Provider\FilesProvider;
-use Symplify\PHP7_CodeSniffer\Sniff\SniffFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\ExcludedSniffDataCollector;
+use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 
 final class Php7CodeSniffer
 {
@@ -27,41 +28,48 @@ final class Php7CodeSniffer
     private $filesProvider;
 
     /**
-     * @var SniffFactory
+     * @var SniffSetFactory
      */
     private $sniffFactory;
+
+    /**
+     * @var ExcludedSniffDataCollector
+     */
+    private $excludedSniffDataCollector;
 
     public function __construct(
         SniffDispatcher $sniffDispatcher,
         FilesProvider $sourceFilesProvider,
-        SniffFactory $sniffFactory
+        SniffSetFactory $sniffFactory,
+        ExcludedSniffDataCollector $excludedSniffDataCollector
     ) {
         $this->sniffDispatcher = $sniffDispatcher;
         $this->filesProvider = $sourceFilesProvider;
         $this->sniffFactory = $sniffFactory;
 
         $this->setupRequirements();
+        $this->excludedSniffDataCollector = $excludedSniffDataCollector;
     }
 
     public function runCommand(Php7CodeSnifferCommand $command)
     {
         $this->registerSniffs(
             $command->getStandards(),
-            $command->getSniffs(),
-            $command->getExcludedSniffs()
+            $command->getSniffs()
         );
+
+        $this->excludedSniffDataCollector->addExcludedSniffs($command->getExcludedSniffs());
 
         $this->ensureSniffsAreRegistered();
 
         $this->runForSource($command->getSource(), $command->isFixer());
     }
 
-    private function registerSniffs(array $standards, array $extraSniffs, array $excludedSniffs)
+    private function registerSniffs(array $standards, array $extraSniffs)
     {
         $sniffs = $this->sniffFactory->createFromStandardsAndSniffs(
             $standards,
-            $extraSniffs,
-            $excludedSniffs
+            $extraSniffs
         );
 
         $this->sniffDispatcher->addSniffListeners($sniffs);

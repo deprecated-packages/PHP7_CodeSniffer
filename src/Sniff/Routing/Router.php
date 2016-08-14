@@ -5,7 +5,7 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\Ruleset\Routing;
+namespace Symplify\PHP7_CodeSniffer\Sniff\Routing;
 
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 

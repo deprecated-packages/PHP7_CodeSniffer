@@ -15,7 +15,7 @@ final class SniffFactoryTest extends TestCase
 
     protected function setUp()
     {
-        $this->sniffFactory = Instantiator::createSniffFactory();
+        $this->sniffFactory = Instantiator::createSniffSetFactory();
     }
 
     /**

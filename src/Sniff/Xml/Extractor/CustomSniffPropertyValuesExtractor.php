@@ -5,30 +5,30 @@
  * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
  */
 
-namespace Symplify\PHP7_CodeSniffer\Ruleset\Extractor;
+namespace Symplify\PHP7_CodeSniffer\Sniff\Xml\Extractor;
 
 use SimpleXMLElement;
 
-final class CustomPropertyValuesExtractor
+final class CustomSniffPropertyValuesExtractor
 {
-    public function extractFromRulesetXmlFile(string $rulesetXmlFile) : array
-    {
-        $rulesetXml = simplexml_load_file($rulesetXmlFile);
-
-        $customPropertyValues = [];
-        foreach ($rulesetXml->rule as $ruleElement) {
-            if (!isset($ruleElement['ref'])) {
-                continue;
-            }
-
-            $customPropertyValues = array_merge(
-                $customPropertyValues,
-                $this->extractFromRuleXmlElement($ruleElement)
-            );
-        }
-
-        return $customPropertyValues;
-    }
+//    public function extractFromRulesetXmlFile(string $rulesetXmlFile) : array
+//    {
+//        $rulesetXml = simplexml_load_file($rulesetXmlFile);
+//
+//        $customPropertyValues = [];
+//        foreach ($rulesetXml->rule as $ruleElement) {
+//            if (!isset($ruleElement['ref'])) {
+//                continue;
+//            }
+//
+//            $customPropertyValues = array_merge(
+//                $customPropertyValues,
+//                $this->extractFromRuleXmlElement($ruleElement)
+//            );
+//        }
+//
+//        return $customPropertyValues;
+//    }
 
     public function extractFromRuleXmlElement(SimpleXMLElement $ruleElement) : array
     {
