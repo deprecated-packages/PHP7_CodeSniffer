@@ -43,7 +43,6 @@ final class RulesetXmlToSniffsFactoryTest extends TestCase
         $rulesetXmlPath = $standardFinder->getRulesetPathForStandardName('PSR1');
         $sniffs = $this->rulesetXmlToSniffsFactory->create($rulesetXmlPath);
 
-//        dump($sniffs);
         $this->assertCount(4, $sniffs);
 
 //        $this->assertSame([

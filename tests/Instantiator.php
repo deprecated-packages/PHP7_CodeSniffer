@@ -42,7 +42,7 @@ final class Instantiator
             new CustomSniffPropertyValueDataCollector()
         );
 
-        $rulesetXmlToSniffsFactory->setSniffSetFactory(self::createSniffSetFactory());
+        $rulesetXmlToSniffsFactory->sniffFactoryCollector(self::createSniffSetFactory());
 
         return $rulesetXmlToSniffsFactory;
     }

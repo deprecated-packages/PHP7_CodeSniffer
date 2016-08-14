@@ -22,7 +22,7 @@ final class CustomSniffPropertyValueDataCollector
         if (isset($ruleXmlElement->properties)) {
             $this->addCustomSniffProperty(
                 (string) $ruleXmlElement['ref'],
-                $ruleXmlElement->properties
+                (array) $ruleXmlElement->properties
             );
         }
     }
@@ -39,6 +39,10 @@ final class CustomSniffPropertyValueDataCollector
 
     private function addCustomSniffProperty(string $sniffCode, array $properties)
     {
+        if (!isset($this->customSniffPropertyValuesBySniffCode[$sniffCode])) {
+            $this->customSniffPropertyValuesBySniffCode[$sniffCode] = [];
+        }
+
         $this->customSniffPropertyValuesBySniffCode[$sniffCode] = array_merge(
             $this->customSniffPropertyValuesBySniffCode[$sniffCode],
             $properties
@@ -62,6 +66,7 @@ final class CustomSniffPropertyValueDataCollector
         $value = $this->trimStringValue($value);
         return $this->normalizeBoolValue($value);
     }
+
 
     /**
      * @param mixed $value

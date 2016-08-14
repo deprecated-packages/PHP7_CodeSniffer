@@ -13,7 +13,6 @@ use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication;
 use Symplify\PHP7_CodeSniffer\Contract\Configuration\OptionResolver\OptionResolverInterface;
 use Symplify\PHP7_CodeSniffer\Contract\Sniff\Factory\SniffFactoryInterface;
-use Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToSniffsFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 
 final class Php7CodeSnifferExtension extends CompilerExtension
@@ -36,8 +35,6 @@ final class Php7CodeSnifferExtension extends CompilerExtension
         $this->loadSniffFactoriesToSniffSetFactory();
         $this->loadConsoleCommandsToConsoleApplication();
         $this->loadOptionResolversToConfigurationResolver();
-
-        $this->injectSniffSetFactory();
     }
 
     private function loadServicesFromConfig()
@@ -53,25 +50,11 @@ final class Php7CodeSnifferExtension extends CompilerExtension
 
     private function loadSniffFactoriesToSniffSetFactory()
     {
-        $this->addServicesToCollector(
-            SniffSetFactory::class,
-            SniffFactoryInterface::class,
-            'addSniffFactory'
-        );
+        $this->addServicesToCollector(SniffSetFactory::class, SniffFactoryInterface::class, 'addSniffFactory');
     }
 
     private function loadOptionResolversToConfigurationResolver()
     {
-        $this->addServicesToCollector(
-            ConfigurationResolver::class,
-            OptionResolverInterface::class,
-            'addOptionResolver'
-        );
-    }
-
-    private function injectSniffSetFactory()
-    {
-        $definition = $this->getDefinitionByType(RulesetXmlToSniffsFactory::class);
-        $definition->addSetup('setSniffSetFactory', ['@' . SniffSetFactory::class]);
+        $this->addServicesToCollector(ConfigurationResolver::class, OptionResolverInterface::class, 'addOptionResolver');
     }
 }

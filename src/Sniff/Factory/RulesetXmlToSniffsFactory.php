@@ -11,19 +11,15 @@ use Nette\Utils\Strings;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use SimpleXMLElement;
 use Symplify\PHP7_CodeSniffer\Contract\Sniff\Factory\SniffFactoryInterface;
+use Symplify\PHP7_CodeSniffer\Contract\Sniff\SniffSetFactoryAwareInterface;
 use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
+use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Sorter\SniffSorter;
 use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\CustomSniffPropertyValueDataCollector;
 use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
-use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 
-final class RulesetXmlToSniffsFactory implements SniffFactoryInterface
+final class RulesetXmlToSniffsFactory implements SniffFactoryInterface, SniffSetFactoryAwareInterface
 {
-    /**
-     * @var SniffSetFactory
-     */
-    private $sniffSetFactory;
-
     /**
      * @var ExcludedSniffDataCollector
      */
@@ -34,18 +30,17 @@ final class RulesetXmlToSniffsFactory implements SniffFactoryInterface
      */
     private $customSniffPropertyDataCollector;
 
+    /**
+     * @var SniffSetFactory
+     */
+    private $sniffSetFactory;
+
     public function __construct(
         ExcludedSniffDataCollector $excludedSniffDataCollector,
         CustomSniffPropertyValueDataCollector $customSniffPropertyDataCollector
     ) {
         $this->customSniffPropertyDataCollector = $customSniffPropertyDataCollector;
         $this->excludedSniffDataCollector = $excludedSniffDataCollector;
-    }
-
-    public function setSniffSetFactory(SniffSetFactory $sniffSetFactory)
-    {
-        $this->sniffSetFactory = $sniffSetFactory;
-        $this->sniffSetFactory->addSniffFactory($this);
     }
 
     public function isMatch(string $reference) : bool
@@ -73,6 +68,11 @@ final class RulesetXmlToSniffsFactory implements SniffFactoryInterface
         }
 
         return SniffSorter::sort($sniffs);
+    }
+
+    public function setSniffSetFactory(SniffSetFactory $sniffSetFactory)
+    {
+        $this->sniffSetFactory = $sniffSetFactory;
     }
 
     private function isRuleXmlElementSkipped(SimpleXMLElement $ruleXmlElement) : bool

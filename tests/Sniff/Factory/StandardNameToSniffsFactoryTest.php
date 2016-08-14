@@ -32,7 +32,7 @@ final class StandardNameToSniffsFactoryTest extends TestCase
         );
 
         $sniffSetFactory = Instantiator::createSniffSetFactory();
-        $rulesetXmlToSniffsFactory->setSniffSetFactory($sniffSetFactory);
+        $rulesetXmlToSniffsFactory->sniffFactoryCollector($sniffSetFactory);
 
         $this->standardNameToSniffsFactory = new StandardNameToSniffsFactory(
             new StandardFinder(),
