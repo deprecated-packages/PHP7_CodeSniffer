@@ -3,21 +3,11 @@
 namespace Symplify\PHP7_CodeSniffer\Tests\Sniff;
 
 use PHPUnit\Framework\TestCase;
-use Symplify\PHP7_CodeSniffer\Sniff\SniffFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
 use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
 
 final class SniffFactoryTest extends TestCase
 {
-    /**
-     * @var SniffFactory
-     */
-    private $sniffFactory;
-
-    protected function setUp()
-    {
-        $this->sniffFactory = Instantiator::createSniffSetFactory();
-    }
-
     /**
      * @dataProvider provideDataForResolver()
      */
@@ -27,12 +17,11 @@ final class SniffFactoryTest extends TestCase
         array $excludedSniffs,
         int $sniffCount
     ) {
-        $sniffs = $this->sniffFactory->createFromStandardsAndSniffs(
-            $standards,
-            $extraSniffs,
-            $excludedSniffs
-        );
+        $excludedSniffDataCollector = new ExcludedSniffDataCollector();
+        $excludedSniffDataCollector->addExcludedSniffs($excludedSniffs);
+        $sniffSetFactory = Instantiator::createSniffSetFactoryWithExcludedDataCollector($excludedSniffDataCollector);
 
+        $sniffs = $sniffSetFactory->createFromStandardsAndSniffs($standards, $extraSniffs);
         $this->assertCount($sniffCount, $sniffs);
     }
 
@@ -42,14 +31,14 @@ final class SniffFactoryTest extends TestCase
             [
                 [], [], [], 0
             ], [
-                ['PSR2'], [], [], 42
+                ['PSR2'], [], [], 48
             ], [
-                ['PSR2'], ['PEAR.Commenting.ClassComment'], [], 43
+                ['PSR2'], ['PEAR.Commenting.ClassComment'], [], 49
             ], [
                 ['PSR2'],
                 ['PEAR.Commenting.ClassComment'],
                 ['PEAR.Commenting.ClassComment', 'PSR2.Namespaces.UseDeclaration'],
-                41
+                49
             ],
         ];
     }

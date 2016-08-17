@@ -128,7 +128,7 @@ final class Instantiator
         return new Router(self::createSniffFinder());
     }
 
-    public static function createSniffSetFactory() : SniffSetFactory
+    public static function createSniffSetFactory(SingleSniffFactory $singleSniffFactory = null) : SniffSetFactory
     {
         $sniffSetFactory = new SniffSetFactory(
             self::createConfigurationResolver()
@@ -136,13 +136,17 @@ final class Instantiator
 
         $sniffSetFactory->addSniffFactory(new SniffCodeToSniffsFactory(
             self::createRouter(),
-            self::createSingleSniffFactory()
+            $singleSniffFactory = $singleSniffFactory ?: self::createSingleSniffFactory()
         ));
 
         $sniffSetFactory->addSniffFactory(new StandardNameToSniffsFactory(
             new StandardFinder(),
             self::createBareRulesetXmlToSniffsFactory()
         ));
+
+        $sniffSetFactory->addSniffFactory(
+            self::createBareRulesetXmlToSniffsFactory()
+        );
 
         return $sniffSetFactory;
     }
@@ -158,5 +162,18 @@ final class Instantiator
     private static function createSniffDispatcher() : SniffDispatcher
     {
         return new SniffDispatcher(new CurrentListenerSniffCodeProvider());
+    }
+
+    public static function createSniffSetFactoryWithExcludedDataCollector(
+        ExcludedSniffDataCollector $excludedSniffDataCollector
+    ) : SniffSetFactory {
+        $singleSniffFactory = new SingleSniffFactory(
+            $excludedSniffDataCollector,
+            new CustomSniffPropertyValueDataCollector()
+        );
+
+        $sniffSetFactory = self::createSniffSetFactory($singleSniffFactory);
+
+        return $sniffSetFactory;
     }
 }
