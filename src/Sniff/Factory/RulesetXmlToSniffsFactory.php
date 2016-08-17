@@ -12,6 +12,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use SimpleXMLElement;
 use Symplify\PHP7_CodeSniffer\Contract\Sniff\Factory\SniffFactoryInterface;
 use Symplify\PHP7_CodeSniffer\Contract\Sniff\SniffSetFactoryAwareInterface;
+use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Sorter\SniffSorter;
@@ -35,12 +36,26 @@ final class RulesetXmlToSniffsFactory implements SniffFactoryInterface, SniffSet
      */
     private $sniffSetFactory;
 
+    /**
+     * @var SniffFinder
+     */
+    private $sniffFinder;
+
+    /**
+     * @var SingleSniffFactory
+     */
+    private $singleSniffFactory;
+
     public function __construct(
+        SniffFinder $sniffFinder,
         ExcludedSniffDataCollector $excludedSniffDataCollector,
-        CustomSniffPropertyValueDataCollector $customSniffPropertyDataCollector
+        CustomSniffPropertyValueDataCollector $customSniffPropertyDataCollector,
+        SingleSniffFactory $singleSniffFactory
     ) {
+        $this->sniffFinder = $sniffFinder;
         $this->customSniffPropertyDataCollector = $customSniffPropertyDataCollector;
         $this->excludedSniffDataCollector = $excludedSniffDataCollector;
+        $this->singleSniffFactory = $singleSniffFactory;
     }
 
     public function isMatch(string $reference) : bool
@@ -53,7 +68,7 @@ final class RulesetXmlToSniffsFactory implements SniffFactoryInterface, SniffSet
      */
     public function create(string $rulesetXmlFile) : array
     {
-        $sniffs = [];
+        $sniffs = $this->createSniffsFromOwnRuleset($rulesetXmlFile);
 
         $rulesetXml = simplexml_load_file($rulesetXmlFile);
         foreach ($rulesetXml->rule as $ruleXmlElement) {
@@ -90,5 +105,28 @@ final class RulesetXmlToSniffsFactory implements SniffFactoryInterface, SniffSet
         }
 
         return false;
+    }
+
+    /**
+     * @return Sniff[]
+     */
+    private function createSniffsFromOwnRuleset(string $rulesetXmlFile) : array
+    {
+        $rulesetDir = dirname($rulesetXmlFile);
+        $sniffDir = $rulesetDir.DIRECTORY_SEPARATOR.'Sniffs';
+        if (!is_dir($sniffDir)) {
+            return [];
+        }
+
+        $sniffClassNames = $this->sniffFinder->findAllSniffClassesInDirectory($sniffDir);
+
+        $sniffs = [];
+        foreach ($sniffClassNames as $sniffClassName) {
+            if ($sniff = $this->singleSniffFactory->create($sniffClassName)) {
+                $sniffs[] = $sniff;
+            }
+        }
+
+        return $sniffs;
     }
 }

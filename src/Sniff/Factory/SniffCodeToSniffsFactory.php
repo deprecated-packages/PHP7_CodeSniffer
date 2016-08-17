@@ -9,7 +9,6 @@ namespace Symplify\PHP7_CodeSniffer\Sniff\Factory;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
 use Symplify\PHP7_CodeSniffer\Contract\Sniff\Factory\SniffFactoryInterface;
-use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 use Symplify\PHP7_CodeSniffer\Sniff\Routing\Router;
 
 final class SniffCodeToSniffsFactory implements SniffFactoryInterface
@@ -32,7 +31,12 @@ final class SniffCodeToSniffsFactory implements SniffFactoryInterface
 
     public function isMatch(string $reference) : bool
     {
-        return SniffNaming::isSniffCode($reference);
+        $partsCount = count(explode('.', $reference));
+        if ($partsCount >= 3 && $partsCount <=4) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

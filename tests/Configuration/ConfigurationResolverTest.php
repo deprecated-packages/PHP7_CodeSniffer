@@ -2,7 +2,6 @@
 
 namespace Symplify\PHP7_CodeSniffer\Tests\Configuration;
 
-use PHP_CodeSniffer\Standards\PEAR\Sniffs\Commenting\ClassCommentSniff;
 use PHPUnit\Framework\TestCase;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
@@ -27,6 +26,14 @@ final class ConfigurationResolverTest extends TestCase
         $this->configurationResolver->resolve('standards', ['fake']);
     }
 
+    /**
+     * @expectedException \Symplify\PHP7_CodeSniffer\Exception\Configuration\OptionResolver\InvalidSniffCodeException
+     */
+    public function testInvalidSniffCode()
+    {
+        $this->configurationResolver->resolve('sniffs', ['invalid.code']);
+    }
+
     public function testResolve()
     {
         $this->assertSame(
@@ -34,15 +41,29 @@ final class ConfigurationResolverTest extends TestCase
             $this->configurationResolver->resolve('source', [__DIR__])
         );
 
-        $this->assertArrayHasKey(
-            'PSR2',
+        $this->assertSame(
+            ['PSR2'],
             $this->configurationResolver->resolve('standards', ['PSR2'])
         );
 
         $this->assertSame(
-            ['PEAR.Commenting.ClassComment' => ClassCommentSniff::class],
+            ['PSR1', 'PSR2'],
+            $this->configurationResolver->resolve('standards', ['PSR1,PSR2'])
+        );
+
+        $this->assertSame(
+            ['PEAR.Commenting.ClassComment'],
             $this->configurationResolver->resolve('sniffs', ['PEAR.Commenting.ClassComment'])
         );
+
+        $this->assertSame(
+            ['PEAR.Commenting.ClassComment', 'SomeOther.Commenting.ClassComment'],
+            $this->configurationResolver->resolve(
+                'sniffs',
+                ['PEAR.Commenting.ClassComment', 'SomeOther.Commenting.ClassComment']
+            )
+        );
+
     }
 
     /**

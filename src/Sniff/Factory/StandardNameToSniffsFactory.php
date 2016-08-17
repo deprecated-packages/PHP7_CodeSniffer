@@ -22,19 +22,12 @@ final class StandardNameToSniffsFactory implements SniffFactoryInterface
      */
     private $rulesetXmlToSniffsFactory;
 
-    /**
-     * @var RulesetXmlToOwnSniffsFactory
-     */
-    private $rulesetXmlToOwnSniffsFactory;
-
     public function __construct(
         StandardFinder $standardFinder,
-        RulesetXmlToSniffsFactory $rulesetXmlToSniffsFactory,
-        RulesetXmlToOwnSniffsFactory $rulesetXmlToOwnSniffsFactory
+        RulesetXmlToSniffsFactory $rulesetXmlToSniffsFactory
     ) {
         $this->standardFinder = $standardFinder;
         $this->rulesetXmlToSniffsFactory = $rulesetXmlToSniffsFactory;
-        $this->rulesetXmlToOwnSniffsFactory = $rulesetXmlToOwnSniffsFactory;
     }
 
     public function isMatch(string $reference) : bool
@@ -46,10 +39,6 @@ final class StandardNameToSniffsFactory implements SniffFactoryInterface
     public function create(string $standardName) : array
     {
         $rulesetXml = $this->standardFinder->getRulesetPathForStandardName($standardName);
-        $rulesetSniffs = $this->rulesetXmlToSniffsFactory->create($rulesetXml);
-
-        $rulesetOwnSniffs = $this->rulesetXmlToOwnSniffsFactory->create($rulesetXml);
-
-        return array_merge($rulesetSniffs, $rulesetOwnSniffs);
+        return $this->rulesetXmlToSniffsFactory->create($rulesetXml);
     }
 }
