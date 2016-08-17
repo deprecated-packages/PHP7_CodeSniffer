@@ -25,6 +25,7 @@ use Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToOwnSniffsFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToSniffsFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Factory\SingleSniffFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Factory\SniffCodeToSniffsFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\Factory\StandardNameToSniffsFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Routing\Router;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassFilter;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassRobotLoaderFactory;
@@ -36,18 +37,32 @@ use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
 
 final class Instantiator
 {
+    /**
+     * @var RulesetXmlToSniffsFactory
+     */
+    private static $cachedRulesetXmlToSniffFactory;
+
     public static function createRulesetXmlToSniffsFactory() : RulesetXmlToSniffsFactory
     {
-        $rulesetXmlToSniffsFactory = new RulesetXmlToSniffsFactory(
+        $sniffSetFactory = self::createSniffSetFactory();
+        $rulesetXmlToSniffsFactory = self::createBareRulesetXmlToSniffsFactory();
+        $sniffSetFactory->addSniffFactory($rulesetXmlToSniffsFactory);
+
+        return $rulesetXmlToSniffsFactory;
+    }
+
+    private static function createBareRulesetXmlToSniffsFactory() : RulesetXmlToSniffsFactory
+    {
+        if (self::$cachedRulesetXmlToSniffFactory) {
+            return self::$cachedRulesetXmlToSniffFactory;
+        }
+
+        return self::$cachedRulesetXmlToSniffFactory = new RulesetXmlToSniffsFactory(
             self::createSniffFinder(),
             new ExcludedSniffDataCollector(),
             new CustomSniffPropertyValueDataCollector(),
             self::createSingleSniffFactory()
         );
-
-        $rulesetXmlToSniffsFactory->setSniffSetFactory(self::createSniffSetFactory());
-
-        return $rulesetXmlToSniffsFactory;
     }
 
     public static function createConfigurationResolver() : ConfigurationResolver
@@ -118,9 +133,15 @@ final class Instantiator
         $sniffSetFactory = new SniffSetFactory(
             self::createConfigurationResolver()
         );
+
         $sniffSetFactory->addSniffFactory(new SniffCodeToSniffsFactory(
             self::createRouter(),
             self::createSingleSniffFactory()
+        ));
+
+        $sniffSetFactory->addSniffFactory(new StandardNameToSniffsFactory(
+            new StandardFinder(),
+            self::createBareRulesetXmlToSniffsFactory()
         ));
 
         return $sniffSetFactory;
