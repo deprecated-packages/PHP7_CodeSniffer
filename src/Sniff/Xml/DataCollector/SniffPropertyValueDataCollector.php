@@ -62,9 +62,6 @@ final class SniffPropertyValueDataCollector
             $customSniffPropertyValues[$property] = $this->normalizeValue($value);
         }
 
-
-
-
         return $customSniffPropertyValues;
     }
 
