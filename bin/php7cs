@@ -16,8 +16,8 @@ $classLoaderDecorator = $container->getByType(Symplify\PHP7_CodeSniffer\Composer
 $classLoaderDecorator->decorate($classLoader);
 
 // 3. get Console Application
-/** @var Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication $codeSnifferApplication */
-$codeSnifferApplication = $container->getByType(Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication::class);
+/** @var Symplify\PHP7_CodeSniffer\Console\ConsoleApplication $codeSnifferApplication */
+$codeSnifferApplication = $container->getByType(Symplify\PHP7_CodeSniffer\Console\ConsoleApplication::class);
 
 // 4. run it!
 $codeSnifferApplication->setDefaultCommand('run', true);

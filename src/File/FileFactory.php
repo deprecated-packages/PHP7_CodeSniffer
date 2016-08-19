@@ -8,7 +8,7 @@
 namespace Symplify\PHP7_CodeSniffer\File;
 
 use Nette\FileNotFoundException;
-use Symplify\PHP7_CodeSniffer\Fixer;
+use Symplify\PHP7_CodeSniffer\Application\Fixer;
 use Symplify\PHP7_CodeSniffer\Parser\EolCharDetector;
 use Symplify\PHP7_CodeSniffer\Parser\FileToTokensParser;
 use Symplify\PHP7_CodeSniffer\Report\ErrorDataCollector;

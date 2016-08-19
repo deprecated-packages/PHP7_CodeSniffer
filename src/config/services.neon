@@ -1,22 +1,17 @@
 includes:
+    - services/application.neon
     - services/configuration.neon
     - services/console.neon
     - services/event-dispatcher.neon
     - services/files.neon
-    - services/ruleset.neon
+    - services/parser.neon
     - services/sniffs.neon
     - services/standard.neon
     - services/report.neon
 
 services:
-    - Symplify\PHP7_CodeSniffer\Fixer
-    - Symplify\PHP7_CodeSniffer\Php7CodeSniffer
-
+    # composer
     - Symplify\PHP7_CodeSniffer\Composer\ClassLoaderDecorator
-
-    # tokenizer / parser
-    - Symplify\PHP7_CodeSniffer\Parser\FileToTokensParser
-    - Symplify\PHP7_CodeSniffer\Parser\EolCharDetector
 
     # this has to be created to initializes all token constants
     - PHP_CodeSniffer\Util\Tokens

@@ -23,10 +23,10 @@ trait ExtensionHelperTrait
         $containerBuilder = $this->getContainerBuilder();
         $collectorDefinition = $this->getDefinitionByType($collectorClass);
 
-        foreach ($containerBuilder->findByType($collectedClass) as $definition) {
+        foreach ($containerBuilder->findByType($collectedClass) as $name => $definition) {
             $collectorDefinition->addSetup(
                 $adderMethodName,
-                ['@'.$definition->getClass()]
+                ['@'.$name]
             );
         }
     }

@@ -39,8 +39,8 @@ final class StandardsOptionResolver implements OptionResolverInterface
     {
         $optionsResolver = new OptionsResolver();
         $optionsResolver->setDefined(self::NAME);
-        $this->setNormalizers($optionsResolver);
         $this->setAllowedValues($optionsResolver);
+        $this->setNormalizer($optionsResolver);
 
         $values = $optionsResolver->resolve([
             self::NAME => $value
@@ -49,13 +49,12 @@ final class StandardsOptionResolver implements OptionResolverInterface
         return $values[self::NAME];
     }
 
-    private function setNormalizers(OptionsResolver $optionsResolver)
+    private function setNormalizer(OptionsResolver $optionsResolver)
     {
         $optionsResolver->setNormalizer(
             self::NAME,
             function (OptionsResolver $optionsResolver, array $standardNames) {
-                $standardNames = ValueNormalizer::normalizeCommaSeparatedValues($standardNames);
-                return $this->standardFinder->getRulesetPathsForStandardNames($standardNames);
+                return ValueNormalizer::normalizeCommaSeparatedValues($standardNames);
             }
         );
     }

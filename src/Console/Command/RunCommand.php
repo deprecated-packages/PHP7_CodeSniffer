@@ -12,11 +12,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symplify\PHP7_CodeSniffer\Application\Application;
+use Symplify\PHP7_CodeSniffer\Application\Command\RunApplicationCommand;
 use Symplify\PHP7_CodeSniffer\Console\ExitCode;
 use Symplify\PHP7_CodeSniffer\Console\Style\CodeSnifferStyle;
 use Symplify\PHP7_CodeSniffer\Console\Output\InfoMessagePrinter;
-use Symplify\PHP7_CodeSniffer\Php7CodeSniffer;
-use Symplify\PHP7_CodeSniffer\Php7CodeSnifferCommand;
 use Symplify\PHP7_CodeSniffer\Report\ErrorDataCollector;
 use Throwable;
 
@@ -33,9 +33,9 @@ final class RunCommand extends Command
     private $errorDataCollector;
 
     /**
-     * @var Php7CodeSniffer
+     * @var Application
      */
-    private $php7CodeSniffer;
+    private $application;
 
     /**
      * @var InfoMessagePrinter
@@ -45,12 +45,12 @@ final class RunCommand extends Command
     public function __construct(
         CodeSnifferStyle $codeSnifferStyle,
         ErrorDataCollector $reportCollector,
-        Php7CodeSniffer $php7CodeSniffer,
+        Application $application,
         InfoMessagePrinter $infoMessagePrinter
     ) {
         $this->codeSnifferStyle = $codeSnifferStyle;
         $this->errorDataCollector = $reportCollector;
-        $this->php7CodeSniffer = $php7CodeSniffer;
+        $this->application = $application;
         $this->infoMessagePrinter = $infoMessagePrinter;
 
         parent::__construct();
@@ -77,15 +77,13 @@ final class RunCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $php7CodeSnifferCommand = new Php7CodeSnifferCommand(
+            $this->application->runCommand(new RunApplicationCommand(
                 $input->getArgument('source'),
                 $input->getOption('standards'),
                 $input->getOption('sniffs'),
                 $input->getOption('exclude-sniffs'),
                 $input->getOption('fix')
-            );
-
-            $this->php7CodeSniffer->runCommand($php7CodeSnifferCommand);
+            ));
 
             if ($this->errorDataCollector->getErrorCount()) {
                 $this->infoMessagePrinter->printFoundErrorsStatus($input->getOption('fix'));

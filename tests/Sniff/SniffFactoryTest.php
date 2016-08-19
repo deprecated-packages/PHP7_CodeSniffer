@@ -2,25 +2,46 @@
 
 namespace Symplify\PHP7_CodeSniffer\Tests\Sniff;
 
-use PHP_CodeSniffer\Standards\PSR2\Sniffs\Classes\ClassDeclarationSniff;
 use PHPUnit\Framework\TestCase;
-use Symplify\PHP7_CodeSniffer\Sniff\SniffFactory;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
+use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
 
 final class SniffFactoryTest extends TestCase
 {
-    public function testCreateFrom()
+    /**
+     * @dataProvider provideDataForResolver()
+     */
+    public function testResolveFromStandardsAndSniffs(
+        array $standards,
+        array $extraSniffs,
+        array $excludedSniffs,
+        int $sniffCount
+    ) {
+        $excludedSniffDataCollector = new ExcludedSniffDataCollector();
+        $excludedSniffDataCollector->addExcludedSniffs($excludedSniffs);
+        $sniffSetFactory = Instantiator::createSniffSetFactoryWithExcludedDataCollector(
+            $excludedSniffDataCollector
+        );
+
+        $sniffs = $sniffSetFactory->createFromStandardsAndSniffs($standards, $extraSniffs);
+        $this->assertCount($sniffCount, $sniffs);
+    }
+
+    public function provideDataForResolver() : array
     {
-        $sniffFactory = new SniffFactory();
-
-        $sniffClassNames = [];
-        $sniffs = $sniffFactory->createFromSniffClassNames($sniffClassNames);
-        $this->assertSame([], $sniffs);
-
-        $sniffClassNames = [
-            'Some.Code' => ClassDeclarationSniff::class
+        return [
+            [
+                [], [], [], 0
+            ], [
+                ['PSR2'], [], [], 48
+            ], [
+                ['PSR2'], ['PEAR.Commenting.ClassComment'], [], 49
+            ], [
+                ['PSR2'],
+                ['PEAR.Commenting.ClassComment'],
+                ['PEAR.Commenting.ClassComment', 'PSR2.Namespaces.UseDeclaration'],
+                49
+            ],
         ];
-        $sniffs = $sniffFactory->createFromSniffClassNames($sniffClassNames);
-        $this->assertSame('Some.Code', key($sniffs));
-        $this->assertInstanceOf(ClassDeclarationSniff::class, $sniffs['Some.Code']);
     }
 }

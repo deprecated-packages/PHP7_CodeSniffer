@@ -1,5 +1,5 @@
 services:
-    - Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication
+    - Symplify\PHP7_CodeSniffer\Console\ConsoleApplication
     - Symplify\PHP7_CodeSniffer\Console\Command\RunCommand
 
     - Symfony\Component\Console\Input\ArgvInput

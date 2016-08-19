@@ -10,8 +10,10 @@ namespace Symplify\PHP7_CodeSniffer\DI;
 use Nette\DI\CompilerExtension;
 use Symfony\Component\Console\Command\Command;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
-use Symplify\PHP7_CodeSniffer\Console\Php7CodeSnifferApplication;
+use Symplify\PHP7_CodeSniffer\Console\ConsoleApplication;
 use Symplify\PHP7_CodeSniffer\Contract\Configuration\OptionResolver\OptionResolverInterface;
+use Symplify\PHP7_CodeSniffer\Contract\Sniff\Factory\SniffFactoryInterface;
+use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 
 final class Php7CodeSnifferExtension extends CompilerExtension
 {
@@ -30,6 +32,7 @@ final class Php7CodeSnifferExtension extends CompilerExtension
      */
     public function beforeCompile()
     {
+        $this->loadSniffFactoriesToSniffSetFactory();
         $this->loadConsoleCommandsToConsoleApplication();
         $this->loadOptionResolversToConfigurationResolver();
     }
@@ -42,7 +45,16 @@ final class Php7CodeSnifferExtension extends CompilerExtension
 
     private function loadConsoleCommandsToConsoleApplication()
     {
-        $this->addServicesToCollector(Php7CodeSnifferApplication::class, Command::class, 'add');
+        $this->addServicesToCollector(ConsoleApplication::class, Command::class, 'add');
+    }
+
+    private function loadSniffFactoriesToSniffSetFactory()
+    {
+        $this->addServicesToCollector(
+            SniffSetFactory::class,
+            SniffFactoryInterface::class,
+            'addSniffFactory'
+        );
     }
 
     private function loadOptionResolversToConfigurationResolver()

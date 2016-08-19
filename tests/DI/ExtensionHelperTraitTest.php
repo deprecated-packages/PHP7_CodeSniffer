@@ -50,7 +50,7 @@ final class ExtensionHelperTraitTest extends TestCase
 
         $this->assertNotSame([], $collectorDefinition->getSetup());
         $this->assertEquals(
-            new Statement('add', ['@'.Collected::class]),
+            new Statement('add', ['@collected']),
             $collectorDefinition->getSetup()[0]
         );
     }
