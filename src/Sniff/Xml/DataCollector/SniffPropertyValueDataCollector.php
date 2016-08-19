@@ -7,10 +7,11 @@
 
 namespace Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector;
 
+use PHP_CodeSniffer\Sniffs\Sniff;
 use SimpleXMLElement;
 use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 
-final class CustomSniffPropertyValueDataCollector
+final class SniffPropertyValueDataCollector
 {
     /**
      * @var array[]
@@ -27,7 +28,13 @@ final class CustomSniffPropertyValueDataCollector
         }
     }
 
-    public function getForSniffClass(string $sniffClassName) : array
+    public function getForSniff(Sniff $sniff) : array
+    {
+        $sniffClassName = get_class($sniff);
+        return $this->getForSniffClass($sniffClassName);
+    }
+
+    private function getForSniffClass(string $sniffClassName) : array
     {
         $sniffCode = SniffNaming::guessCodeByClass($sniffClassName);
         if (!isset($this->customSniffPropertyValuesBySniffCode[$sniffCode])) {
@@ -54,6 +61,10 @@ final class CustomSniffPropertyValueDataCollector
         foreach ($customSniffPropertyValues as $property => $value) {
             $customSniffPropertyValues[$property] = $this->normalizeValue($value);
         }
+
+
+
+
         return $customSniffPropertyValues;
     }
 

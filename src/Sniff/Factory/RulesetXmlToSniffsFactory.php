@@ -16,10 +16,12 @@ use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Sorter\SniffSorter;
-use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\CustomSniffPropertyValueDataCollector;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\SniffPropertyValueDataCollector;
 use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
 
-final class RulesetXmlToSniffsFactory implements SniffFactoryInterface, SniffSetFactoryAwareInterface
+final class RulesetXmlToSniffsFactory implements
+    SniffFactoryInterface,
+    SniffSetFactoryAwareInterface
 {
     /**
      * @var ExcludedSniffDataCollector
@@ -27,7 +29,7 @@ final class RulesetXmlToSniffsFactory implements SniffFactoryInterface, SniffSet
     private $excludedSniffDataCollector;
 
     /**
-     * @var CustomSniffPropertyValueDataCollector
+     * @var SniffPropertyValueDataCollector
      */
     private $customSniffPropertyDataCollector;
 
@@ -49,7 +51,7 @@ final class RulesetXmlToSniffsFactory implements SniffFactoryInterface, SniffSet
     public function __construct(
         SniffFinder $sniffFinder,
         ExcludedSniffDataCollector $excludedSniffDataCollector,
-        CustomSniffPropertyValueDataCollector $customSniffPropertyDataCollector,
+        SniffPropertyValueDataCollector $customSniffPropertyDataCollector,
         SingleSniffFactory $singleSniffFactory
     ) {
         $this->sniffFinder = $sniffFinder;

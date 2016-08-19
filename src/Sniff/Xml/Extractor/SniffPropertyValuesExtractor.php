@@ -9,7 +9,7 @@ namespace Symplify\PHP7_CodeSniffer\Sniff\Xml\Extractor;
 
 use SimpleXMLElement;
 
-final class CustomSniffPropertyValuesExtractor
+final class SniffPropertyValuesExtractor
 {
     public function extractFromRuleXmlElement(SimpleXMLElement $ruleElement) : array
     {

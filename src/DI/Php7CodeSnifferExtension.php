@@ -50,11 +50,19 @@ final class Php7CodeSnifferExtension extends CompilerExtension
 
     private function loadSniffFactoriesToSniffSetFactory()
     {
-        $this->addServicesToCollector(SniffSetFactory::class, SniffFactoryInterface::class, 'addSniffFactory');
+        $this->addServicesToCollector(
+            SniffSetFactory::class,
+            SniffFactoryInterface::class,
+            'addSniffFactory'
+        );
     }
 
     private function loadOptionResolversToConfigurationResolver()
     {
-        $this->addServicesToCollector(ConfigurationResolver::class, OptionResolverInterface::class, 'addOptionResolver');
+        $this->addServicesToCollector(
+            ConfigurationResolver::class,
+            OptionResolverInterface::class,
+            'addOptionResolver'
+        );
     }
 }

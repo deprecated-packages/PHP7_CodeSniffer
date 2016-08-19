@@ -63,7 +63,6 @@ final class ConfigurationResolverTest extends TestCase
                 ['PEAR.Commenting.ClassComment', 'SomeOther.Commenting.ClassComment']
             )
         );
-
     }
 
     /**

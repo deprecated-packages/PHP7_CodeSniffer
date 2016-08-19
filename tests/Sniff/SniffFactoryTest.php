@@ -19,7 +19,9 @@ final class SniffFactoryTest extends TestCase
     ) {
         $excludedSniffDataCollector = new ExcludedSniffDataCollector();
         $excludedSniffDataCollector->addExcludedSniffs($excludedSniffs);
-        $sniffSetFactory = Instantiator::createSniffSetFactoryWithExcludedDataCollector($excludedSniffDataCollector);
+        $sniffSetFactory = Instantiator::createSniffSetFactoryWithExcludedDataCollector(
+            $excludedSniffDataCollector
+        );
 
         $sniffs = $sniffSetFactory->createFromStandardsAndSniffs($standards, $extraSniffs);
         $this->assertCount($sniffCount, $sniffs);

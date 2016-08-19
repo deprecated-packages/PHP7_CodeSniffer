@@ -30,7 +30,7 @@ use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassFilter;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassRobotLoaderFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
-use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\CustomSniffPropertyValueDataCollector;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\SniffPropertyValueDataCollector;
 use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
 use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
 
@@ -59,7 +59,7 @@ final class Instantiator
         return self::$cachedRulesetXmlToSniffFactory = new RulesetXmlToSniffsFactory(
             self::createSniffFinder(),
             new ExcludedSniffDataCollector(),
-            new CustomSniffPropertyValueDataCollector(),
+            new SniffPropertyValueDataCollector(),
             self::createSingleSniffFactory()
         );
     }
@@ -127,8 +127,9 @@ final class Instantiator
         return new Router(self::createSniffFinder());
     }
 
-    public static function createSniffSetFactory(SingleSniffFactory $singleSniffFactory = null) : SniffSetFactory
-    {
+    public static function createSniffSetFactory(
+        SingleSniffFactory $singleSniffFactory=null
+    ) : SniffSetFactory {
         $sniffSetFactory = new SniffSetFactory(
             self::createConfigurationResolver()
         );
@@ -154,7 +155,7 @@ final class Instantiator
     {
         return new SingleSniffFactory(
             new ExcludedSniffDataCollector(),
-            new CustomSniffPropertyValueDataCollector()
+            new SniffPropertyValueDataCollector()
         );
     }
 
@@ -168,7 +169,7 @@ final class Instantiator
     ) : SniffSetFactory {
         $singleSniffFactory = new SingleSniffFactory(
             $excludedSniffDataCollector,
-            new CustomSniffPropertyValueDataCollector()
+            new SniffPropertyValueDataCollector()
         );
 
         $sniffSetFactory = self::createSniffSetFactory($singleSniffFactory);
