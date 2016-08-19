@@ -1,21 +1,22 @@
 <?php
 
-namespace Symplify\PHP7_CodeSniffer\Tests;
+namespace Symplify\PHP7_CodeSniffer\Tests\Application;
 
 use PHPUnit\Framework\TestCase;
-use Symplify\PHP7_CodeSniffer\Application\Php7CodeSnifferApplication;
-use Symplify\PHP7_CodeSniffer\Application\RunApplicationCommand;
+use Symplify\PHP7_CodeSniffer\Application\Application;
+use Symplify\PHP7_CodeSniffer\Application\Command\RunApplicationCommand;
+use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
 
 final class Php7CodeSnifferTest extends TestCase
 {
     /**
-     * @var Php7CodeSnifferApplication
+     * @var Application
      */
-    private $php7CodeSniffer;
+    private $application;
 
     protected function setUp()
     {
-        $this->php7CodeSniffer = Instantiator::createPhp7CodeSniffer();
+        $this->application = Instantiator::createApplication();
     }
 
     /**
@@ -23,7 +24,7 @@ final class Php7CodeSnifferTest extends TestCase
      */
     public function testRunWithoutSniffs()
     {
-        $this->php7CodeSniffer->runCommand($this->createCommand([]));
+        $this->application->runCommand($this->createCommand([]));
     }
 
     private function createCommand(array $standards) : RunApplicationCommand

@@ -1,10 +1,11 @@
 <?php
 
-namespace Symplify\PHP7_CodeSniffer\Tests;
+namespace Symplify\PHP7_CdeSniffer\Tests\Application;
 
 use PHPUnit\Framework\TestCase;
+use Symplify\PHP7_CodeSniffer\Application\Fixer;
 use Symplify\PHP7_CodeSniffer\File\File;
-use Symplify\PHP7_CodeSniffer\Fixer;
+use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
 
 final class FixerTest extends TestCase
 {
@@ -21,7 +22,7 @@ final class FixerTest extends TestCase
     protected function setUp()
     {
         $fileFactory = Instantiator::createFileFactory();
-        $this->file = $fileFactory->create(__DIR__.'/FixerSource/SomeFile.php', true);
+        $this->file = $fileFactory->create(__DIR__ . '/FixerSource/SomeFile.php', true);
         $this->fixer = new Fixer();
     }
 
@@ -31,7 +32,7 @@ final class FixerTest extends TestCase
         $this->fixer->startFile($this->file);
 
         $this->assertStringEqualsFile(
-            __DIR__.'/FixerSource/SomeFile.php',
+            __DIR__ . '/FixerSource/SomeFile.php',
             $this->fixer->getContents()
         );
     }
@@ -48,7 +49,7 @@ final class FixerTest extends TestCase
         $this->assertSame('_', $token);
 
         $this->assertStringNotEqualsFile(
-            __DIR__.'/FixerSource/SomeFile.php',
+            __DIR__ . '/FixerSource/SomeFile.php',
             $this->fixer->getContents()
         );
     }

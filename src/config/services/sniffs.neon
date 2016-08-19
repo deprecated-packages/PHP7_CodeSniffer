@@ -5,7 +5,6 @@ services:
     - Symplify\PHP7_CodeSniffer\Sniff\Factory\SniffCodeToSniffsFactory
     - Symplify\PHP7_CodeSniffer\Sniff\Factory\StandardNameToSniffsFactory
     - Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToSniffsFactory
-    - Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToOwnSniffsFactory
 
     # finder
     - Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder

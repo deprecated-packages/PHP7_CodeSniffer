@@ -40,8 +40,8 @@ final class ExcludedSniffDataCollector
         return $this->isSniffCodeExcluded($sniffCode);
     }
 
-    private function isSniffCodeExcluded(string $sniffCode) : bool
+    public function isSniffCodeExcluded(string $sniffCode) : bool
     {
-        return isset($this->excludedSniffCodes[$sniffCode]);
+        return in_array($sniffCode, $this->excludedSniffCodes);
     }
 }

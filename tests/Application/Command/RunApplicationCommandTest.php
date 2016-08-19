@@ -1,11 +1,11 @@
 <?php
 
-namespace Symplify\PHP7_CodeSniffer\Tests;
+namespace Symplify\PHP7_CodeSniffer\Tests\Application\Command;
 
 use PHPUnit\Framework\TestCase;
-use Symplify\PHP7_CodeSniffer\Application\RunApplicationCommand;
+use Symplify\PHP7_CodeSniffer\Application\Command\RunApplicationCommand;
 
-final class Php7CodeSnifferCommandTest extends TestCase
+final class RunApplicationCommandTest extends TestCase
 {
     public function testConstructor()
     {

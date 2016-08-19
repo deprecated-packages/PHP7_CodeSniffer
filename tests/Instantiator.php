@@ -21,7 +21,6 @@ use Symplify\PHP7_CodeSniffer\Parser\EolCharDetector;
 use Symplify\PHP7_CodeSniffer\Parser\FileToTokensParser;
 use Symplify\PHP7_CodeSniffer\Report\ErrorDataCollector;
 use Symplify\PHP7_CodeSniffer\Report\ErrorMessageSorter;
-use Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToOwnSniffsFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Factory\RulesetXmlToSniffsFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Factory\SingleSniffFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Factory\SniffCodeToSniffsFactory;
@@ -103,7 +102,7 @@ final class Instantiator
         );
     }
 
-    public static function createPhp7CodeSniffer() : Application
+    public static function createApplication() : Application
     {
         return new Application(
             self::createSniffDispatcher(),

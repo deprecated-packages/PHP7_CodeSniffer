@@ -3,7 +3,7 @@
 namespace Symplify\PHP7_CodeSniffer\Tests\Sniff;
 
 use PHPUnit\Framework\TestCase;
-use Symplify\PHP7_CodeSniffer\Sniff\ExcludedSniffDataCollector;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
 
 final class ExcludedSniffDataCollectorTest extends TestCase
 {
@@ -15,10 +15,10 @@ final class ExcludedSniffDataCollectorTest extends TestCase
         $excludedSniffDataCollector->addExcludedSniffs(['AnotherStandard.Category.Name']);
 
         $this->assertTrue(
-            $excludedSniffDataCollector->isSniffClassExcluded('Standard.Category.Name')
+            $excludedSniffDataCollector->isSniffCodeExcluded('Standard.Category.Name')
         );
         $this->assertFalse(
-            $excludedSniffDataCollector->isSniffClassExcluded('Standard.Category.NonexistingName')
+            $excludedSniffDataCollector->isSniffCodeExcluded('Standard.Category.NonexistingName')
         );
     }
 }
