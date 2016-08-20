@@ -91,8 +91,8 @@ final class ErrorDataCollector
         string $message,
         int $line,
         string $sniffCode,
-        array $data=[],
-        bool $isFixable=false
+        array $data  =  [],
+        bool $isFixable  =  false
     ) {
         $this->errorCount++;
 

@@ -128,7 +128,7 @@ final class Instantiator
     }
 
     public static function createSniffSetFactory(
-        SingleSniffFactory $singleSniffFactory=null
+        SingleSniffFactory $singleSniffFactory  =  null
     ) : SniffSetFactory {
         $sniffSetFactory = new SniffSetFactory(
             self::createConfigurationResolver()
