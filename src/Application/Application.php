@@ -72,10 +72,7 @@ final class Application
 
         $this->excludedSniffDataCollector->addExcludedSniffs($command->getExcludedSniffs());
 
-        $this->createAndRegisterSniffsToSniffDispatcher(
-            $command->getStandards(),
-            $command->getSniffs()
-        );
+        $this->createAndRegisterSniffsToSniffDispatcher($command->getStandards(), $command->getSniffs());
 
         $this->runForSource($command->getSource(), $command->isFixer());
     }
@@ -102,9 +99,8 @@ final class Application
         }
     }
 
-    private function resolveCommandConfiguration(
-        RunApplicationCommand $command
-    ) : RunApplicationCommand {
+    private function resolveCommandConfiguration(RunApplicationCommand $command) : RunApplicationCommand
+    {
         return new RunApplicationCommand(
             $command->getSource(),
             $this->configurationResolver->resolve('standards', $command->getStandards()),
