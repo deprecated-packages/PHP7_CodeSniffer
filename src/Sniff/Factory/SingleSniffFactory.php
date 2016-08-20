@@ -47,10 +47,8 @@ final class SingleSniffFactory
     private function setCustomSniffPropertyValues(Sniff $sniff) : Sniff
     {
         $sniffPropertyValues = $this->sniffPropertyValueDataCollector->getForSniff($sniff);
-        if ($sniffPropertyValues) {
-            foreach ($sniffPropertyValues as $property => $value) {
-                $sniff->$property = $value;
-            }
+        foreach ($sniffPropertyValues as $property => $value) {
+            $sniff->$property = $value;
         }
 
         return $sniff;

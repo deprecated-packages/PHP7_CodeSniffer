@@ -16,15 +16,18 @@ final class SniffPropertyValueDataCollector
     /**
      * @var array[]
      */
-    private $customSniffPropertyValuesBySniffCode = [];
+    private $sniffPropertyValuesBySniffCode = [];
 
     public function collectFromRuleXmlElement(SimpleXMLElement $ruleXmlElement)
     {
         if (isset($ruleXmlElement->properties)) {
-            $this->addCustomSniffProperty(
-                (string) $ruleXmlElement['ref'],
-                (array) $ruleXmlElement->properties
-            );
+            $properties = (array) $ruleXmlElement->properties;
+
+            if (is_array($properties['property'])) {
+                $properties = array_pop($properties);
+            }
+
+            $this->addCustomSniffProperties((string) $ruleXmlElement['ref'], $properties);
         }
     }
 
@@ -37,32 +40,30 @@ final class SniffPropertyValueDataCollector
     private function getForSniffClass(string $sniffClassName) : array
     {
         $sniffCode = SniffNaming::guessCodeByClass($sniffClassName);
-        if (!isset($this->customSniffPropertyValuesBySniffCode[$sniffCode])) {
+        if (!isset($this->sniffPropertyValuesBySniffCode[$sniffCode])) {
             return [];
         }
 
-        return $this->normalizeValues($this->customSniffPropertyValuesBySniffCode[$sniffCode]);
+        return $this->sniffPropertyValuesBySniffCode[$sniffCode];
     }
 
-    private function addCustomSniffProperty(string $sniffCode, array $properties)
+    private function addCustomSniffProperties(string $sniffCode, array $propertyXmlElements)
     {
-        if (!isset($this->customSniffPropertyValuesBySniffCode[$sniffCode])) {
-            $this->customSniffPropertyValuesBySniffCode[$sniffCode] = [];
+        if (!isset($this->sniffPropertyValuesBySniffCode[$sniffCode])) {
+            $this->sniffPropertyValuesBySniffCode[$sniffCode] = [];
         }
 
-        $this->customSniffPropertyValuesBySniffCode[$sniffCode] = array_merge(
-            $this->customSniffPropertyValuesBySniffCode[$sniffCode],
-            $properties
+        $propertyValues = [];
+        foreach ($propertyXmlElements as $propertyXmlElement) {
+            $name = (string) $propertyXmlElement['name'];
+            $value = (string) $propertyXmlElement['value'];
+            $propertyValues[$name] = $this->normalizeValue($value);
+        }
+
+        $this->sniffPropertyValuesBySniffCode[$sniffCode] = array_merge(
+            $this->sniffPropertyValuesBySniffCode[$sniffCode],
+            $propertyValues
         );
-    }
-
-    private function normalizeValues(array $customSniffPropertyValues) : array
-    {
-        foreach ($customSniffPropertyValues as $property => $value) {
-            $customSniffPropertyValues[$property] = $this->normalizeValue($value);
-        }
-
-        return $customSniffPropertyValues;
     }
 
     /**
@@ -72,9 +73,12 @@ final class SniffPropertyValueDataCollector
     private function normalizeValue($value)
     {
         $value = $this->trimStringValue($value);
+        if (is_numeric($value)) {
+            return (int) $value;
+        }
+
         return $this->normalizeBoolValue($value);
     }
-
 
     /**
      * @param mixed $value
