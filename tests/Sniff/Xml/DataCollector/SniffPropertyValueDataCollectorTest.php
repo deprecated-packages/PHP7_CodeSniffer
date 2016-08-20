@@ -32,13 +32,15 @@ final class SniffPropertyValueDataCollectorTest extends TestCase
             'string' => 'hello',
             'bool' => false,
             'another_bool' => true,
+            'caps_bool' => false,
+            'caps_another_bool' => true,
             'array_with_keys' => [
                 'key' => 'value',
                 'anotherKey' => 'anotherValue'
             ],
             'simple_array' => [
                 'value', 'anotherValue'
-            ]
+            ],
         ], $this->sniffPropertyValueDataCollector->getForSniff($sniff));
     }
 }

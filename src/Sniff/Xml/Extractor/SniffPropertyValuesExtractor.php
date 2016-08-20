@@ -47,7 +47,7 @@ final class SniffPropertyValuesExtractor
 
     private function isArrayValue(SimpleXMLElement $property) : bool
     {
-        return isset($property['type']) === true && (string)$property['type'] === 'array';
+        return isset($property['type']) === true && (string) $property['type'] === 'array';
     }
 
     /**
