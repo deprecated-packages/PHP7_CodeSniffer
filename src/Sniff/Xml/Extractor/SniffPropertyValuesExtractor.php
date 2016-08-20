@@ -17,35 +17,22 @@ final class SniffPropertyValuesExtractor
             return [];
         }
 
-        $propertyXmlElements = (array) $ruleXmlElement->properties;
-        if (is_array($propertyXmlElements['property'])) {
-            $propertyXmlElements = array_pop($propertyXmlElements);
-        }
-
         $propertyValues = [];
-        foreach ($propertyXmlElements as $propertyXmlElement) {
+        foreach ($ruleXmlElement->properties->property as $propertyXmlElement) {
             $name = (string) $propertyXmlElement['name'];
             $value = $this->normalizeValue((string) $propertyXmlElement['value'], $propertyXmlElement);
             $propertyValues[$name] = $value;
         }
 
-//        $propertyValues = [];
-//        foreach ($ruleElement->properties->property as $property) {
-//            $name = (string) $property['name'];
-//            $value = $this->resolveValue($property);
-//            $propertyValues[$name] = $value;
-//        }
-
         return $propertyValues;
     }
 
     /**
-     * @param mixed $value
      * @return mixed
      */
-    private function normalizeValue($value, SimpleXMLElement $propertyXmlElement)
+    private function normalizeValue(string $value, SimpleXMLElement $propertyXmlElement)
     {
-        $value = $this->trim($value);
+        $value = trim($value);
 
         if (is_numeric($value)) {
             return (int) $value;
@@ -58,29 +45,15 @@ final class SniffPropertyValuesExtractor
         return $this->normalizeBoolValue($value);
     }
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    private function trim($value)
-    {
-        if (is_string($value)) {
-            return trim($value);
-        }
-
-        return $value;
-    }
-
     private function isArrayValue(SimpleXMLElement $property) : bool
     {
         return isset($property['type']) === true && (string)$property['type'] === 'array';
     }
 
     /**
-     * @param mixed $value
      * @return mixed
      */
-    private function normalizeBoolValue($value)
+    private function normalizeBoolValue(string $value)
     {
         if ($value === 'true' || $value === 'TRUE') {
             return true;
