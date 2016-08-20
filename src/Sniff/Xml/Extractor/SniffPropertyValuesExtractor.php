@@ -11,34 +11,64 @@ use SimpleXMLElement;
 
 final class SniffPropertyValuesExtractor
 {
-    public function extractFromRuleXmlElement(SimpleXMLElement $ruleElement) : array
+    public function extractFromRuleXmlElement(SimpleXMLElement $ruleXmlElement) : array
     {
-        if (!isset($ruleElement->properties)) {
+        if (!isset($ruleXmlElement->properties)) {
             return [];
         }
 
-        $sniffCode = (string) $ruleElement['ref'];
-
-        $customPropertyValues = [];
-        foreach ($ruleElement->properties->property as $property) {
-            $name = (string) $property['name'];
-            $value = $this->resolveValue($property);
-            $customPropertyValues[$sniffCode]['properties'][$name] = $value;
+        $propertyXmlElements = (array) $ruleXmlElement->properties;
+        if (is_array($propertyXmlElements['property'])) {
+            $propertyXmlElements = array_pop($propertyXmlElements);
         }
 
-        return $customPropertyValues;
+        $propertyValues = [];
+        foreach ($propertyXmlElements as $propertyXmlElement) {
+            $name = (string) $propertyXmlElement['name'];
+            $value = $this->normalizeValue((string) $propertyXmlElement['value'], $propertyXmlElement);
+            $propertyValues[$name] = $value;
+        }
+
+//        $propertyValues = [];
+//        foreach ($ruleElement->properties->property as $property) {
+//            $name = (string) $property['name'];
+//            $value = $this->resolveValue($property);
+//            $propertyValues[$name] = $value;
+//        }
+
+        return $propertyValues;
     }
 
     /**
-     * @return array|string
+     * @param mixed $value
+     * @return mixed
      */
-    private function resolveValue(SimpleXMLElement $property)
+    private function normalizeValue($value, SimpleXMLElement $propertyXmlElement)
     {
-        if ($this->isArrayValue($property)) {
-            return $this->resolveArrayValue($property);
+        $value = $this->trim($value);
+
+        if (is_numeric($value)) {
+            return (int) $value;
         }
 
-        return (string)$property['value'];
+        if ($this->isArrayValue($propertyXmlElement)) {
+            return $this->normalizeArrayValue($value);
+        }
+
+        return $this->normalizeBoolValue($value);
+    }
+
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    private function trim($value)
+    {
+        if (is_string($value)) {
+            return trim($value);
+        }
+
+        return $value;
     }
 
     private function isArrayValue(SimpleXMLElement $property) : bool
@@ -46,10 +76,25 @@ final class SniffPropertyValuesExtractor
         return isset($property['type']) === true && (string)$property['type'] === 'array';
     }
 
-    private function resolveArrayValue(SimpleXMLElement $arrayProperty) : array
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    private function normalizeBoolValue($value)
     {
-        $value = (string) $arrayProperty['value'];
+        if ($value === 'true' || $value === 'TRUE') {
+            return true;
+        }
 
+        if ($value === 'false' || $value === 'FALSE') {
+            return false;
+        }
+
+        return $value;
+    }
+
+    private function normalizeArrayValue(string $value) : array
+    {
         $values = [];
         foreach (explode(',', $value) as $val) {
             $v = '';
