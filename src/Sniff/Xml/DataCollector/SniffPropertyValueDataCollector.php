@@ -10,99 +10,57 @@ namespace Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use SimpleXMLElement;
 use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\Extractor\SniffPropertyValuesExtractor;
 
 final class SniffPropertyValueDataCollector
 {
     /**
+     * @var SniffPropertyValuesExtractor
+     */
+    private $sniffPropertyValuesExtractor;
+
+    /**
      * @var array[]
      */
-    private $customSniffPropertyValuesBySniffCode = [];
+    private $sniffPropertyValuesBySniffClass = [];
+
+    public function __construct(SniffPropertyValuesExtractor $sniffPropertyValuesExtractor)
+    {
+        $this->sniffPropertyValuesExtractor = $sniffPropertyValuesExtractor;
+    }
 
     public function collectFromRuleXmlElement(SimpleXMLElement $ruleXmlElement)
     {
-        if (isset($ruleXmlElement->properties)) {
-            $this->addCustomSniffProperty(
-                (string) $ruleXmlElement['ref'],
-                (array) $ruleXmlElement->properties
-            );
+        if (!isset($ruleXmlElement->properties)) {
+            return;
         }
+
+        $sniffCode = (string) $ruleXmlElement['ref'];
+        $sniffClass = SniffNaming::guessClassByCode($sniffCode);
+
+        $properties = $this->sniffPropertyValuesExtractor->extractFromRuleXmlElement($ruleXmlElement);
+        $this->addSniffPropertyValues($sniffClass, $properties);
     }
 
     public function getForSniff(Sniff $sniff) : array
     {
-        $sniffClassName = get_class($sniff);
-        return $this->getForSniffClass($sniffClassName);
-    }
-
-    private function getForSniffClass(string $sniffClassName) : array
-    {
-        $sniffCode = SniffNaming::guessCodeByClass($sniffClassName);
-        if (!isset($this->customSniffPropertyValuesBySniffCode[$sniffCode])) {
+        $sniffClass = get_class($sniff);
+        if (!isset($this->sniffPropertyValuesBySniffClass[$sniffClass])) {
             return [];
         }
 
-        return $this->normalizeValues($this->customSniffPropertyValuesBySniffCode[$sniffCode]);
+        return $this->sniffPropertyValuesBySniffClass[$sniffClass];
     }
 
-    private function addCustomSniffProperty(string $sniffCode, array $properties)
+    private function addSniffPropertyValues(string $sniffCode, array $propertyValues)
     {
-        if (!isset($this->customSniffPropertyValuesBySniffCode[$sniffCode])) {
-            $this->customSniffPropertyValuesBySniffCode[$sniffCode] = [];
+        if (!isset($this->sniffPropertyValuesBySniffClass[$sniffCode])) {
+            $this->sniffPropertyValuesBySniffClass[$sniffCode] = [];
         }
 
-        $this->customSniffPropertyValuesBySniffCode[$sniffCode] = array_merge(
-            $this->customSniffPropertyValuesBySniffCode[$sniffCode],
-            $properties
+        $this->sniffPropertyValuesBySniffClass[$sniffCode] = array_merge(
+            $this->sniffPropertyValuesBySniffClass[$sniffCode],
+            $propertyValues
         );
-    }
-
-    private function normalizeValues(array $customSniffPropertyValues) : array
-    {
-        foreach ($customSniffPropertyValues as $property => $value) {
-            $customSniffPropertyValues[$property] = $this->normalizeValue($value);
-        }
-
-        return $customSniffPropertyValues;
-    }
-
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    private function normalizeValue($value)
-    {
-        $value = $this->trimStringValue($value);
-        return $this->normalizeBoolValue($value);
-    }
-
-
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    private function trimStringValue($value)
-    {
-        if (is_string($value)) {
-            return trim($value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    private function normalizeBoolValue($value)
-    {
-        if ($value === 'true' || $value === 'TRUE') {
-            return true;
-        }
-
-        if ($value === 'false' || $value === 'FALSE') {
-            return false;
-        }
-
-        return $value;
     }
 }

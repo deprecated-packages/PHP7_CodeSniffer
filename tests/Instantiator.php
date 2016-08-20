@@ -32,6 +32,7 @@ use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\SniffPropertyValueDataCollector;
 use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
+use Symplify\PHP7_CodeSniffer\Sniff\Xml\Extractor\SniffPropertyValuesExtractor;
 use Symplify\PHP7_CodeSniffer\Standard\Finder\StandardFinder;
 
 final class Instantiator
@@ -59,7 +60,7 @@ final class Instantiator
         return self::$cachedRulesetXmlToSniffFactory = new RulesetXmlToSniffsFactory(
             self::createSniffFinder(),
             new ExcludedSniffDataCollector(),
-            new SniffPropertyValueDataCollector(),
+            self::createSniffPropertyValueDataCollector(),
             self::createSingleSniffFactory()
         );
     }
@@ -128,7 +129,7 @@ final class Instantiator
     }
 
     public static function createSniffSetFactory(
-        SingleSniffFactory $singleSniffFactory=null
+        SingleSniffFactory $singleSniffFactory = null
     ) : SniffSetFactory {
         $sniffSetFactory = new SniffSetFactory(
             self::createConfigurationResolver()
@@ -155,7 +156,7 @@ final class Instantiator
     {
         return new SingleSniffFactory(
             new ExcludedSniffDataCollector(),
-            new SniffPropertyValueDataCollector()
+            self::createSniffPropertyValueDataCollector()
         );
     }
 
@@ -169,11 +170,18 @@ final class Instantiator
     ) : SniffSetFactory {
         $singleSniffFactory = new SingleSniffFactory(
             $excludedSniffDataCollector,
-            new SniffPropertyValueDataCollector()
+            self::createSniffPropertyValueDataCollector()
         );
 
         $sniffSetFactory = self::createSniffSetFactory($singleSniffFactory);
 
         return $sniffSetFactory;
+    }
+
+    public static function createSniffPropertyValueDataCollector() : SniffPropertyValueDataCollector
+    {
+        return new SniffPropertyValueDataCollector(
+            new SniffPropertyValuesExtractor()
+        );
     }
 }

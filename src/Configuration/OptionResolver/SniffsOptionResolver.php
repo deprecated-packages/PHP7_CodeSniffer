@@ -62,11 +62,8 @@ final class SniffsOptionResolver implements OptionResolverInterface
 
     private function setNormalizer(OptionsResolver $optionsResolver)
     {
-        $optionsResolver->setNormalizer(
-            self::NAME,
-            function (OptionsResolver $optionsResolver, array $sniffCodes) {
-                return ValueNormalizer::normalizeCommaSeparatedValues($sniffCodes);
-            }
-        );
+        $optionsResolver->setNormalizer(self::NAME, function (OptionsResolver $optionsResolver, array $sniffCodes) {
+            return ValueNormalizer::normalizeCommaSeparatedValues($sniffCodes);
+        });
     }
 }

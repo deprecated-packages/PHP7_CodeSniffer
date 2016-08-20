@@ -38,11 +38,7 @@ final class SniffPropertyValuesExtractorTest extends TestCase
                         <property name="eolChar" value="\n"/>
                     </properties>
                 </rule>', [
-                    'Generic.Files.LineEndings' => [
-                        'properties' => [
-                            'eolChar' => '\n'
-                        ]
-                    ],
+                    'eolChar' => '\n'
                 ]
             ],
             [
@@ -52,13 +48,9 @@ final class SniffPropertyValuesExtractorTest extends TestCase
                             type="array" value="T_COMMENT,T_DOC_COMMENT_OPEN_TAG"/>
                     </properties>
                 </rule>', [
-                    'Generic.WhiteSpace.ScopeIndent' => [
-                        'properties' => [
-                            'ignoreIndentationTokens' => [
-                                0 => 'T_COMMENT',
-                                1 => 'T_DOC_COMMENT_OPEN_TAG'
-                            ]
-                        ]
+                    'ignoreIndentationTokens' => [
+                        0 => 'T_COMMENT',
+                        1 => 'T_DOC_COMMENT_OPEN_TAG'
                     ]
                 ]
             ]
