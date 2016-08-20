@@ -75,7 +75,7 @@ final class Fixer
         return $this->addContentBefore($stackPtr, $this->currentFile->eolChar);
     }
 
-    public function substrToken(int $stackPtr, int $start, int $length  =  null) : bool
+    public function substrToken(int $stackPtr, int $start, int $length = null) : bool
     {
         $current = $this->getTokenContent($stackPtr);
 

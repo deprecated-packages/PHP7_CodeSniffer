@@ -44,7 +44,7 @@ final class SingleSniffFactoryTest extends TestCase
         $this->assertSame(80, $lineLenghtSniff->lineLimit);
         $this->assertSame(100, $lineLenghtSniff->absoluteLineLimit);
 
-        $sniffPropertyValueDataCollector = new SniffPropertyValueDataCollector();
+        $sniffPropertyValueDataCollector = Instantiator::createSniffPropertyValueDataCollector();
         $ruleXmlElement = new SimpleXMLElement('<rule ref="Generic.Files.LineLength">
             <properties>
                 <property name="lineLimit" value="120"/>
