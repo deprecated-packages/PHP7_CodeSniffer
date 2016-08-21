@@ -35,14 +35,8 @@ final class File extends BaseFile implements FileInterface
      */
     private $isFixer;
 
-    public function __construct(
-        string $path,
-        array $tokens,
-        Fixer $fixer,
-        ErrorDataCollector $errorDataCollector,
-        bool $isFixer,
-        string $eolChar
-    ) {
+    public function __construct(string $path, array $tokens, Fixer $fixer, ErrorDataCollector $errorDataCollector, bool $isFixer, string $eolChar)
+    {
         $this->path = $path;
         $this->tokens = $tokens;
         $this->fixer = $fixer;
@@ -59,9 +53,10 @@ final class File extends BaseFile implements FileInterface
      */
     public function parse()
     {
-        throw new NotImplementedException(
-            'This is not needed to be public. File is already parsed on __construct.'
-        );
+        throw new NotImplementedException(sprintf(
+            'Method %s not needed to be public. File is already parsed on __construct.',
+            __METHOD__
+        ));
     }
 
     /**
@@ -111,28 +106,13 @@ final class File extends BaseFile implements FileInterface
     /**
      * {@inheritdoc}
      */
-    protected function addMessage(
-        $error,
-        $message,
-        $line,
-        $column,
-        $code,
-        $data,
-        $severity,
-        $isFixable = false
-    ) : bool {
+    protected function addMessage($error, $message, $line, $column, $code, $data, $severity, $isFixable = false) : bool
+    {
         if (!$error) { // skip warnings
             return false;
         }
 
-        $this->errorDataCollector->addErrorMessage(
-            $this->path,
-            $message,
-            $line,
-            $code,
-            $data,
-            $isFixable
-        );
+        $this->errorDataCollector->addErrorMessage($this->path, $message, $line, $code, $data, $isFixable);
 
         return true;
     }
