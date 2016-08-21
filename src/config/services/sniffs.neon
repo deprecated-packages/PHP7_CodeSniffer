@@ -15,6 +15,5 @@ services:
     - Symplify\PHP7_CodeSniffer\Sniff\Xml\Extractor\SniffPropertyValuesExtractor
     - Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector
     - Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\SniffPropertyValueDataCollector
-    - Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\SniffDataCollector
 
     - Symplify\PHP7_CodeSniffer\Sniff\Routing\Router

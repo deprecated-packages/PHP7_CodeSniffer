@@ -11,6 +11,16 @@ use SimpleXMLElement;
 
 final class SniffPropertyValuesExtractor
 {
+    /**
+     * @var bool[]
+     */
+    private $stringToBoolMap = [
+        'true' => true,
+        'TRUE' => true,
+        'false' => false,
+        'FALSE' => false
+    ];
+
     public function extractFromRuleXmlElement(SimpleXMLElement $ruleXmlElement) : array
     {
         if (!isset($ruleXmlElement->properties)) {
@@ -55,12 +65,8 @@ final class SniffPropertyValuesExtractor
      */
     private function normalizeBoolValue(string $value)
     {
-        if ($value === 'true' || $value === 'TRUE') {
-            return true;
-        }
-
-        if ($value === 'false' || $value === 'FALSE') {
-            return false;
+        if (isset($this->stringToBoolMap[$value])) {
+            return $this->stringToBoolMap[$value];
         }
 
         return $value;

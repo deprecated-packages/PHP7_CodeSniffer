@@ -69,15 +69,7 @@ final class ErrorDataCollector
     {
         $unfixableErrorMessages = [];
         foreach ($this->getErrorMessages() as $file => $errorMessagesForFile) {
-            $unfixableErrorMessagesForFile = [];
-            foreach ($errorMessagesForFile as $errorMessage) {
-                if ($errorMessage['isFixable']) {
-                    continue;
-                }
-
-                $unfixableErrorMessagesForFile[] = $errorMessage;
-            }
-
+            $unfixableErrorMessagesForFile = $this->filterUnfixableErrorMessagesForFile($errorMessagesForFile);
             if (count($unfixableErrorMessagesForFile)) {
                 $unfixableErrorMessages[$file] = $unfixableErrorMessagesForFile;
             }
@@ -126,5 +118,19 @@ final class ErrorDataCollector
         }
 
         return $message;
+    }
+
+    private function filterUnfixableErrorMessagesForFile(array $errorMessagesForFile) : array
+    {
+        $unfixableErrorMessages = [];
+        foreach ($errorMessagesForFile as $errorMessage) {
+            if ($errorMessage['isFixable']) {
+                continue;
+            }
+
+            $unfixableErrorMessages[] = $errorMessage;
+        }
+
+        return $unfixableErrorMessages;
     }
 }
