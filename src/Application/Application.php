@@ -10,9 +10,8 @@ namespace Symplify\PHP7_CodeSniffer\Application;
 use Symplify\PHP7_CodeSniffer\Application\Command\RunApplicationCommand;
 use Symplify\PHP7_CodeSniffer\Configuration\ConfigurationResolver;
 use Symplify\PHP7_CodeSniffer\EventDispatcher\SniffDispatcher;
-use Symplify\PHP7_CodeSniffer\Exception\AnySniffMissingException;
 use Symplify\PHP7_CodeSniffer\File\Provider\FilesProvider;
-use Symplify\PHP7_CodeSniffer\Legacy\LegacyConfiguration;
+use Symplify\PHP7_CodeSniffer\Legacy\LegacyCompatibilityLayer;
 use Symplify\PHP7_CodeSniffer\Sniff\SniffSetFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Xml\DataCollector\ExcludedSniffDataCollector;
 
@@ -63,7 +62,7 @@ final class Application
         $this->configurationResolver = $configurationResolver;
         $this->fileProcessor = $fileProcessor;
 
-        LegacyConfiguration::setup();
+        LegacyCompatibilityLayer::add();
     }
 
     public function runCommand(RunApplicationCommand $command)

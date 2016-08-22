@@ -12,18 +12,21 @@ use PHP_CodeSniffer\Sniffs\AbstractPatternSniff;
 use PHP_CodeSniffer\Sniffs\AbstractScopeSniff;
 use PHP_CodeSniffer\Sniffs\AbstractVariableSniff;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Util\Tokens;
 use Symplify\PHP7_CodeSniffer\Composer\VendorDirProvider;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassFilter;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffClassRobotLoaderFactory;
 use Symplify\PHP7_CodeSniffer\Sniff\Finder\SniffFinder;
 
-final class ClassAliases
+final class LegacyClassAliases
 {
-    public static function registerAliases()
+    public static function register()
     {
         if (class_exists('PHP_CodeSniffer_File')) {
             return;
         }
+
+        new Tokens();
 
         class_alias(File::class, 'PHP_CodeSniffer_File');
         class_alias(Sniff::class, 'PHP_CodeSniffer_Sniff');

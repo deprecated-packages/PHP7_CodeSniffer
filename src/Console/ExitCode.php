@@ -12,7 +12,7 @@ final class ExitCode
     /**
      * @var int
      */
-   const SUCCESS = 0;
+    const SUCCESS = 0;
 
     /**
      *

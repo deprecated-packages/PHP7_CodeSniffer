@@ -1,10 +1,14 @@
 #!/usr/bin/env php
 <?php
 
-/** @var Composer\Autoload\ClassLoader $classLoader */
-$classLoader = require __DIR__ . '/../vendor/autoload.php';
+/*
+ * This file is part of Symplify
+ * Copyright (c) 2016 Tomas Votruba (http://tomasvotruba.cz).
+ */
 
-Symplify\PHP7_CodeSniffer\Legacy\ClassAliases::registerAliases();
+$classLoader = require_once __DIR__.'/bootstrap.php';
+
+Symplify\PHP7_CodeSniffer\Legacy\LegacyCompatibilityLayer::add();
 
 // 1. build DI container
 $containerFactory = new Symplify\PHP7_CodeSniffer\DI\ContainerFactory();

@@ -12,6 +12,3 @@ includes:
 services:
     # composer
     - Symplify\PHP7_CodeSniffer\Composer\ClassLoaderDecorator
-
-    # this has to be created to initializes all token constants
-    - PHP_CodeSniffer\Util\Tokens

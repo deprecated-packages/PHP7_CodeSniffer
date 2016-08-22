@@ -7,7 +7,6 @@
 
 namespace Symplify\PHP7_CodeSniffer\Sniff\Finder;
 
-use PHP_CodeSniffer\Util\Tokens;
 use ReflectionClass;
 use Symplify\PHP7_CodeSniffer\Sniff\Naming\SniffNaming;
 
