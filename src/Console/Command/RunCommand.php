@@ -82,7 +82,8 @@ final class RunCommand extends Command
 
             if ($this->errorDataCollector->getErrorCount()) {
                 $this->infoMessagePrinter->printFoundErrorsStatus($input->getOption('fix'));
-                throw new Exception();
+
+                return ExitCode::ERROR;
             }
 
             $this->codeSnifferStyle->success(
