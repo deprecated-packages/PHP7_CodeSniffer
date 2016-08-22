@@ -13,5 +13,8 @@ final class ClassAliasesTest extends TestCase
 
         $this->assertTrue(class_exists('PHP_CodeSniffer_File'));
         $this->assertTrue(interface_exists('PHP_CodeSniffer_Sniff'));
+
+        $this->assertTrue(class_exists('PHP_CodeSniffer_Standards_AbstractVariableSniff'));
+        $this->assertTrue(class_exists('PEAR_Sniffs_Commenting_ClassCommentSniff'));
     }
 }

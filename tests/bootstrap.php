@@ -3,6 +3,7 @@
 /** @var Composer\Autoload\ClassLoader $classLoader */
 $classLoader = require __DIR__ . '/../vendor/autoload.php';
 
+new PHP_CodeSniffer\Util\Tokens();
 Symplify\PHP7_CodeSniffer\Legacy\ClassAliases::registerAliases();
 
 $classLoaderDecorator = new Symplify\PHP7_CodeSniffer\Composer\ClassLoaderDecorator(
