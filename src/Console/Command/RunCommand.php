@@ -7,6 +7,7 @@
 
 namespace Symplify\PHP7_CodeSniffer\Console\Command;
 
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -77,13 +78,7 @@ final class RunCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $this->application->runCommand(new RunApplicationCommand(
-                $input->getArgument('source'),
-                $input->getOption('standards'),
-                $input->getOption('sniffs'),
-                $input->getOption('exclude-sniffs'),
-                $input->getOption('fix')
-            ));
+            $this->application->runCommand($this->createCommandFromInput($input));
 
             if ($this->errorDataCollector->getErrorCount()) {
                 $this->infoMessagePrinter->printFoundErrorsStatus($input->getOption('fix'));
@@ -105,11 +100,17 @@ final class RunCommand extends Command
 
     private function addArrayOption(string $name, string $description)
     {
-        $this->addOption(
-            $name,
-            null,
-            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-            $description
+        $this->addOption($name, null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, $description);
+    }
+
+    private function createCommandFromInput(InputInterface $input) : RunApplicationCommand
+    {
+        return new RunApplicationCommand(
+            $input->getArgument('source'),
+            $input->getOption('standards'),
+            $input->getOption('sniffs'),
+            $input->getOption('exclude-sniffs'),
+            $input->getOption('fix')
         );
     }
 }
