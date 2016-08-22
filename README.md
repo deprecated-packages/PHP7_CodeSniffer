@@ -11,8 +11,6 @@ This is essential development tool that ensures your code **remains clean and co
 
 ## Install
 
-Via composer:
-
 ```bash
 composer require symplify/php7_codesniffer --dev
 ```
@@ -44,7 +42,7 @@ You can combine them as well:
 vendor/bin/php7cs src --standards=PSR2 --sniffs=Zend.Files.ClosingTag
 ```
 
-### Or Use Standard Without One Sniff?
+### Or Use Standard WITHOUT One Sniff?
 
 ```bash
 vendor/bin/php7cs src --standards=PSR2 --exclude-sniffs=PSR2.Namespaces.UseDeclaration

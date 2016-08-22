@@ -39,25 +39,6 @@ final class Router
             return $sniffClasses[$sniffCode];
         }
 
-        return $this->foundClasses[$sniffCode] = $this->findClosesMatch($sniffClasses, $sniffCode);
-    }
-
-    private function findClosesMatch(array $sniffClasses, string $seekedSniffCode)
-    {
-        $shortestDistance = -1;
-        $closest = '';
-        foreach ($sniffClasses as $sniffCode => $sniffClass) {
-            $levenshtein = levenshtein($seekedSniffCode, $sniffClass);
-            if ($levenshtein <= $shortestDistance || $shortestDistance < 0) {
-                $closest = $sniffClass;
-                $shortestDistance = $levenshtein;
-            }
-        }
-
-        if ($shortestDistance <= 30) {
-            return $closest;
-        }
-
         return '';
     }
 
