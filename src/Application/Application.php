@@ -80,7 +80,6 @@ final class Application
     private function createAndRegisterSniffsToSniffDispatcher(array $standards, array $extraSniffs)
     {
         $sniffs = $this->sniffSetFactory->createFromStandardsAndSniffs($standards, $extraSniffs);
-        $this->ensureAtLeastOneSniffIsRegistered($sniffs);
         $this->sniffDispatcher->addSniffListeners($sniffs);
     }
 
@@ -88,15 +87,6 @@ final class Application
     {
         $files = $this->filesProvider->getFilesForSource($source, $isFixer);
         $this->fileProcessor->processFiles($files, $isFixer);
-    }
-
-    private function ensureAtLeastOneSniffIsRegistered(array $sniffs)
-    {
-        if (count($sniffs) < 1) {
-            throw new AnySniffMissingException(
-                'You need to specify some sniffs with "--standards=..." or "--sniffs=...".'
-            );
-        }
     }
 
     private function resolveCommandConfiguration(RunApplicationCommand $command) : RunApplicationCommand

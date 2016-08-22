@@ -7,7 +7,7 @@ use Symplify\PHP7_CodeSniffer\Application\Application;
 use Symplify\PHP7_CodeSniffer\Application\Command\RunApplicationCommand;
 use Symplify\PHP7_CodeSniffer\Tests\Instantiator;
 
-final class Php7CodeSnifferTest extends TestCase
+final class ApplicationTest extends TestCase
 {
     /**
      * @var Application
@@ -19,19 +19,16 @@ final class Php7CodeSnifferTest extends TestCase
         $this->application = Instantiator::createApplication();
     }
 
-    /**
-     * @expectedException \Symplify\PHP7_CodeSniffer\Exception\AnySniffMissingException
-     */
-    public function testRunWithoutSniffs()
+    public function testRunCommand()
     {
-        $this->application->runCommand($this->createCommand([]));
+        $this->application->runCommand($this->createCommand());
     }
 
-    private function createCommand(array $standards) : RunApplicationCommand
+    private function createCommand() : RunApplicationCommand
     {
         return new RunApplicationCommand(
-            $source = [__DIR__ . '/Php7CodeSnifferSource'],
-            $standards,
+            $source = [__DIR__ . '/ApplicationSource'],
+            $standards = ['PSR2'],
             $sniffs = [],
             $excludedSniffs = [],
             $isFixer = true
