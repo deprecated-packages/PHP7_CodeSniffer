@@ -25,6 +25,9 @@ final class SniffFactoryTest extends TestCase
 
         $sniffs = $sniffSetFactory->createFromStandardsAndSniffs($standards, $extraSniffs);
         $this->assertCount($sniffCount, $sniffs);
+        foreach ($sniffs as $sniff) {
+            $this->assertNotNull($sniff, 'Null present in sniffs array');
+        }
     }
 
     public function provideDataForResolver() : array
