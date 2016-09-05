@@ -25,6 +25,9 @@ final class SniffFactoryTest extends TestCase
 
         $sniffs = $sniffSetFactory->createFromStandardsAndSniffs($standards, $extraSniffs);
         $this->assertCount($sniffCount, $sniffs);
+        foreach ($sniffs as $sniff) {
+            $this->assertNotNull($sniff, 'Null present in sniffs array');
+        }
     }
 
     public function provideDataForResolver() : array
@@ -37,10 +40,12 @@ final class SniffFactoryTest extends TestCase
             ], [
                 ['PSR2'], ['PEAR.Commenting.ClassComment'], [], 49
             ], [
+                ['PSR2'], [], ['PSR2.Namespaces.UseDeclaration'], 48
+            ], [
                 ['PSR2'],
                 ['PEAR.Commenting.ClassComment'],
                 ['PEAR.Commenting.ClassComment', 'PSR2.Namespaces.UseDeclaration'],
-                49
+                48
             ],
         ];
     }
