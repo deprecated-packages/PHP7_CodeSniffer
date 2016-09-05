@@ -45,6 +45,11 @@ final class SniffCodeToSniffsFactory implements SniffFactoryInterface
     public function create(string $sniffCode) : array
     {
         $sniffClassName = $this->router->getClassFromSniffCode($sniffCode);
-        return [$this->singleSniffFactory->create($sniffClassName)];
+        $sniff = $this->singleSniffFactory->create($sniffClassName);
+        if($sniff !== null)
+        {
+            return [$sniff];
+        }
+        return [];
     }
 }
