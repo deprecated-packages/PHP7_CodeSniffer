@@ -37,10 +37,12 @@ final class SniffFactoryTest extends TestCase
             ], [
                 ['PSR2'], ['PEAR.Commenting.ClassComment'], [], 49
             ], [
+                ['PSR2'], [], ['PSR2.Namespaces.UseDeclaration'], 48
+            ], [
                 ['PSR2'],
                 ['PEAR.Commenting.ClassComment'],
                 ['PEAR.Commenting.ClassComment', 'PSR2.Namespaces.UseDeclaration'],
-                49
+                48
             ],
         ];
     }
